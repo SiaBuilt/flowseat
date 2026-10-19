@@ -1,0 +1,1206 @@
+{
+  "date": "2026-10-19",
+  "scope": "10 purposive queries, Tencent place search plus parking within 500m of unverified first result; not representative; no source reviews copied; no user identity data",
+  "rows": [
+    {
+      "category": "咖啡馆",
+      "query": "Common 咖啡 上海",
+      "status": 0,
+      "candidates": [
+        {
+          "title": "SHONEN JUMP CAFE(上海店)",
+          "id": "1131020220650110314",
+          "address": "上海市徐汇区徐家汇街道肇嘉浜路1111号美罗城A段第一层1-1F单元",
+          "location": {
+            "lat": 31.193344,
+            "lng": 121.439505
+          },
+          "category": "娱乐休闲:咖啡厅",
+          "phone_present": true,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        },
+        {
+          "title": "% Arabica阿拉比卡咖啡烘焙工坊(上海烘焙工坊店)",
+          "id": "3469430390357990931",
+          "address": "上海市黄浦区圆明园路169号协进大楼1楼",
+          "location": {
+            "lat": 31.242234,
+            "lng": 121.488055
+          },
+          "category": "娱乐休闲:咖啡厅",
+          "phone_present": true,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        },
+        {
+          "title": "0566咖啡制作所(上海万象城店)",
+          "id": "3196637361146755602",
+          "address": "上海市闵行区吴中路1799号万象城L1",
+          "location": {
+            "lat": 31.171117,
+            "lng": 121.370414
+          },
+          "category": "娱乐休闲:咖啡厅",
+          "phone_present": false,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        }
+      ],
+      "parking_probe": {
+        "anchor": "first_candidate_unverified",
+        "status": 0,
+        "count_reported": 78,
+        "returned": [
+          {
+            "title": "TPY中心停车场",
+            "address": "上海市徐汇区肇嘉浜路1117号(徐家汇地铁站10号口步行130米)",
+            "location": {
+              "lat": 31.192889,
+              "lng": 121.439059
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "美罗城地下停车场",
+            "address": "上海市徐汇区肇嘉浜路1111号美罗城B2",
+            "location": {
+              "lat": 31.192985,
+              "lng": 121.439959
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "美罗大厦地面停车场",
+            "address": "上海市徐汇区天钥桥路30号",
+            "location": {
+              "lat": 31.1935,
+              "lng": 121.4405
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "category": "咖啡馆",
+      "query": "Cafe OnAir",
+      "status": 0,
+      "candidates": [
+        {
+          "title": "Cafe OnAir昂云咖啡(利西店)",
+          "id": "7977873004661271406",
+          "address": "上海市长宁区江苏路街道利西路102号1幢1楼101室",
+          "location": {
+            "lat": 31.214869,
+            "lng": 121.430166
+          },
+          "category": "娱乐休闲:咖啡厅",
+          "phone_present": true,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        },
+        {
+          "title": "westwell x cafe OnAir(武夷路店)",
+          "id": "3931161404953118779",
+          "address": "上海市长宁区江苏路街道武夷路155号D栋",
+          "location": {
+            "lat": 31.214092,
+            "lng": 121.427776
+          },
+          "category": "娱乐休闲:咖啡厅",
+          "phone_present": true,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        },
+        {
+          "title": "Cafe OnAir昂云咖啡(斜土店)",
+          "id": "14194068154566879556",
+          "address": "上海市黄浦区半淞园路街道斜土东路176号1楼中庭",
+          "location": {
+            "lat": 31.207739,
+            "lng": 121.488443
+          },
+          "category": "娱乐休闲:咖啡厅",
+          "phone_present": true,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        }
+      ],
+      "parking_probe": {
+        "anchor": "first_candidate_unverified",
+        "status": 0,
+        "count_reported": 70,
+        "returned": [
+          {
+            "title": "利西小区东侧停车场",
+            "address": "上海市长宁区安化175号,177号",
+            "location": {
+              "lat": 31.215295,
+              "lng": 121.43009
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "上海电力医院地下停车场",
+            "address": "上海市长宁区延安西路937号上海电力医院",
+            "location": {
+              "lat": 31.21413,
+              "lng": 121.432207
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "停车场(锦江都城达华经典酒店南)",
+            "address": "上海市长宁区新华路街道延安西路918号附近",
+            "location": {
+              "lat": 31.213126,
+              "lng": 121.43243
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "category": "咖啡馆",
+      "query": "小田实验室",
+      "status": 0,
+      "candidates": [
+        {
+          "title": "Paddy Lab 小田实验室",
+          "id": "9995210512914434208",
+          "address": "上海市静安区曹家渡街道万航渡路889号889广场4楼L4-22号",
+          "location": {
+            "lat": 31.229443,
+            "lng": 121.428164
+          },
+          "category": "机构团体:科研机构",
+          "phone_present": false,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        },
+        {
+          "title": "Paddy Lab小田实验室",
+          "id": "14907401583575680693",
+          "address": "上海市长宁区镇宁路465弄181号安垦air3号楼1C",
+          "location": {
+            "lat": 31.222424,
+            "lng": 121.432318
+          },
+          "category": "娱乐休闲:其它娱乐休闲",
+          "phone_present": true,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        }
+      ],
+      "parking_probe": {
+        "anchor": "first_candidate_unverified",
+        "status": 0,
+        "count_reported": 63,
+        "returned": [
+          {
+            "title": "889广场停车场",
+            "address": "上海市静安区万航渡路889号889广场B2",
+            "location": {
+              "lat": 31.229445,
+              "lng": 121.428494
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "889广场地上停车场",
+            "address": "上海市静安区万航渡路889号889广场B2",
+            "location": {
+              "lat": 31.229954,
+              "lng": 121.427885
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "悦达889CENTER地下停车场",
+            "address": "上海市静安区万航渡路889号悦达889广场B2",
+            "location": {
+              "lat": 31.229588,
+              "lng": 121.428417
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "category": "咖啡馆",
+      "query": "C3office",
+      "status": 0,
+      "candidates": []
+    },
+    {
+      "category": "联合办公",
+      "query": "WeWork 威海路696",
+      "status": 0,
+      "candidates": [
+        {
+          "title": "wework",
+          "id": "4197847445548303199",
+          "address": "上海市静安区威海路696号",
+          "location": {
+            "lat": 31.226402,
+            "lng": 121.458218
+          },
+          "category": "房产小区:产业园区",
+          "phone_present": false,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        },
+        {
+          "title": "WeWork中国(威海路社区店)",
+          "id": "2814312225676443088",
+          "address": "上海市静安区威海路696号1层",
+          "location": {
+            "lat": 31.226697,
+            "lng": 121.457707
+          },
+          "category": "公司企业:公司企业",
+          "phone_present": true,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        },
+        {
+          "title": "GLA Art Group",
+          "id": "8044098998097314671",
+          "address": "上海市静安区威海路696号wework",
+          "location": {
+            "lat": 31.226664,
+            "lng": 121.457688
+          },
+          "category": "公司企业:公司企业",
+          "phone_present": true,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        }
+      ],
+      "parking_probe": {
+        "anchor": "first_candidate_unverified",
+        "status": 0,
+        "count_reported": 63,
+        "returned": [
+          {
+            "title": "科恩国际中心内部停车场",
+            "address": "上海市静安区陕西北路66号",
+            "location": {
+              "lat": 31.224656,
+              "lng": 121.457256
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "上海报业大厦内部停车场",
+            "address": "上海市静安区威海路755号(南京西路地铁站12号口步行370米)",
+            "location": {
+              "lat": 31.224985,
+              "lng": 121.457491
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "金色希望地上停车场(延安中路)",
+            "address": "上海市静安区延安中路金色希望",
+            "location": {
+              "lat": 31.224091,
+              "lng": 121.457996
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "category": "联合办公",
+      "query": "WeWork 国际传媒港",
+      "status": 0,
+      "candidates": [
+        {
+          "title": "WeWork中国(国际传媒港社区店)",
+          "id": "2488721357915193177",
+          "address": "上海市徐汇区龙文路69号国际传媒港M2栋3层",
+          "location": {
+            "lat": 31.160009,
+            "lng": 121.463245
+          },
+          "category": "公司企业:其它公司企业",
+          "phone_present": true,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        },
+        {
+          "title": "瑞幸咖啡(WeWork店)",
+          "id": "1386323083705786971",
+          "address": "上海市徐汇区龙华街道龙文路69号国际传媒港M2栋WeWork一层大堂",
+          "location": {
+            "lat": 31.159967,
+            "lng": 121.463192
+          },
+          "category": "娱乐休闲:咖啡厅",
+          "phone_present": true,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        },
+        {
+          "title": "上海摩泛科技有限公司",
+          "id": "8145267784839945299",
+          "address": "上海市徐汇区龙华街道龙文路69号wework国际传媒港M2栋8楼103室",
+          "location": {
+            "lat": 31.159854,
+            "lng": 121.463291
+          },
+          "category": "公司企业:公司企业",
+          "phone_present": false,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        }
+      ],
+      "parking_probe": {
+        "anchor": "first_candidate_unverified",
+        "status": 0,
+        "count_reported": 14,
+        "returned": [
+          {
+            "title": "芒果广场地下停车场",
+            "address": "上海市徐汇区龙爱路7号",
+            "location": {
+              "lat": 31.160987,
+              "lng": 121.463883
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "国际传媒港(M地块)地下停车场",
+            "address": "上海市徐汇区龙腾大道2171号国际传媒港",
+            "location": {
+              "lat": 31.159286,
+              "lng": 121.46266
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "国际传媒港L地块地下停车场",
+            "address": "上海市徐汇区龙腾大道2171号国际传媒港",
+            "location": {
+              "lat": 31.159686,
+              "lng": 121.462327
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "category": "公共空间",
+      "query": "新里137 党群服务中心",
+      "status": 0,
+      "candidates": [
+        {
+          "title": "天平街道新里137党群服务中心",
+          "id": "2206375292343711370",
+          "address": "上海市徐汇区天平路137号",
+          "location": {
+            "lat": 31.199616,
+            "lng": 121.437961
+          },
+          "category": "机构团体:政府机关",
+          "phone_present": true,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        }
+      ],
+      "parking_probe": {
+        "anchor": "first_candidate_unverified",
+        "status": 0,
+        "count_reported": 36,
+        "returned": [
+          {
+            "title": "One ITC停车场",
+            "address": "上海市徐汇区华山路1901号One ITCB1",
+            "location": {
+              "lat": 31.197879,
+              "lng": 121.437988
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "汇银广场地上停车场",
+            "address": "上海市徐汇区徐家汇街道华山路2088号汇银广场南楼7层",
+            "location": {
+              "lat": 31.19771,
+              "lng": 121.436606
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "国贸汇地下停车场",
+            "address": "上海市徐汇区华山路1901号",
+            "location": {
+              "lat": 31.197806,
+              "lng": 121.438413
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "category": "公共空间",
+      "query": "古北市民中心",
+      "status": 0,
+      "candidates": [
+        {
+          "title": "古北市民中心(古北国际广场)",
+          "id": "1784892308627747305",
+          "address": "上海市长宁区富贵东道99号",
+          "location": {
+            "lat": 31.193978,
+            "lng": 121.406723
+          },
+          "category": "机构团体:政府机关",
+          "phone_present": true,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        },
+        {
+          "title": "仙霞市民中心虹旭坊",
+          "id": "1245867667919732063",
+          "address": "上海市长宁区仙霞新村街道虹古路虹旭小区",
+          "location": {
+            "lat": 31.203543,
+            "lng": 121.387403
+          },
+          "category": "房产小区:其它房产小区",
+          "phone_present": false,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        },
+        {
+          "title": "长宁区涉外民商事纠纷调解中心",
+          "id": "1794431473723692391",
+          "address": "上海市长宁区富贵东道古北市民中心",
+          "location": {
+            "lat": 31.193997,
+            "lng": 121.406779
+          },
+          "category": "机构团体:政府机关",
+          "phone_present": false,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        }
+      ],
+      "parking_probe": {
+        "anchor": "first_candidate_unverified",
+        "status": 0,
+        "count_reported": 37,
+        "returned": [
+          {
+            "title": "古北国际广场南停车场",
+            "address": "上海市长宁区富贵东道229弄1-12号",
+            "location": {
+              "lat": 31.193425,
+              "lng": 121.405246
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "古北国际广场北停车场",
+            "address": "上海市长宁区富贵东道219号古北国际广场(北)",
+            "location": {
+              "lat": 31.194927,
+              "lng": 121.405714
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "商铺停车场(内部使用)",
+            "address": "上海市长宁区虹桥街道富贵东路古北国际广场",
+            "location": {
+              "lat": 31.195019,
+              "lng": 121.405714
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "category": "图书馆",
+      "query": "上海图书馆东馆",
+      "status": 0,
+      "candidates": [
+        {
+          "title": "上海图书馆(东馆)",
+          "id": "5528072624503891635",
+          "address": "上海市浦东新区合欢路300号(迎春路300号)",
+          "location": {
+            "lat": 31.219975,
+            "lng": 121.547154
+          },
+          "category": "文化场馆:图书馆",
+          "phone_present": true,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        },
+        {
+          "title": "Manner Coffee(上海图书馆东馆烘焙店)",
+          "id": "13862830302199732623",
+          "address": "上海市浦东新区花木街道合欢路300号上海图书馆东馆负一层B1009室(肯德基旁边)",
+          "location": {
+            "lat": 31.219876,
+            "lng": 121.547081
+          },
+          "category": "娱乐休闲:咖啡厅",
+          "phone_present": true,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        },
+        {
+          "title": "B151(上海图书馆东馆)",
+          "id": "5620865673556458522",
+          "address": "上海市浦东新区合欢路300号上海图书馆(东馆)B1层",
+          "location": {
+            "lat": 31.219717,
+            "lng": 121.546451
+          },
+          "category": "文化场馆:图书馆",
+          "phone_present": false,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        }
+      ],
+      "parking_probe": {
+        "anchor": "first_candidate_unverified",
+        "status": 0,
+        "count_reported": 36,
+        "returned": [
+          {
+            "title": "路边停车场(合欢路西侧)",
+            "address": "上海市浦东新区合欢路(迎春路地铁站4号口步行400米)",
+            "location": {
+              "lat": 31.22007,
+              "lng": 121.54808
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "亚太盛汇停车场",
+            "address": "上海市浦东新区迎春路301号",
+            "location": {
+              "lat": 31.219403,
+              "lng": 121.545035
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "上海图书馆东馆地下停车场",
+            "address": "上海市浦东新区合欢路300号上海图书馆东馆",
+            "location": {
+              "lat": 31.220562,
+              "lng": 121.547838
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "category": "图书馆",
+      "query": "杨浦区图书馆",
+      "status": 0,
+      "candidates": [
+        {
+          "title": "杨浦图书馆",
+          "id": "3299611627541318899",
+          "address": "上海市杨浦区长海路街道长海路366号",
+          "location": {
+            "lat": 31.308735,
+            "lng": 121.523288
+          },
+          "category": "文化场馆:图书馆",
+          "phone_present": true,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        },
+        {
+          "title": "杨浦区图书馆(延吉新村街道分馆)",
+          "id": "3790286092199679935",
+          "address": "上海市杨浦区靖宇东路267号地下一层(延吉中路地铁站3号口步行130米)",
+          "location": {
+            "lat": 31.288902,
+            "lng": 121.536593
+          },
+          "category": "文化场馆:图书馆",
+          "phone_present": false,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        },
+        {
+          "title": "杨浦区定海路街道图书馆",
+          "id": "2402090002430959118",
+          "address": "上海市杨浦区定海路街道长阳路3066号5楼506室",
+          "location": {
+            "lat": 31.278299,
+            "lng": 121.549272
+          },
+          "category": "文化场馆:图书馆",
+          "phone_present": true,
+          "returned_fields": [
+            "ad_info",
+            "address",
+            "category",
+            "id",
+            "location",
+            "tel",
+            "title",
+            "type"
+          ],
+          "sub_poi_count": 0
+        }
+      ],
+      "parking_probe": {
+        "anchor": "first_candidate_unverified",
+        "status": 0,
+        "count_reported": 35,
+        "returned": [
+          {
+            "title": "杨浦区图书馆地下停车场",
+            "address": "上海市杨浦区长海路366号杨浦图书馆(总馆)",
+            "location": {
+              "lat": 31.308169,
+              "lng": 121.523267
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "长恒苑-地上停车场",
+            "address": "上海市杨浦区恒仁路31号附近",
+            "location": {
+              "lat": 31.308936,
+              "lng": 121.524354
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          },
+          {
+            "title": "黑山小区地上停车场",
+            "address": "上海市杨浦区恒仁路与政立路交叉口东南方向10米左右",
+            "location": {
+              "lat": 31.30793,
+              "lng": 121.52396
+            },
+            "category": "汽车:停车场",
+            "returned_fields": [
+              "_distance",
+              "ad_info",
+              "address",
+              "category",
+              "id",
+              "location",
+              "tel",
+              "title",
+              "type"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

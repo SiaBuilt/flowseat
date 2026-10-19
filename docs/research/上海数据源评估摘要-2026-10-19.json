@@ -1,0 +1,238 @@
+{
+  "date": "2026-10-19",
+  "target_queries": 10,
+  "plausible_matches": 8,
+  "no_reliable_match": [
+    "Common 日常",
+    "C³office"
+  ],
+  "matched_with_phone": 7,
+  "matched_with_address": 8,
+  "matched_with_coordinates": 8,
+  "parking_candidate_records": 24,
+  "explicit_internal_parking_records": 3,
+  "parking_min_straight_m": 29,
+  "parking_max_straight_m": 291,
+  "parking_access_tariff_vacancy_confirmed": 0,
+  "deep_work_fields_in_search_response": 0,
+  "api_requests": 21,
+  "request_breakdown": "10 initial place searches + 9 first-candidate parking searches + 2 alias follow-ups. One irrelevant Common parking probe excluded. WeWork Weihai selected second record; parking distances recalculated against selected coordinate.",
+  "selected": [
+    {
+      "query": "Cafe OnAir",
+      "selected_candidate": "Cafe OnAir昂云咖啡(利西店)",
+      "address": "上海市长宁区江苏路街道利西路102号1幢1楼101室",
+      "phone_present": true,
+      "parking": [
+        {
+          "name": "利西小区东侧停车场",
+          "distance_straight_m": 48,
+          "access_confirmed": false,
+          "explicit_internal": false
+        },
+        {
+          "name": "上海电力医院地下停车场",
+          "distance_straight_m": 211,
+          "access_confirmed": false,
+          "explicit_internal": false
+        },
+        {
+          "name": "停车场(锦江都城达华经典酒店南)",
+          "distance_straight_m": 290,
+          "access_confirmed": false,
+          "explicit_internal": false
+        }
+      ],
+      "match_status": "名称地址初步匹配，非营业或laptop友好核验"
+    },
+    {
+      "query": "小田实验室",
+      "selected_candidate": "Paddy Lab 小田实验室",
+      "address": "上海市静安区曹家渡街道万航渡路889号889广场4楼L4-22号",
+      "phone_present": false,
+      "parking": [
+        {
+          "name": "889广场停车场",
+          "distance_straight_m": 31,
+          "access_confirmed": false,
+          "explicit_internal": false
+        },
+        {
+          "name": "889广场地上停车场",
+          "distance_straight_m": 63,
+          "access_confirmed": false,
+          "explicit_internal": false
+        },
+        {
+          "name": "悦达889CENTER地下停车场",
+          "distance_straight_m": 29,
+          "access_confirmed": false,
+          "explicit_internal": false
+        }
+      ],
+      "match_status": "名称地址初步匹配，非营业或laptop友好核验"
+    },
+    {
+      "query": "WeWork 威海路696",
+      "selected_candidate": "WeWork中国(威海路社区店)",
+      "address": "上海市静安区威海路696号1层",
+      "phone_present": true,
+      "parking": [
+        {
+          "name": "科恩国际中心内部停车场",
+          "distance_straight_m": 231,
+          "access_confirmed": false,
+          "explicit_internal": true
+        },
+        {
+          "name": "上海报业大厦内部停车场",
+          "distance_straight_m": 191,
+          "access_confirmed": false,
+          "explicit_internal": true
+        },
+        {
+          "name": "金色希望地上停车场(延安中路)",
+          "distance_straight_m": 291,
+          "access_confirmed": false,
+          "explicit_internal": false
+        }
+      ],
+      "match_status": "名称地址初步匹配，非营业或laptop友好核验"
+    },
+    {
+      "query": "WeWork 国际传媒港",
+      "selected_candidate": "WeWork中国(国际传媒港社区店)",
+      "address": "上海市徐汇区龙文路69号国际传媒港M2栋3层",
+      "phone_present": true,
+      "parking": [
+        {
+          "name": "芒果广场地下停车场",
+          "distance_straight_m": 125,
+          "access_confirmed": false,
+          "explicit_internal": false
+        },
+        {
+          "name": "国际传媒港(M地块)地下停车场",
+          "distance_straight_m": 98,
+          "access_confirmed": false,
+          "explicit_internal": false
+        },
+        {
+          "name": "国际传媒港L地块地下停车场",
+          "distance_straight_m": 94,
+          "access_confirmed": false,
+          "explicit_internal": false
+        }
+      ],
+      "match_status": "名称地址初步匹配，非营业或laptop友好核验"
+    },
+    {
+      "query": "新里137 党群服务中心",
+      "selected_candidate": "天平街道新里137党群服务中心",
+      "address": "上海市徐汇区天平路137号",
+      "phone_present": true,
+      "parking": [
+        {
+          "name": "One ITC停车场",
+          "distance_straight_m": 193,
+          "access_confirmed": false,
+          "explicit_internal": false
+        },
+        {
+          "name": "汇银广场地上停车场",
+          "distance_straight_m": 248,
+          "access_confirmed": false,
+          "explicit_internal": false
+        },
+        {
+          "name": "国贸汇地下停车场",
+          "distance_straight_m": 206,
+          "access_confirmed": false,
+          "explicit_internal": false
+        }
+      ],
+      "match_status": "名称地址初步匹配，非营业或laptop友好核验"
+    },
+    {
+      "query": "古北市民中心",
+      "selected_candidate": "古北市民中心(古北国际广场)",
+      "address": "上海市长宁区富贵东道99号",
+      "phone_present": true,
+      "parking": [
+        {
+          "name": "古北国际广场南停车场",
+          "distance_straight_m": 153,
+          "access_confirmed": false,
+          "explicit_internal": false
+        },
+        {
+          "name": "古北国际广场北停车场",
+          "distance_straight_m": 143,
+          "access_confirmed": false,
+          "explicit_internal": false
+        },
+        {
+          "name": "商铺停车场(内部使用)",
+          "distance_straight_m": 150,
+          "access_confirmed": false,
+          "explicit_internal": true
+        }
+      ],
+      "match_status": "名称地址初步匹配，非营业或laptop友好核验"
+    },
+    {
+      "query": "上海图书馆东馆",
+      "selected_candidate": "上海图书馆(东馆)",
+      "address": "上海市浦东新区合欢路300号(迎春路300号)",
+      "phone_present": true,
+      "parking": [
+        {
+          "name": "路边停车场(合欢路西侧)",
+          "distance_straight_m": 89,
+          "access_confirmed": false,
+          "explicit_internal": false
+        },
+        {
+          "name": "亚太盛汇停车场",
+          "distance_straight_m": 211,
+          "access_confirmed": false,
+          "explicit_internal": false
+        },
+        {
+          "name": "上海图书馆东馆地下停车场",
+          "distance_straight_m": 92,
+          "access_confirmed": false,
+          "explicit_internal": false
+        }
+      ],
+      "match_status": "名称地址初步匹配，非营业或laptop友好核验"
+    },
+    {
+      "query": "杨浦区图书馆",
+      "selected_candidate": "杨浦图书馆",
+      "address": "上海市杨浦区长海路街道长海路366号",
+      "phone_present": true,
+      "parking": [
+        {
+          "name": "杨浦区图书馆地下停车场",
+          "distance_straight_m": 63,
+          "access_confirmed": false,
+          "explicit_internal": false
+        },
+        {
+          "name": "长恒苑-地上停车场",
+          "distance_straight_m": 104,
+          "access_confirmed": false,
+          "explicit_internal": false
+        },
+        {
+          "name": "黑山小区地上停车场",
+          "distance_straight_m": 110,
+          "access_confirmed": false,
+          "explicit_internal": false
+        }
+      ],
+      "match_status": "名称地址初步匹配，非营业或laptop友好核验"
+    }
+  ]
+}

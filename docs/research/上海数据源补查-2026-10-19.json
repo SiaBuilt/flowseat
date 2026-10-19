@@ -1,0 +1,134 @@
+[
+  {
+    "query": "Common日常",
+    "status": 0,
+    "candidates": [
+      {
+        "title": "COMMON SCENTS(五原路店)",
+        "id": "4395423532821566962",
+        "address": "上海市徐汇区湖南路街道五原路108号103室(常熟路地铁站8号口步行240米)",
+        "location": {
+          "lat": 31.21298,
+          "lng": 121.447001
+        },
+        "phone_present": true,
+        "returned_fields": [
+          "ad_info",
+          "address",
+          "category",
+          "id",
+          "location",
+          "tel",
+          "title",
+          "type"
+        ]
+      },
+      {
+        "title": "COMMON SCENTS(永源路店)",
+        "id": "1594110867376815825",
+        "address": "上海市静安区永源路26号首层",
+        "location": {
+          "lat": 31.221146,
+          "lng": 121.441158
+        },
+        "phone_present": true,
+        "returned_fields": [
+          "ad_info",
+          "address",
+          "category",
+          "id",
+          "location",
+          "tel",
+          "title",
+          "type"
+        ]
+      },
+      {
+        "title": "COMMON SCENTS(西岸梦中心)",
+        "id": "10970719818530419579",
+        "address": "上海市徐汇区龙华街道龙腾大道2266号西岸梦中心10栋1层118号",
+        "location": {
+          "lat": 31.159517,
+          "lng": 121.466271
+        },
+        "phone_present": false,
+        "returned_fields": [
+          "ad_info",
+          "address",
+          "category",
+          "id",
+          "location",
+          "tel",
+          "title",
+          "type"
+        ]
+      }
+    ]
+  },
+  {
+    "query": "C³office",
+    "status": 0,
+    "candidates": [
+      {
+        "title": "愚园里GARDEN OFFICE-C栋",
+        "id": "9212413295061891311",
+        "address": "上海市长宁区镇宁路",
+        "location": {
+          "lat": 31.221702,
+          "lng": 121.432705
+        },
+        "phone_present": false,
+        "returned_fields": [
+          "ad_info",
+          "address",
+          "category",
+          "id",
+          "location",
+          "tel",
+          "title",
+          "type"
+        ]
+      },
+      {
+        "title": "C-OFFICE设计师主题共享办公",
+        "id": "3253512776032245686",
+        "address": "上海市徐汇区田林街道中山西路家饰佳国际馆",
+        "location": {
+          "lat": 31.184287,
+          "lng": 121.425135
+        },
+        "phone_present": false,
+        "returned_fields": [
+          "ad_info",
+          "address",
+          "category",
+          "id",
+          "location",
+          "tel",
+          "title",
+          "type"
+        ]
+      },
+      {
+        "title": "蓝村啤酒厂(蓝村路店)",
+        "id": "14056224189198174406",
+        "address": "上海市浦东新区塘桥街道蓝村路510号一层3室C(公交车站办公室旁)",
+        "location": {
+          "lat": 31.211641,
+          "lng": 121.523911
+        },
+        "phone_present": true,
+        "returned_fields": [
+          "ad_info",
+          "address",
+          "category",
+          "id",
+          "location",
+          "tel",
+          "title",
+          "type"
+        ]
+      }
+    ]
+  }
+]
