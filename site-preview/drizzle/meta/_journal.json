@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1792141898202,
+      "tag": "0000_mixed_talkback",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1792396993864,
+      "tag": "0001_public_candidates",
+      "breakpoints": true
+    }
+  ]
+}

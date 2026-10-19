@@ -1,0 +1,17 @@
+{
+  "pages": ["pages/explore/index", "pages/detail/index", "pages/me/index", "pages/review/index"],
+  "window": {
+    "navigationBarTitleText": "流浪工位",
+    "navigationBarBackgroundColor": "#f5f3ee",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f5f3ee"
+  },
+  "tabBar": {
+    "color": "#77776e", "selectedColor": "#285943", "backgroundColor": "#ffffff",
+    "list": [
+      { "pagePath": "pages/explore/index", "text": "找工位" },
+      { "pagePath": "pages/me/index", "text": "我的" }
+    ]
+  },
+  "sitemapLocation": "sitemap.json"
+}

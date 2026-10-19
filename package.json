@@ -1,0 +1,22 @@
+{
+  "name": "wandering-desk",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "check": "node scripts/check.js",
+    "configure": "node scripts/configure.js",
+    "dev:web": "npm --prefix apps/client run dev:h5",
+    "build:web": "npm --prefix apps/client run build:h5",
+    "build:weixin": "npm --prefix apps/client run build:mp-weixin",
+    "typecheck:client": "npm --prefix apps/client run type-check",
+    "sync:web": "node scripts/sync-web-source.js",
+    "build:server": "npm --prefix site-preview run build"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "2.6.2"
+  }
+}

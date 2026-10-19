@@ -1,0 +1,9 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+    <defs/>
+    <path fill="#111111" stroke="none" d="M 28 0 L 100 0 C 115.463974 0 128 12.536027 128 28 L 128 100 C 128 115.463974 115.463974 128 100 128 L 28 128 C 12.536027 128 0 115.463974 0 100 L 0 28 C -0 12.536027 12.536027 0 28 0 Z"/>
+    <g transform="matrix(0.78 0 0 0.78 13 9)">
+        <g>
+            <path fill="none" stroke="#ffffff" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round" d="M 96 27 C 75 12 51 15 40 29 C 30 43 34 60 39 73 C 42 82 49 86 60 86 L 98 86 M 47 86 L 34 113 M 84 86 L 98 113"/>
+        </g>
+    </g>
+</svg>

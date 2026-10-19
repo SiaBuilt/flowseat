@@ -1,0 +1,13 @@
+node_modules/
+dist/build/
+.sites-local/
+.env*
+
+.wrangler/
+.sites-runtime/
+.vinext/
+.dev.vars
+.next/
+
+/dist/
+*.tsbuildinfo

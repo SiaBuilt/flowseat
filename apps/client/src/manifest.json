@@ -1,0 +1,35 @@
+{
+  "name": "流动工位",
+  "appid": "",
+  "description": "Laptop-friendly places to work.",
+  "versionName": "0.1.0",
+  "versionCode": "100",
+  "vueVersion": "3",
+  "uniStatistics": {
+    "enable": false
+  },
+  "h5": {
+    "title": "流动工位 · FlowSeat",
+    "router": {
+      "mode": "hash"
+    }
+  },
+  "mp-weixin": {
+    "appid": "",
+    "setting": {
+      "urlCheck": true
+    },
+    "usingComponents": true
+  },
+  "app-plus": {
+    "usingComponents": true,
+    "modules": {},
+    "distribute": {
+      "android": {
+        "permissions": []
+      },
+      "ios": {},
+      "sdkConfigs": {}
+    }
+  }
+}

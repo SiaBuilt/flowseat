@@ -1,0 +1,10 @@
+<view class="page">
+  <view wx:if="{{loading}}" class="muted">正在读取地点…</view>
+  <view wx:if="{{error}}" class="error">{{error}}<button bindtap="load">重试</button></view>
+  <view wx:if="{{place}}">
+    <view class="eyebrow">{{place.type}} · {{place.district}}</view>
+    <view class="title">{{place.name}}</view>
+    <view class="card"><view class="name">{{place.statusLabel}}</view><view class="muted">{{place.address}}</view></view>
+    <view class="card"><view class="name">办公条件与评价</view><view class="muted">当前搭建版本仅展示基础预览。详细条件、用户反馈与付费权益将在后续版本接入。</view></view>
+  </view>
+</view>

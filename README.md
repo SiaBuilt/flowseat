@@ -1,0 +1,41 @@
+# 流动工位 · FlowSeat
+
+Find your seat. Find your flow.
+
+Web 优先的共享工位发现与共创产品，面向自由职业者、远程工作者与独立创业者。上海首发，客户端为 uni-app + Vue 3 + TypeScript，保留小程序与 App 的源码复用。
+
+当前 v0.3 已实现云端投稿、署名、收藏、体验审核、空位反馈、闭店去重与恢复，以及账号内快速审核。UI 保持黑白，费用与状态使用克制的语义色。[版本说明](docs/版本更新-v0.3.md)
+
+v0.4 补齐公开候选一次性导入、投稿地图坐标与定点导航、列表余座同步、收藏展示隔离和地址搜索。[本次更新](docs/版本更新-v0.4.md)
+
+正式接入已选 `siabuilt.com`、微信登录、首轮免费；2026-10-19 已完成域名 DNS、绑定和 HTTPS 证书验证，托管状态 active。仍保持私有内测，公众访问、微信与地图账号尚待接入，详见 [正式接入清单](docs/正式接入清单.md)。
+
+预览：[流动工位](https://laptop-friendly-shanghai-20261014.agilebowl.chatgpt.site)。访问范围仍是私有内测。平台 ChatGPT 登录用于预览；面向国内普通用户的登录、内置真实地图 SDK、支付与公众发布尚需接入。示意地图不用于导航，真实地点可打开高德地址搜索。
+
+## 开发目录
+
+- `apps/client`：跨端页面、领域类型、服务与平台适配器。
+- `site-preview`：已连接原 Sites 项目的发布仓库；含 API、D1 迁移、客户端源码快照与 Web 产物。
+- `data`：带来源的上海公开候选资料，导入后先审核。
+- `tests`：当前 HTTP 服务与客户端逻辑测试；保留早期微信骨架权限测试。
+- `miniprogram` / `cloudfunctions`：早期原生微信准备稿，不是当前 Web 后端。
+- `brand` / `previews`：品牌素材与浏览器验证截图。
+
+## 常用命令
+
+开发需 Node.js 22.13+。前端依赖在 `apps/client`，服务端依赖在 `site-preview`，分别使用各自锁文件安装。
+
+```sh
+npm run typecheck:client
+npm test
+npm run build:web
+npm run build:weixin
+npm run sync:web
+npm run build:server
+```
+
+`sync:web` 将前端源码和产物复制到发布仓库，不复制依赖、环境变量或本地数据库。服务本地开发：`npm --prefix site-preview run dev`。D1 首次开发需先生成并应用本地迁移，详见发布仓库说明。部署仍按 Sites 的已有项目源仓库与打包流程执行。
+
+审核角色在服务端 `REVIEWER_USER_IDS` 配置，不向前端硬编码账号，不用本机存储授予角色。所有真实写入按当前服务端身份授权，数据库与本地示例分开。
+
+真实场所的插座数量、椅子舒适度、停留规则和余座可能未知；未知保持待确认。公开资料的日期与来源展示在地点页，不把资料整理写成实访。

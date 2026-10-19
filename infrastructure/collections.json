@@ -1,0 +1,5 @@
+{
+  "current": ["users", "places", "review_tasks"],
+  "planned": ["visits", "reports", "contributions", "audit_logs", "orders", "entitlements"],
+  "note": "current 集合必须创建，并逐个应用 database.rules.json；planned 不表示已实现。客户端只经云函数访问。"
+}

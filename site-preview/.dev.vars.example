@@ -1,0 +1,2 @@
+# 仅本地开发：官方 Sites loopback 模拟身份；不要把它作为生产审核员。
+REVIEWER_USER_IDS=local_seedy

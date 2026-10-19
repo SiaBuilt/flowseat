@@ -1,0 +1,7 @@
+; FlowSeat domain routing — generated 2026-10-16
+; Import into Cloudflare zone siabuilt.com. Set A records to DNS only.
+; Preserve existing unrelated DNS records.
+siabuilt.com. 300 IN A 162.159.143.30
+siabuilt.com. 300 IN A 172.66.3.26
+_openai-site-verification.siabuilt.com. 300 IN TXT "openai-site-verification=gesNjIOzRcJ-L7zoC8VKXYqGwvS8KgHEiG1dVpR7jVU"
+_cf-custom-hostname.siabuilt.com. 300 IN TXT "a90d8825-a345-4a5e-b4bd-54c9aaa095f4"

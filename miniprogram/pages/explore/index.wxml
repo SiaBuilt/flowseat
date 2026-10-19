@@ -1,0 +1,25 @@
+<view class="page">
+  <view wx:if="{{preview}}" class="notice">搭建预览 · 尚未接入云环境，暂无真实地点</view>
+  <view class="eyebrow">上海 · 电脑办公地点</view>
+  <view class="title">今天，在哪里工作？</view>
+  <view class="subtitle">看清进入条件，再选择适合你的地方。</view>
+  <view class="tabs">
+    <view class="tab {{view === 'list' ? 'active' : ''}}" data-view="list" bindtap="changeView">列表</view>
+    <view class="tab {{view === 'map' ? 'active' : ''}}" data-view="map" bindtap="changeView">地图</view>
+  </view>
+  <map wx:if="{{view === 'map'}}" latitude="31.2304" longitude="121.4737" scale="12" markers="{{markers}}" bindmarkertap="openMarker" />
+  <view wx:if="{{loading}}" class="muted">正在读取地点…</view>
+  <view wx:if="{{error}}" class="error">{{error}}<button bindtap="load">重试</button></view>
+  <view wx:if="{{!loading &amp;&amp; !error &amp;&amp; places.length === 0}}" class="card empty">
+    <view class="name">等待第一批上海地点</view>
+    <view class="muted">仅收录有来源的候选地点；办公条件未知时会明确标注。</view>
+  </view>
+  <block wx:if="{{view === 'list'}}">
+    <view wx:for="{{places}}" wx:key="id" class="card" data-id="{{item.id}}" bindtap="openPlace">
+      <view class="row"><view class="name">{{item.name}}</view><view class="muted">{{item.statusLabel}}</view></view>
+      <view class="muted">{{item.type}} · {{item.district}}</view>
+      <view class="muted">{{item.address}}</view>
+    </view>
+  </block>
+  <button wx:if="{{nextCursor}}" loading="{{loading}}" bindtap="loadMore">加载更多地点</button>
+</view>
