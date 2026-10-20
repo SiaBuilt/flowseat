@@ -85,7 +85,7 @@ test('证据白名单与零插座支持，不接受伪造审核状态',async()=>
 });
 
 const daysAgo=n=>new Date(Date.now()+8*3600000-n*86400000).toISOString().slice(0,10);
-test('到访核对刷新逐项依据，不改变字段值且每天一次',async()=>{
+test('到访核对先审核，保留原始依据与字段值，每人每天一次',async()=>{
  const {db,call}=await setup();const input=place();
  for(const key of Object.keys(input.evidence))input.evidence[key]={...input.evidence[key],date:daysAgo(10)};
  const p=await call('submissions','POST',input);assert.equal(p.status,201);
@@ -94,10 +94,12 @@ test('到访核对刷新逐项依据，不改变字段值且每天一次',async(
  assert.equal((await call('places/'+p.id+'/confirm','POST',{fields:['cost','hours','laptopFriendly'],note:'三项一起核对'})).status,400);
  assert.equal((await call('places/'+p.id+'/confirm','POST',{fields:['cost','bogus'],note:'未知信息项'})).status,400);
  const saved=await call('places/'+p.id+'/confirm','POST',{fields:['cost','hours'],note:'18:10 仍在营业，吧台可充电'});
- assert.equal(saved.status,200);assert.equal(saved.saved,true);
+ assert.equal(saved.status,200);assert.equal(saved.saved,true);assert.equal(saved.status===200,true);
+ assert.deepEqual((await call('places/'+p.id)).place.evidence,before.evidence);assert.equal((await call('places/'+p.id)).place.confirmations,undefined);
+ assert.equal((await call('review/review/'+saved.id,'POST',{action:'approve',note:'核对内容与当前条件一致'},'owner')).status,200);
  const after=(await call('places/'+p.id)).place;
  assert.equal(after.cost,before.cost);assert.equal(after.hours,before.hours);
- assert.equal(after.evidence.cost.kind,'visit');assert.equal(after.evidence.cost.url,'');assert.equal(after.evidence.cost.date,today());
+ assert.deepEqual(after.evidence,before.evidence);assert.equal(after.confirmations.cost.kind,'visit');assert.equal(after.confirmations.cost.date,today());
  assert.equal(after.publicationIssues.length,0);
  assert.equal((await call('places/'+p.id+'/confirm','POST',{fields:['cost'],note:'同一天再次核对'})).saved,false);
  assert.equal((await call('places/'+p.id+'/confirm','POST',{fields:['cost'],note:'未登录核对'},'')).status,401);
@@ -106,4 +108,16 @@ test('到访核对刷新逐项依据，不改变字段值且每天一次',async(
  assert.equal((await call('places/'+p.id+'/confirm','POST',{fields:['hours'],note:'未知字段不能核对'})).status,400);
  const queue=await call('review-queue','GET',undefined,'owner');
  assert.ok(queue.history.some(h=>h.action==='confirm'&&h.note.includes('费用规则')));
+});
+
+test('到访核对在条件变动或地点隐藏后不能通过',async()=>{
+ const {db,call}=await setup(),id=await published(call);
+ let r=await call('places/'+id+'/confirm','POST',{fields:['cost'],note:'确认消费规则'});
+ const raw=JSON.parse((await db.prepare('SELECT payload FROM places WHERE id=?').bind(id).first()).payload);raw.cost='paid';
+ await db.prepare('UPDATE places SET payload=? WHERE id=?').bind(JSON.stringify(raw),id).run();
+ assert.equal((await call('review/review/'+r.id,'POST',{action:'approve',note:'不能通过已变动条件'},'owner')).status,409);
+ assert.equal((await call('review/review/'+r.id,'POST',{action:'reject',note:'条件已发生变化'},'owner')).status,200);
+ r=await call('places/'+id+'/confirm','POST',{fields:['hours'],note:'确认开放时间'});
+ await call('review/place/'+id,'POST',{action:'hide',note:'等待重新核对'},'owner');
+ assert.equal((await call('review/review/'+r.id,'POST',{action:'approve',note:'不能通过隐藏地点'},'owner')).status,409);
 });

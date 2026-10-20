@@ -52,10 +52,12 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={}}){
   if(path[2]==='confirm'){
    const picked=Array.isArray(b.fields)?[...new Set(b.fields)]:[];if(!picked.length||picked.length>2)fail(400,'每次到访最多核对 2 项信息');for(const field of picked)if(!coreFields.includes(field))fail(400,'请选择有效的信息项');
    const note=text(b.note,2,200),payload=JSON.parse(p.payload),today=new Date(now+8*3600000).toISOString().slice(0,10),known=field=>({laptopFriendly:payload.laptopFriendly===true,deskFits:payload.deskFits===true,cost:payload.cost&&payload.cost!=='unknown',hours:payload.hours&&!/待确认|未知|不详/.test(payload.hours)})[field];for(const field of picked)if(!known(field))fail(400,fieldLabels[field]+'仍是待确认，不能核对；请用「地点纠错」补充实际信息');payload.evidence={...(payload.evidence||{})};
-   const changed=picked.filter(field=>payload.evidence[field]?.date!==today);if(!changed.length)return json({saved:false,unchanged:true});
-   for(const field of changed)payload.evidence[field]={kind:'visit',url:'',date:today,note};
-   await db.batch([q('UPDATE places SET payload=?,updated_at=? WHERE id=?',JSON.stringify(payload),now,id),audit(id,'confirm',changed.map(field=>fieldLabels[field]).join('、')+'：'+note)]);
-   return json({saved:true,evidence:payload.evidence,updatedAt:now});
+   const prior=await all("SELECT payload FROM reviews WHERE place_id=? AND author=? AND status IN ('pending','approved') AND json_extract(payload,'$.kind')='confirmation' AND json_extract(payload,'$.date')=?",id,uid,today);
+   const already=new Set(prior.flatMap(row=>JSON.parse(row.payload).confirmationFields||[]));
+   const changed=picked.filter(field=>!already.has(field));if(!changed.length)return json({saved:false,unchanged:true});
+   const reviewId=uuid(),v={kind:'confirmation',confirmationFields:changed,values:Object.fromEntries(changed.map(field=>[field,payload[field]])),date:today,period:'到访核对',text:note,spend:''};
+   await db.batch([q("INSERT INTO reviews(id,author,place_id,payload,status,note,created_at) VALUES(?,?,?,?,'pending','',?)",reviewId,uid,id,JSON.stringify(v),now),audit(id,'confirm',changed.map(field=>fieldLabels[field]).join('、')+'：已提交审核')]);
+   return json({saved:true,status:'pending',id:reviewId});
   }
   if(path[2]==='seats'){one(b.status,['available','busy','full']);await db.batch([q('INSERT INTO seats(author,place_id,status,at) VALUES(?,?,?,?) ON CONFLICT(author,place_id) DO UPDATE SET status=excluded.status,at=excluded.at',uid,id,b.status,now),audit(id,'seat')]);return json({seat:{status:b.status,at:now}});}
   if(path[2]==='reviews'){const v=visitInput(b),reviewId=uuid();await db.batch([q("INSERT INTO reviews(id,author,place_id,payload,status,note,created_at) VALUES(?,?,?,?,'pending','',?)",reviewId,uid,id,JSON.stringify(v),now),audit(reviewId,'review')]);return json({id:reviewId,status:'pending'},201);}
@@ -79,7 +81,14 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={}}){
    const p=await first('SELECT * FROM places WHERE id=?',id);if(!p)fail(404,'投稿不存在');if(action==='approve'||action==='restore'){const payload=JSON.parse(p.payload);const issues=publicationIssues(payload);if(issues.length)fail(400,'暂不能发布：'+issues.join('；'));if(action==='approve'&&p.status!=='pending')fail(409,'该投稿已经处理');}
    const state=action==='approve'||action==='restore'?'published':action==='hide'?'hidden':action==='reject'?'rejected':null;if(!state)fail(400,'操作无效');if(action==='restore'&&p.status!=='hidden')fail(409,'仅隐藏地点可恢复');const tasks=[q('UPDATE places SET status=?,note=?,updated_at=? WHERE id=?',state,note,now,id),audit(id,action,note)];if(action==='restore')tasks.push(q("UPDATE reports SET status='resolved' WHERE place_id=? AND status='active'",id));await db.batch(tasks);return json({saved:true});
   }
-  if(kind==='review'){one(action,['approve','reject']);const r=await first("SELECT id FROM reviews WHERE id=? AND status='pending'",id);if(!r)fail(409,'该体验已处理或不存在');await db.batch([q('UPDATE reviews SET status=?,note=? WHERE id=?',action==='approve'?'approved':'rejected',note,id),audit(id,action,note)]);return json({saved:true});}
+  if(kind==='review'){one(action,['approve','reject']);const r=await first("SELECT * FROM reviews WHERE id=? AND status='pending'",id);if(!r)fail(409,'该体验已处理或不存在');const v=JSON.parse(r.payload),tasks=[];
+   if(action==='approve'&&v.kind==='confirmation'){
+    const place=await first("SELECT * FROM places WHERE id=? AND status='published'",r.place_id);if(!place)fail(409,'地点已隐藏，不能通过到访核对');const payload=JSON.parse(place.payload);
+    if(!Array.isArray(v.confirmationFields)||!v.confirmationFields.length||v.confirmationFields.some(f=>!coreFields.includes(f)||payload[f]!==v.values?.[f]))fail(409,'地点条件已有变化，请退回后重新核对');
+    if(now-Date.parse(v.date+'T00:00:00+08:00')>30*86400000)fail(409,'到访记录已超过 30 天，请重新核对');
+    for(const f of v.confirmationFields){const observation={kind:'visit',date:v.date,note:v.text,reviewId:id};tasks.push(q("UPDATE places SET payload=json_set(payload,?,json(?)),updated_at=? WHERE id=?",'$.confirmations.'+f,JSON.stringify(observation),now,r.place_id));}
+   }
+   tasks.push(q('UPDATE reviews SET status=?,note=? WHERE id=?',action==='approve'?'approved':'rejected',note,id),audit(id,action,note));await db.batch(tasks);return json({saved:true});}
   one(action,['resolve']);await db.batch([q("UPDATE reports SET status='resolved' WHERE id=?",id),audit(id,'resolve',note)]);return json({saved:true});
  }
  fail(404,'接口不存在');
