@@ -1,7 +1,8 @@
 import {nearbyParking} from './parking.mjs';
 import candidates from '../data/shanghai-public-candidates.json' with {type:'json'};
 import {publicMapConfig,proxyMap} from './map.mjs';
-import {ApiError,fail,text,url,date,sourceKey,fingerprint,placeInput,visitInput,one,publicationIssues} from './validation.mjs';
+import {ApiError,fail,text,url,date,sourceKey,fingerprint,placeInput,visitInput,one,publicationIssues,coreFields} from './validation.mjs';
+const fieldLabels={laptopFriendly:'电脑办公许可',deskFits:'桌面条件',cost:'费用规则',hours:'开放时间'};
 const json=(value,status=200)=>Response.json(value,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 const uuid=()=>crypto.randomUUID();
 export async function handle(request,{db,reviewerIds='',mapCredentials={}}){
@@ -11,7 +12,7 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={}}){
  if(path[0]==='_TMapService')return await proxyMap(request,mapCredentials);
  const canReview=Boolean(uid&&reviewerIds.split(',').map(x=>x.trim()).filter(Boolean).includes(uid));
  if(!['GET','HEAD'].includes(method)){const origin=request.headers.get('origin');if((origin&&origin!==new URL(request.url).origin)||request.headers.get('sec-fetch-site')==='cross-site')fail(403,'请从本站发起操作');if(!request.headers.get('content-type')?.includes('application/json'))fail(415,'需要 JSON 请求');}
- if(path[0]==='health')return json({ok:true,storage:Boolean(db),version:'0.5.0'});
+ if(path[0]==='health')return json({ok:true,storage:Boolean(db),version:'0.5.1'});
  if(path[0]==='map-config'&&method==='GET')return json(publicMapConfig(mapCredentials));
  if(!db)fail(503,'数据库尚未连接，请稍后再试');
  const q=(sql,...args)=>db.prepare(sql).bind(...args),all=async(sql,...args)=>(await q(sql,...args).all()).results||[],first=async(sql,...args)=>q(sql,...args).first();
@@ -48,6 +49,14 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={}}){
    return json({visits:rs.map(r=>({...JSON.parse(r.payload),id:r.id,authorName:r.name||'社区贡献者',own:r.author===uid,pending:r.status==='pending',helps:r.helps,helpful:Boolean(r.mine)})),seat:seat||null,closureReports:report.count});
   }
   auth();await profile();await rate();const b=await body();
+  if(path[2]==='confirm'){
+   const picked=Array.isArray(b.fields)?[...new Set(b.fields)]:[];if(!picked.length||picked.length>2)fail(400,'每次到访最多核对 2 项信息');for(const field of picked)if(!coreFields.includes(field))fail(400,'请选择有效的信息项');
+   const note=text(b.note,2,200),payload=JSON.parse(p.payload),today=new Date(now+8*3600000).toISOString().slice(0,10),known=field=>({laptopFriendly:payload.laptopFriendly===true,deskFits:payload.deskFits===true,cost:payload.cost&&payload.cost!=='unknown',hours:payload.hours&&!/待确认|未知|不详/.test(payload.hours)})[field];for(const field of picked)if(!known(field))fail(400,fieldLabels[field]+'仍是待确认，不能核对；请用「地点纠错」补充实际信息');payload.evidence={...(payload.evidence||{})};
+   const changed=picked.filter(field=>payload.evidence[field]?.date!==today);if(!changed.length)return json({saved:false,unchanged:true});
+   for(const field of changed)payload.evidence[field]={kind:'visit',url:'',date:today,note};
+   await db.batch([q('UPDATE places SET payload=?,updated_at=? WHERE id=?',JSON.stringify(payload),now,id),audit(id,'confirm',changed.map(field=>fieldLabels[field]).join('、')+'：'+note)]);
+   return json({saved:true,evidence:payload.evidence,updatedAt:now});
+  }
   if(path[2]==='seats'){one(b.status,['available','busy','full']);await db.batch([q('INSERT INTO seats(author,place_id,status,at) VALUES(?,?,?,?) ON CONFLICT(author,place_id) DO UPDATE SET status=excluded.status,at=excluded.at',uid,id,b.status,now),audit(id,'seat')]);return json({seat:{status:b.status,at:now}});}
   if(path[2]==='reviews'){const v=visitInput(b),reviewId=uuid();await db.batch([q("INSERT INTO reviews(id,author,place_id,payload,status,note,created_at) VALUES(?,?,?,?,'pending','',?)",reviewId,uid,id,JSON.stringify(v),now),audit(reviewId,'review')]);return json({id:reviewId,status:'pending'},201);}
   if(path[2]==='report'){

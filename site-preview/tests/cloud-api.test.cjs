@@ -83,3 +83,27 @@ test('证据白名单与零插座支持，不接受伪造审核状态',async()=>
  const r=await call('submissions','POST',p);assert.equal(r.status,201);
  const q=await call('review-queue','GET',undefined,'owner');assert.equal(q.places[0].plugs,'0 个');assert.equal(q.places[0].evidence.cost.reviewed,undefined);
 });
+
+const daysAgo=n=>new Date(Date.now()+8*3600000-n*86400000).toISOString().slice(0,10);
+test('到访核对刷新逐项依据，不改变字段值且每天一次',async()=>{
+ const {db,call}=await setup();const input=place();
+ for(const key of Object.keys(input.evidence))input.evidence[key]={...input.evidence[key],date:daysAgo(10)};
+ const p=await call('submissions','POST',input);assert.equal(p.status,201);
+ assert.equal((await call('review/place/'+p.id,'POST',{action:'approve',note:'已核对来源与两项门槛'},'owner')).status,200);
+ const before=(await call('places/'+p.id)).place;
+ assert.equal((await call('places/'+p.id+'/confirm','POST',{fields:['cost','hours','laptopFriendly'],note:'三项一起核对'})).status,400);
+ assert.equal((await call('places/'+p.id+'/confirm','POST',{fields:['cost','bogus'],note:'未知信息项'})).status,400);
+ const saved=await call('places/'+p.id+'/confirm','POST',{fields:['cost','hours'],note:'18:10 仍在营业，吧台可充电'});
+ assert.equal(saved.status,200);assert.equal(saved.saved,true);
+ const after=(await call('places/'+p.id)).place;
+ assert.equal(after.cost,before.cost);assert.equal(after.hours,before.hours);
+ assert.equal(after.evidence.cost.kind,'visit');assert.equal(after.evidence.cost.url,'');assert.equal(after.evidence.cost.date,today());
+ assert.equal(after.publicationIssues.length,0);
+ assert.equal((await call('places/'+p.id+'/confirm','POST',{fields:['cost'],note:'同一天再次核对'})).saved,false);
+ assert.equal((await call('places/'+p.id+'/confirm','POST',{fields:['cost'],note:'未登录核对'},'')).status,401);
+ const raw=JSON.parse((await db.prepare('SELECT payload FROM places WHERE id=?').bind(p.id).first()).payload);raw.hours='开放时间待确认';
+ await db.prepare('UPDATE places SET payload=? WHERE id=?').bind(JSON.stringify(raw),p.id).run();
+ assert.equal((await call('places/'+p.id+'/confirm','POST',{fields:['hours'],note:'未知字段不能核对'})).status,400);
+ const queue=await call('review-queue','GET',undefined,'owner');
+ assert.ok(queue.history.some(h=>h.action==='confirm'&&h.note.includes('费用规则')));
+});
