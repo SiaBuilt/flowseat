@@ -9,7 +9,7 @@ let api;
 const ready=import(pathToFileURL(resolve(prefix+'server/api.mjs')).href).then(m=>api=m.handle);
 function database(){const raw=new DatabaseSync(':memory:');raw.exec(readFileSync(prefix+'drizzle/0000_mixed_talkback.sql','utf8'));return{exec(sql){raw.exec(sql);},prepare(sql){return{bind(...args){const p=raw.prepare(sql);return{first:async()=>p.get(...args)||null,all:async()=>({results:p.all(...args)}),run:async()=>p.run(...args),execute:()=>p.run(...args)}}}},async batch(items){raw.exec('BEGIN');try{const result=items.map(p=>p.execute());raw.exec('COMMIT');return result;}catch(e){raw.exec('ROLLBACK');throw e;}}};}
 const today=()=>new Date(Date.now()+8*3600000).toISOString().slice(0,10);
-const place=()=>({name:'测试工作空间',address:'上海市静安区测试路 123 号',district:'静安',type:'咖啡馆',cost:'purchase',budget:'¥30',basis:'一杯饮品',sourceUrl:'https://merchant.example/place',sourceDate:today(),laptopFriendly:true,deskFits:true});
+const place=()=>({name:'测试工作空间',address:'上海市静安区测试路 123 号',district:'静安',type:'咖啡馆',cost:'purchase',budget:'¥30',basis:'一杯饮品',sourceUrl:'https://merchant.example/place',sourceDate:today(),laptopFriendly:true,deskFits:true,hours:'09:00—18:00',entry:'直接进入',evidence:Object.fromEntries(['laptopFriendly','deskFits','cost','hours'].map(f=>[f,{kind:'official',url:'https://merchant.example/place',date:today(),note:'已逐项核对具体规则'}]))});
 async function setup(){await ready;const db=database();const call=async(path,method='GET',body,uid='a',origin='https://flowseat.example')=>{const headers={'Content-Type':'application/json',Origin:origin};if(uid)headers['oai-authenticated-user-id']=uid;const r=await api(new Request('https://flowseat.example/api/'+path,{method,headers,...(body?{body:JSON.stringify(body)}:{})}),{db,reviewerIds:'owner'});return{...await r.json(),status:r.status};};for(const id of ['a','b','owner'])assert.equal((await call('me','PUT',{displayName:'用户'+id},id)).status,200);return{db,call};}
 async function published(call){const p=await call('submissions','POST',place());assert.equal(p.status,201);const r=await call('review/place/'+p.id,'POST',{action:'approve',note:'已核对公开来源与两项办公门槛'},'owner');assert.equal(r.status,200);return p.id;}
 test('真实接口默认拒绝匿名写入、前端伪造审核角色和跨站写入',async()=>{const{call}=await setup();assert.equal((await call('submissions','POST',place(),'')).status,401);assert.equal((await call('review-queue','GET',undefined,'a')).status,403);assert.equal((await call('me','PUT',{displayName:'测试用户',canReview:true},'a','https://evil.example')).status,403);assert.equal((await call('me','PUT',{displayName:'测试用户',canReview:true},'a')).status,200);assert.equal((await call('me','GET',undefined,'a')).user.canReview,false);});
@@ -59,4 +59,27 @@ test('空库迁移六条线索全部待审核，旧咖啡馆线索不自动通�
  const cafes=queue.places.filter(p=>p.type==='咖啡馆');assert.equal(cafes.length,2);
  for(const p of cafes)assert.equal((await call('review/place/'+p.id,'POST',{action:'approve',note:'试图直接发布历史线索'},'owner')).status,400);
  assert.deepEqual((await call('places')).places,[]);
+});
+
+test('上架和恢复必须具备近期逐项证据与费用时间进入条件',async()=>{
+ const {call}=await setup();const input=place();delete input.evidence;
+ const r=await call('submissions','POST',input);
+ assert.equal((await call('review/place/'+r.id,'POST',{action:'approve',note:'尚无逐项依据'},'owner')).status,400);
+ const queue=await call('review-queue','GET',undefined,'owner');assert.ok(queue.places[0].publicationIssues.some(x=>x.includes('逐项依据')));
+ for(const patch of [{cost:'unknown'},{hours:'开放时间待确认'},{entry:'进入方式待确认'},{evidence:Object.fromEntries(Object.entries(place().evidence).map(([k,v])=>[k,{...v,date:'2020-01-01'}]))}]){
+  assert.equal((await call('submissions/'+r.id,'PUT',{...place(),...patch})).status,200);
+  assert.equal((await call('review/place/'+r.id,'POST',{action:'approve',note:'不能绕过核实'},'owner')).status,400);
+ }
+ assert.equal((await call('submissions/'+r.id,'PUT',place())).status,200);
+ assert.equal((await call('review/place/'+r.id,'POST',{action:'approve',note:'逐项核对完成'},'owner')).status,200);
+ assert.equal((await call('places/'+r.id)).place.evidence.cost.kind,'official');
+ assert.equal((await call('places/'+r.id+'/parking')).state,'no-location');
+ await call('review/place/'+r.id,'POST',{action:'hide',note:'需要重新核对'},'owner');
+ assert.equal((await call('places/'+r.id+'/parking')).status,404);
+});
+test('证据白名单与零插座支持，不接受伪造审核状态',async()=>{
+ const {call}=await setup();let p=place();p.evidence.cost.kind='verified';assert.equal((await call('submissions','POST',p)).status,400);
+ p=place();p.plugs='0 个';p.evidence.cost.reviewed=true;
+ const r=await call('submissions','POST',p);assert.equal(r.status,201);
+ const q=await call('review-queue','GET',undefined,'owner');assert.equal(q.places[0].plugs,'0 个');assert.equal(q.places[0].evidence.cost.reviewed,undefined);
 });

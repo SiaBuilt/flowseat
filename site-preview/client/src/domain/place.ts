@@ -1,7 +1,11 @@
+export type FieldEvidence={kind:'official'|'merchant'|'visit'|'public';url:string;date:string;note:string};
+export const evidenceKinds={official:'官方资料',merchant:'商家自述',visit:'到访体验',public:'公开线索'};
+export const coreFields=[{key:'laptopFriendly',label:'电脑办公许可'},{key:'deskFits',label:'桌面条件'},{key:'cost',label:'费用规则'},{key:'hours',label:'开放时间'}] as const;
+export function evidenceFresh(date:string,now=Date.now()){const at=Date.parse(date+'T00:00:00+08:00');return Number.isFinite(at)&&at<=now&&now-at<=30*86400000;}
 export type CostKind = 'free' | 'purchase' | 'paid' | 'unknown';
 export type Zone = 'quiet' | 'discussion' | 'booth';
 export type PlaceLocation = {lng:number;lat:number;system:'GCJ-02'};
-export type Place = { id: string; name: string; type: string; district: string; cost: CostKind; price: string; plugs: string; charging: string; chair: string; chairNote: string; zones: Zone[]; wifi: boolean | null; hours: string; entry: string; stay: string; extras: string[]; x: number; y: number; drawing: number; demo:boolean;address?:string;budget?:string;basis?:string;sourceUrl?:string;sourceDate?:string;menuUrl?:string;contributor?:string;laptopFriendly?:boolean;deskFits?:boolean;reviewStatus?:string;note?:string;location?:PlaceLocation;seat?:{status:SeatStatus;at:number} };
+export type Place = { id: string; name: string; type: string; district: string; cost: CostKind; price: string; plugs: string; charging: string; chair: string; chairNote: string; zones: Zone[]; wifi: boolean | null; hours: string; entry: string; stay: string; extras: string[]; x: number; y: number; drawing: number; demo:boolean;address?:string;budget?:string;basis?:string;sourceUrl?:string;sourceDate?:string;menuUrl?:string;contributor?:string;laptopFriendly?:boolean;deskFits?:boolean;evidence?:Partial<Record<'laptopFriendly'|'deskFits'|'cost'|'hours',FieldEvidence>>;publicationIssues?:string[];reviewStatus?:string;note?:string;location?:PlaceLocation;seat?:{status:SeatStatus;at:number} };
 export const costLabels: Record<CostKind,string> = { free:'免费', purchase:'需消费', paid:'付费工位',unknown:'费用待确认' };
 export const zoneLabels: Record<Zone,string> = { quiet:'安静工作', discussion:'多人讨论', booth:'独立通话' };
 // 全部为虚构演示，不可导入真实地点库。

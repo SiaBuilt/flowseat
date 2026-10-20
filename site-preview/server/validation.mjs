@@ -12,9 +12,35 @@ export function location(value){
 export function date(value){const v=text(value,10,10);if(!/^\d{4}-\d{2}-\d{2}$/.test(v)||Number.isNaN(Date.parse(v))||new Date(v).toISOString().slice(0,10)!==v||v>new Date(Date.now()+8*3600000).toISOString().slice(0,10))fail(400,'请选择有效的到访日期，不能填写未来日期');return v;}
 export function one(value,values){if(!values.includes(value))fail(400,'请选择有效选项');return value;}
 export function placeInput(b){
- const p={name:text(b.name,2,70),address:text(b.address,5,160),district:one(b.district,['静安','徐汇','黄浦','长宁','浦东','普陀','虹口','杨浦','闵行','宝山','嘉定','松江','青浦','奉贤','金山','崇明']),type:one(b.type,['咖啡馆','公共空间','联合办公','自习室','图书馆','其他']),cost:one(b.cost,['free','purchase','paid','unknown']),budget:text(b.budget||'费用待确认',1,70),basis:text(b.basis||'请以场地方最新规则为准',1,200),sourceUrl:url(b.sourceUrl),sourceDate:date(b.sourceDate),menuUrl:url(b.menuUrl,true),plugs:one(b.plugs||'待确认',['待确认','1—5 个','6—10 个','10 个以上']),charging:text(b.charging||'插座可达性待确认',1,90),chair:one(b.chair||'待确认',['待确认','硬座','舒适','超舒适']),chairNote:text(b.chairNote||'尚无到访体验',1,100),wifi:typeof b.wifi==='boolean'?b.wifi:null,hours:text(b.hours||'开放时间待确认',1,100),entry:text(b.entry||'进入方式待确认',1,160),stay:text(b.stay||'停留规则待确认',1,160),laptopFriendly:b.laptopFriendly===true,deskFits:b.deskFits===true,zones:Array.isArray(b.zones)?[...new Set(b.zones.filter(z=>['quiet','discussion','booth'].includes(z)))]:[],extras:[],drawing:one(b.type,['咖啡馆','公共空间','联合办公','自习室','图书馆','其他'])==='咖啡馆'?1:3,demo:false};
+ const p={name:text(b.name,2,70),address:text(b.address,5,160),district:one(b.district,['静安','徐汇','黄浦','长宁','浦东','普陀','虹口','杨浦','闵行','宝山','嘉定','松江','青浦','奉贤','金山','崇明']),type:one(b.type,['咖啡馆','公共空间','联合办公','自习室','图书馆','其他']),cost:one(b.cost,['free','purchase','paid','unknown']),budget:text(b.budget||'费用待确认',1,70),basis:text(b.basis||'请以场地方最新规则为准',1,200),sourceUrl:url(b.sourceUrl),sourceDate:date(b.sourceDate),menuUrl:url(b.menuUrl,true),plugs:one(b.plugs||'待确认',['待确认','0 个','1—5 个','6—10 个','10 个以上']),charging:text(b.charging||'插座可达性待确认',1,90),chair:one(b.chair||'待确认',['待确认','硬座','舒适','超舒适']),chairNote:text(b.chairNote||'尚无到访体验',1,100),wifi:typeof b.wifi==='boolean'?b.wifi:null,hours:text(b.hours||'开放时间待确认',1,100),entry:text(b.entry||'进入方式待确认',1,160),stay:text(b.stay||'停留规则待确认',1,160),laptopFriendly:b.laptopFriendly===true,deskFits:b.deskFits===true,zones:Array.isArray(b.zones)?[...new Set(b.zones.filter(z=>['quiet','discussion','booth'].includes(z)))]:[],extras:[],drawing:one(b.type,['咖啡馆','公共空间','联合办公','自习室','图书馆','其他'])==='咖啡馆'?1:3,demo:false};
  if(b.cost==='free'&&b.budget&&!/^([¥￥]?0|免费|无需消费)$/.test(b.budget.trim()))fail(400,'免费地点的空间使用费用应为 0；其他消费请写入费用说明');
+ p.evidence=evidenceInput(b.evidence);
  const point=location(b.location);if(point)p.location=point;
  return p;
 }
 export function visitInput(b){return {date:date(b.date),period:one(b.period,['上午','下午','晚间']),text:text(b.text,5,600),spend:b.spend===''||b.spend==null?'':(()=>{const n=Number(b.spend);if(!Number.isFinite(n)||n<0||n>100000)fail(400,'请填写有效消费金额');return n.toFixed(2);})()};}
+
+export const coreFields=['laptopFriendly','deskFits','cost','hours'];
+export function evidenceInput(value){
+ if(value==null)return {};
+ if(typeof value!=='object'||Array.isArray(value))fail(400,'来源记录格式无效');
+ const result={};
+ for(const field of coreFields){const e=value[field];if(!e)continue;
+ result[field]={kind:one(e.kind,['official','merchant','visit','public']),url:url(e.url),date:date(e.date),note:text(e.note,2,240)};
+ }
+ return result;
+}
+export function publicationIssues(p,now=Date.now()){
+ const labels={laptopFriendly:'电脑办公许可',deskFits:'桌面条件',cost:'费用规则',hours:'开放时间'};
+ const issues=[];
+ if(!p.laptopFriendly)issues.push('电脑办公许可待确认');
+ if(!p.deskFits)issues.push('桌面条件待确认');
+ if(!p.cost||p.cost==='unknown')issues.push('费用规则待确认');
+ if(!p.hours||/待确认|未知|不详/.test(p.hours))issues.push('开放时间待确认');
+ if(!p.entry||/待确认|未知|不详/.test(p.entry))issues.push('进入方式待确认');
+ for(const f of coreFields){const e=p.evidence?.[f];if(!e){issues.push(labels[f]+'缺少逐项依据');continue;}
+ const at=Date.parse(e.date+'T00:00:00+08:00');
+ if(!Number.isFinite(at)||now-at>30*86400000||at>now)issues.push(labels[f]+'依据需在最近 30 天核对');
+ }
+ return issues;
+}

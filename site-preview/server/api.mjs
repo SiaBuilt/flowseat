@@ -1,6 +1,7 @@
+import {nearbyParking} from './parking.mjs';
 import candidates from '../data/shanghai-public-candidates.json' with {type:'json'};
 import {publicMapConfig,proxyMap} from './map.mjs';
-import {ApiError,fail,text,url,date,sourceKey,fingerprint,placeInput,visitInput,one} from './validation.mjs';
+import {ApiError,fail,text,url,date,sourceKey,fingerprint,placeInput,visitInput,one,publicationIssues} from './validation.mjs';
 const json=(value,status=200)=>Response.json(value,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 const uuid=()=>crypto.randomUUID();
 export async function handle(request,{db,reviewerIds='',mapCredentials={}}){
@@ -10,7 +11,7 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={}}){
  if(path[0]==='_TMapService')return await proxyMap(request,mapCredentials);
  const canReview=Boolean(uid&&reviewerIds.split(',').map(x=>x.trim()).filter(Boolean).includes(uid));
  if(!['GET','HEAD'].includes(method)){const origin=request.headers.get('origin');if((origin&&origin!==new URL(request.url).origin)||request.headers.get('sec-fetch-site')==='cross-site')fail(403,'请从本站发起操作');if(!request.headers.get('content-type')?.includes('application/json'))fail(415,'需要 JSON 请求');}
- if(path[0]==='health')return json({ok:true,storage:Boolean(db),version:'0.4.0'});
+ if(path[0]==='health')return json({ok:true,storage:Boolean(db),version:'0.5.0'});
  if(path[0]==='map-config'&&method==='GET')return json(publicMapConfig(mapCredentials));
  if(!db)fail(503,'数据库尚未连接，请稍后再试');
  const q=(sql,...args)=>db.prepare(sql).bind(...args),all=async(sql,...args)=>(await q(sql,...args).all()).results||[],first=async(sql,...args)=>q(sql,...args).first();
@@ -21,7 +22,7 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={}}){
  const profile=async()=>{auth();const p=await first('SELECT name FROM profiles WHERE uid=?',uid);if(!p)fail(400,'请先在我的页面设置贡献署名');return p;};
  const rate=async(limit=30)=>{const r=await first('SELECT COUNT(*) AS n FROM audit WHERE actor=? AND at>?',uid,now-60000);if(r.n>=limit)fail(429,'操作较频繁，请一分钟后重试');};
  const visible=async id=>{const p=await first("SELECT p.*,u.name AS contributor FROM places p LEFT JOIN profiles u ON u.uid=p.author WHERE p.id=? AND p.status='published'",id);if(!p)fail(404,'地点不存在或已隐藏');return p;};
- const project=p=>({...JSON.parse(p.payload),id:p.id,contributor:p.contributor||'社区贡献者',updatedAt:p.updated_at,reviewStatus:p.status,note:p.note,...(p.seat_at?{seat:{status:p.seat_status,at:p.seat_at}}:{})});
+ const project=p=>({...JSON.parse(p.payload),id:p.id,contributor:p.contributor||'社区贡献者',updatedAt:p.updated_at,reviewStatus:p.status,note:p.note,publicationIssues:publicationIssues(JSON.parse(p.payload)),...(p.seat_at?{seat:{status:p.seat_status,at:p.seat_at}}:{})});
  if(path[0]==='me'){
   if(method==='GET'){if(!uid)return json({user:null});const p=await first('SELECT name FROM profiles WHERE uid=?',uid);return json({user:{userId:uid,displayName:p?.name||'',canReview}});}
   auth();const b=await body();const name=text(b.displayName,2,24);await q('INSERT INTO profiles(uid,name,updated_at) VALUES(?,?,?) ON CONFLICT(uid) DO UPDATE SET name=excluded.name,updated_at=excluded.updated_at',uid,name,now).run();return json({saved:true});
@@ -40,6 +41,7 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={}}){
  }
  if(path[0]==='places'&&path[1]){
   const id=path[1],p=await visible(id);if(path.length===2&&method==='GET')return json({place:project(p)});
+  if(path[2]==='parking'&&method==='GET')return json(await nearbyParking(JSON.parse(p.payload).location,mapCredentials));
   if(path[2]==='community'&&method==='GET'){
    const rs=await all("SELECT r.*,u.name AS name,(SELECT COUNT(*) FROM helpful h WHERE h.review_id=r.id) AS helps,(SELECT COUNT(*) FROM helpful h WHERE h.review_id=r.id AND h.uid=?) AS mine FROM reviews r LEFT JOIN profiles u ON u.uid=r.author WHERE r.place_id=? AND (r.status='approved' OR (r.author=? AND r.status='pending')) ORDER BY r.created_at DESC LIMIT 60",uid,id,uid);
    const seat=await first('SELECT status,at FROM seats WHERE place_id=? AND at>? ORDER BY at DESC LIMIT 1',id,now-3600000),report=await first("SELECT COUNT(DISTINCT author) AS count FROM reports WHERE place_id=? AND status='active' AND kind='closed' AND at>?",id,now-30*86400000);
@@ -65,7 +67,7 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={}}){
  if(path[0]==='review'&&method==='POST'){
   reviewer();const b=await body(),kind=one(path[1],['place','review','report']),id=text(path[2],1,100),action=one(b.action,['approve','reject','hide','restore','resolve']);const note=text(b.note||'',2,400);
   if(kind==='place'){
-   const p=await first('SELECT * FROM places WHERE id=?',id);if(!p)fail(404,'投稿不存在');if(action==='approve'||action==='restore'){const payload=JSON.parse(p.payload);if(!payload.laptopFriendly||!payload.deskFits)fail(400,'电脑办公与桌面条件尚未确认，不能发布');if(action==='approve'&&p.status!=='pending')fail(409,'该投稿已经处理');}
+   const p=await first('SELECT * FROM places WHERE id=?',id);if(!p)fail(404,'投稿不存在');if(action==='approve'||action==='restore'){const payload=JSON.parse(p.payload);const issues=publicationIssues(payload);if(issues.length)fail(400,'暂不能发布：'+issues.join('；'));if(action==='approve'&&p.status!=='pending')fail(409,'该投稿已经处理');}
    const state=action==='approve'||action==='restore'?'published':action==='hide'?'hidden':action==='reject'?'rejected':null;if(!state)fail(400,'操作无效');if(action==='restore'&&p.status!=='hidden')fail(409,'仅隐藏地点可恢复');const tasks=[q('UPDATE places SET status=?,note=?,updated_at=? WHERE id=?',state,note,now,id),audit(id,action,note)];if(action==='restore')tasks.push(q("UPDATE reports SET status='resolved' WHERE place_id=? AND status='active'",id));await db.batch(tasks);return json({saved:true});
   }
   if(kind==='review'){one(action,['approve','reject']);const r=await first("SELECT id FROM reviews WHERE id=? AND status='pending'",id);if(!r)fail(409,'该体验已处理或不存在');await db.batch([q('UPDATE reviews SET status=?,note=? WHERE id=?',action==='approve'?'approved':'rejected',note,id),audit(id,action,note)]);return json({saved:true});}
