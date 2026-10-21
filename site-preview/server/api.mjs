@@ -1,3 +1,4 @@
+import {supplementInput,supplementLabels} from './supplements.mjs';
 import {ensureDiscovery} from './discovery.mjs';
 import {nearbyParking} from './parking.mjs';
 import candidates from '../data/shanghai-public-candidates.json' with {type:'json'};
@@ -13,7 +14,7 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={},seedDi
  if(path[0]==='_TMapService')return await proxyMap(request,mapCredentials);
  const canReview=Boolean(uid&&reviewerIds.split(',').map(x=>x.trim()).filter(Boolean).includes(uid));
  if(!['GET','HEAD'].includes(method)){const origin=request.headers.get('origin');if((origin&&origin!==new URL(request.url).origin)||request.headers.get('sec-fetch-site')==='cross-site')fail(403,'请从本站发起操作');if(!request.headers.get('content-type')?.includes('application/json'))fail(415,'需要 JSON 请求');}
- if(path[0]==='health')return json({ok:true,storage:Boolean(db),version:'0.6.0'});
+ if(path[0]==='health')return json({ok:true,storage:Boolean(db),version:'0.7.0'});
  if(path[0]==='map-config'&&method==='GET')return json(publicMapConfig(mapCredentials));
  if(!db)fail(503,'数据库尚未连接，请稍后再试');
  if(seedDiscovery&&method==='GET'&&path[0]==='places')await ensureDiscovery(db);
@@ -51,6 +52,13 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={},seedDi
    return json({visits:rs.map(r=>({...JSON.parse(r.payload),id:r.id,authorName:r.name||'社区贡献者',own:r.author===uid,pending:r.status==='pending',helps:r.helps,helpful:Boolean(r.mine)})),seat:seat||null,closureReports:report.count});
   }
   auth();await profile();await rate();const b=await body();
+  if(path[2]==='supplements'&&method==='POST'){
+   const v=supplementInput(b),payload=JSON.parse(p.payload);
+   const existing=await all("SELECT payload FROM reviews WHERE place_id=? AND author=? AND status='pending' AND json_extract(payload,'$.kind')='supplement'",id,uid);
+   if(existing.some(row=>JSON.parse(row.payload).field===v.field))fail(409,'这一项已有待审核补充，请在我的贡献查看');
+   v.previous=payload[v.field]??null;v.previousObservation=payload.observations?.[v.field]?.reviewId||'';
+   const reviewId=uuid();await db.batch([q("INSERT INTO reviews(id,author,place_id,payload,status,note,created_at) VALUES(?,?,?,?,'pending','',?)",reviewId,uid,id,JSON.stringify(v),now),audit(id,'supplement',supplementLabels[v.field])]);return json({saved:true,id:reviewId,status:'pending'},201);
+  }
   if(path[2]==='confirm'){
    const picked=Array.isArray(b.fields)?[...new Set(b.fields)]:[];if(!picked.length||picked.length>2)fail(400,'每次到访最多核对 2 项信息');for(const field of picked)if(!coreFields.includes(field))fail(400,'请选择有效的信息项');
    const note=text(b.note,2,200),payload=JSON.parse(p.payload),today=new Date(now+8*3600000).toISOString().slice(0,10),known=field=>({laptopFriendly:payload.laptopFriendly===true,deskFits:payload.deskFits===true,cost:payload.cost&&payload.cost!=='unknown',hours:payload.hours&&!/待确认|未知|不详/.test(payload.hours)})[field];for(const field of picked)if(!known(field))fail(400,fieldLabels[field]+'仍是待确认，不能核对；请用「地点纠错」补充实际信息');payload.evidence={...(payload.evidence||{})};
@@ -80,10 +88,21 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={},seedDi
  if(path[0]==='review'&&method==='POST'){
   reviewer();const b=await body(),kind=one(path[1],['place','review','report']),id=text(path[2],1,100),action=one(b.action,['approve','reject','hide','restore','resolve']);const note=text(b.note||'',2,400);
   if(kind==='place'){
-   const p=await first('SELECT * FROM places WHERE id=?',id);if(!p)fail(404,'投稿不存在');if(action==='approve'||action==='restore'){const payload=JSON.parse(p.payload);const issues=publicationIssues(payload);if(issues.length)fail(400,'暂不能发布：'+issues.join('；'));if(action==='approve'&&p.status!=='pending')fail(409,'该投稿已经处理');}
+   const p=await first('SELECT * FROM places WHERE id=?',id);if(!p)fail(404,'投稿不存在');if(action==='approve'||action==='restore'){const payload=JSON.parse(p.payload);const issues=publicationIssues(payload);if(issues.length)fail(400,'暂不能发布：'+issues.join('；'));if(action==='approve'&&!['pending','candidate'].includes(p.status))fail(409,'该投稿已经处理');}
    const state=action==='approve'||action==='restore'?'published':action==='hide'?'hidden':action==='reject'?'rejected':null;if(!state)fail(400,'操作无效');if(action==='restore'&&p.status!=='hidden')fail(409,'仅隐藏地点可恢复');const tasks=[q('UPDATE places SET status=?,note=?,updated_at=? WHERE id=?',state,note,now,id),audit(id,action,note)];if(action==='restore')tasks.push(q("UPDATE reports SET status='resolved' WHERE place_id=? AND status='active'",id));await db.batch(tasks);return json({saved:true});
   }
   if(kind==='review'){one(action,['approve','reject']);const r=await first("SELECT * FROM reviews WHERE id=? AND status='pending'",id);if(!r)fail(409,'该体验已处理或不存在');const v=JSON.parse(r.payload),tasks=[];
+   if(action==='approve'&&v.kind==='supplement'){
+    const valid=supplementInput(v),place=await first("SELECT * FROM places WHERE id=? AND status IN ('candidate','published')",r.place_id);if(!place)fail(409,'地点已隐藏或转入审核，请先处理地点状态');
+    const payload=JSON.parse(place.payload),field=valid.field;
+    if(JSON.stringify(payload[field]??null)!==JSON.stringify(v.previous)||(payload.observations?.[field]?.reviewId||'')!==v.previousObservation)fail(409,'这一项已有更新，请退回后重新核对');
+    if(now-Date.parse(valid.date+'T00:00:00+08:00')>30*86400000)fail(409,'到访依据已超过 30 天，请重新核对');
+    payload[field]=valid.value;if(field==='plugs')payload.charging=valid.text;if(field==='chair')payload.chairNote=valid.text;payload.observations={...payload.observations,[field]:{value:valid.value,date:valid.date,note:valid.text,sourceUrl:valid.sourceUrl,reviewId:id}};
+    if(coreFields.includes(field)){payload.evidence={...payload.evidence};delete payload.confirmations?.[field];if(valid.sourceUrl)payload.evidence[field]={kind:'visit',url:valid.sourceUrl,date:valid.date,note:valid.text};else delete payload.evidence[field];}
+    const state=['laptopFriendly','deskFits'].includes(field)&&valid.value===false?'hidden':place.status==='published'&&publicationIssues(payload).length?'candidate':place.status,next=JSON.stringify(payload);
+    await db.batch([q('UPDATE places SET payload=?,status=?,updated_at=? WHERE id=? AND payload=? AND status=?',next,state,now,place.id,place.payload,place.status),q("UPDATE reviews SET status='approved',note=? WHERE id=? AND status='pending' AND EXISTS(SELECT 1 FROM places WHERE id=? AND payload=?)",note,id,place.id,next),q("INSERT INTO audit(id,actor,subject,action,note,at) SELECT ?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM reviews WHERE id=? AND status='approved')",uuid(),uid,id,'approve',note,now,id)]);
+    if((await first('SELECT status FROM reviews WHERE id=?',id)).status!=='approved')fail(409,'地点刚刚被更新，请刷新后重新审核');return json({saved:true});
+   }
    if(action==='approve'&&v.kind==='confirmation'){
     const place=await first("SELECT * FROM places WHERE id=? AND status='published'",r.place_id);if(!place)fail(409,'地点已隐藏，不能通过到访核对');const payload=JSON.parse(place.payload);
     if(!Array.isArray(v.confirmationFields)||!v.confirmationFields.length||v.confirmationFields.some(f=>!coreFields.includes(f)||payload[f]!==v.values?.[f]))fail(409,'地点条件已有变化，请退回后重新核对');

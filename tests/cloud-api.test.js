@@ -153,3 +153,30 @@ test('候选的社区闭店反馈也能隐藏；只有审核员可以补充候�
  await call('review/place/'+second.id,'POST',{action:'approve',note:'逐项核对全部办公条件'},'owner');
  assert.equal((await call('places/'+second.id)).place.discovery,false);
 });
+
+test('补充一项先审核，按字段更新并保留依据，不自动认证地点',async()=>{
+ const {db,call}=await setup();await (await discoveryReady).ensureDiscovery(db);const p=(await call('places')).places[0];
+ const draft={field:'plugs',value:'1—5 个',date:today(),text:'靠窗一排实见四个插座，其他座位未确认',sourceUrl:''};
+ assert.equal((await call('places/'+p.id+'/supplements','POST',draft,'')).status,401);
+ assert.equal((await call('places/'+p.id+'/supplements','POST',{...draft,field:'status',value:'published'})).status,400);
+ const r=await call('places/'+p.id+'/supplements','POST',draft);assert.equal(r.status,201);
+ assert.equal((await call('places/'+p.id)).place.plugs,'待确认');
+ assert.equal((await call('places/'+p.id+'/community','GET',undefined,'b')).visits.length,0);
+ assert.equal((await call('places/'+p.id+'/supplements','POST',draft)).status,409);
+ assert.equal((await call('review/review/'+r.id,'POST',{action:'approve',note:'核对到访依据'},'b')).status,403);
+ assert.equal((await call('review/review/'+r.id,'POST',{action:'approve',note:'核对到访依据'},'owner')).status,200);
+ const updated=(await call('places/'+p.id)).place;assert.equal(updated.plugs,'1—5 个');assert.equal(updated.observations.plugs.reviewId,r.id);assert.equal(updated.discovery,true);assert.equal(updated.charging,draft.text);
+ assert.equal((await call('places/'+p.id+'/community','GET',undefined,'b')).visits.length,1);
+});
+test('冲突补充不覆盖新依据；否定电脑办公的审核会隐藏地点',async()=>{
+ const {call}=await setup(),id=await published(call);const draft={field:'chair',value:'舒适',date:today(),text:'到访看见靠背软垫椅，坐了一个小时',sourceUrl:''};
+ const a=await call('places/'+id+'/supplements','POST',draft,'a'),b=await call('places/'+id+'/supplements','POST',{...draft,value:'硬座'},'b');
+ await call('review/review/'+a.id,'POST',{action:'approve',note:'通过现场依据'},'owner');
+ assert.equal((await call('review/review/'+b.id,'POST',{action:'approve',note:'过期的并发补充'},'owner')).status,409);assert.equal((await call('places/'+id)).place.chair,'舒适');
+ const no=await call('places/'+id+'/supplements','POST',{...draft,field:'laptopFriendly',value:false,text:'店内现在明确禁止电脑办公，请核实'},'a');
+ await call('review/review/'+no.id,'POST',{action:'approve',note:'已核实不允许电脑办公'},'owner');assert.equal((await call('places/'+id)).status,404);
+});
+test('核心字段无链接补充不能沿用旧证据，也不自动宣称已核实',async()=>{
+ const {call}=await setup(),id=await published(call);const r=await call('places/'+id+'/supplements','POST',{field:'hours',value:'10:00—17:00',date:today(),text:'本周门口告示调整营业时间',sourceUrl:''});
+ await call('review/review/'+r.id,'POST',{action:'approve',note:'通过现场补充但缺少公开依据'},'owner');const p=(await call('places/'+id)).place;assert.equal(p.hours,'10:00—17:00');assert.equal(p.discovery,true);assert.equal(p.evidence.hours,undefined);
+});
