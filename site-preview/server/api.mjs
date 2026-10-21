@@ -1,4 +1,5 @@
 import {supplementInput,supplementLabels} from './supplements.mjs';
+import {merchantLabels,merchantFieldsInput,merchantInput,newToken,hashToken,applyMerchant,merchantConflict,linkDays} from './merchant.mjs';
 import {ensureDiscovery} from './discovery.mjs';
 import {nearbyParking} from './parking.mjs';
 import candidates from '../data/shanghai-public-candidates.json' with {type:'json'};
@@ -27,6 +28,26 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={},seedDi
  const rate=async(limit=30)=>{const r=await first('SELECT COUNT(*) AS n FROM audit WHERE actor=? AND at>?',uid,now-60000);if(r.n>=limit)fail(429,'操作较频繁，请一分钟后重试');};
  const visible=async id=>{const p=await first("SELECT p.*,u.name AS contributor FROM places p LEFT JOIN profiles u ON u.uid=p.author WHERE p.id=? AND p.status IN ('published','candidate')",id);if(!p)fail(404,'地点不存在或已隐藏');return p;};
  const project=p=>({...JSON.parse(p.payload),id:p.id,contributor:p.contributor||'社区贡献者',updatedAt:p.updated_at,reviewStatus:p.status,discovery:p.status==='candidate',note:p.note,publicationIssues:publicationIssues(JSON.parse(p.payload)),...(p.seat_at?{seat:{status:p.seat_status,at:p.seat_at}}:{})});
+ if(path[0]==='merchant'&&path[1]){
+  const hash=await hashToken(path[1]),link=await first("SELECT * FROM merchant_links WHERE token_hash=? AND status='open' AND expires_at>?",hash,now);if(!link)fail(404,'链接无效或已过期');
+  const p=await first("SELECT * FROM places WHERE id=? AND status IN ('pending','candidate','published')",link.place_id);if(!p)fail(404,'链接无效或已过期');
+  const payload=JSON.parse(p.payload),fields=JSON.parse(link.fields);
+  if(method==='GET')return json({place:{name:payload.name,address:payload.address,district:payload.district,type:payload.type},fields:fields.map(key=>({key,label:merchantLabels[key],current:payload[key]??null,...(key==='cost'?{budget:payload.budget??''}:{})})),expiresAt:link.expires_at});
+  if(method!=='POST')fail(405,'不支持的操作');
+  const input=merchantInput(await body(),fields),reviewId=uuid(),today=new Date(now+8*3600000).toISOString().slice(0,10);
+  const previous=Object.fromEntries(Object.keys(input.answers).map(f=>[f,payload[f]??null]));if(input.answers.cost)previous.budget=payload.budget??null;
+  const v={kind:'merchant',answers:input.answers,previous,contact:input.contact,text:input.note,date:today,period:'商家确认',spend:''};
+  await db.batch([q("UPDATE merchant_links SET status='used',used_at=? WHERE token_hash=? AND status='open'",now,hash),q("INSERT INTO reviews(id,author,place_id,payload,status,note,created_at) SELECT ?,?,?,?,'pending','',? WHERE changes()=1",reviewId,'merchant:'+hash.slice(0,12),p.id,JSON.stringify(v),now),q("INSERT INTO audit(id,actor,subject,action,note,at) SELECT ?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM reviews WHERE id=?)",uuid(),'merchant:'+hash.slice(0,12),p.id,'merchant',Object.keys(input.answers).map(f=>merchantLabels[f]).join('、'),now,reviewId)]);
+  if(!await first('SELECT id FROM reviews WHERE id=?',reviewId))fail(409,'该链接已使用');
+  return json({saved:true,status:'pending'},201);
+ }
+ if(path[0]==='merchant-links'&&method==='POST'){
+  reviewer();await rate(8);const b=await body(),placeId=text(b.placeId,1,100),fields=merchantFieldsInput(b.fields);
+  const p=await first("SELECT id FROM places WHERE id=? AND status IN ('pending','candidate','published')",placeId);if(!p)fail(404,'地点不存在或已隐藏');
+  const token=newToken(),hash=await hashToken(token),expiresAt=now+linkDays*86400000;
+  await db.batch([q("UPDATE merchant_links SET status='revoked' WHERE place_id=? AND status='open'",placeId),q("INSERT INTO merchant_links(token_hash,place_id,created_by,fields,status,created_at,expires_at) VALUES(?,?,?,?,'open',?,?)",hash,placeId,uid,JSON.stringify(fields),now,expiresAt),audit(placeId,'merchant-link',fields.map(f=>merchantLabels[f]).join('、'))]);
+  return json({token,expiresAt,fields},201);
+ }
  if(path[0]==='me'){
   if(method==='GET'){if(!uid)return json({user:null});const p=await first('SELECT name FROM profiles WHERE uid=?',uid);return json({user:{userId:uid,displayName:p?.name||'',canReview}});}
   auth();const b=await body();const name=text(b.displayName,2,24);await q('INSERT INTO profiles(uid,name,updated_at) VALUES(?,?,?) ON CONFLICT(uid) DO UPDATE SET name=excluded.name,updated_at=excluded.updated_at',uid,name,now).run();return json({saved:true});
@@ -47,7 +68,7 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={},seedDi
   const id=path[1],p=await visible(id);if(path.length===2&&method==='GET')return json({place:project(p)});
   if(path[2]==='parking'&&method==='GET')return json(await nearbyParking(JSON.parse(p.payload).location,mapCredentials));
   if(path[2]==='community'&&method==='GET'){
-   const rs=await all("SELECT r.*,u.name AS name,(SELECT COUNT(*) FROM helpful h WHERE h.review_id=r.id) AS helps,(SELECT COUNT(*) FROM helpful h WHERE h.review_id=r.id AND h.uid=?) AS mine FROM reviews r LEFT JOIN profiles u ON u.uid=r.author WHERE r.place_id=? AND (r.status='approved' OR (r.author=? AND r.status='pending')) ORDER BY r.created_at DESC LIMIT 60",uid,id,uid);
+   const rs=await all("SELECT r.*,u.name AS name,(SELECT COUNT(*) FROM helpful h WHERE h.review_id=r.id) AS helps,(SELECT COUNT(*) FROM helpful h WHERE h.review_id=r.id AND h.uid=?) AS mine FROM reviews r LEFT JOIN profiles u ON u.uid=r.author WHERE r.place_id=? AND json_extract(r.payload,'$.kind') IS NOT 'merchant' AND (r.status='approved' OR (r.author=? AND r.status='pending')) ORDER BY r.created_at DESC LIMIT 60",uid,id,uid);
    const seat=await first('SELECT status,at FROM seats WHERE place_id=? AND at>? ORDER BY at DESC LIMIT 1',id,now-3600000),report=await first("SELECT COUNT(DISTINCT author) AS count FROM reports WHERE place_id=? AND status='active' AND kind='closed' AND at>?",id,now-30*86400000);
    return json({visits:rs.map(r=>({...JSON.parse(r.payload),id:r.id,authorName:r.name||'社区贡献者',own:r.author===uid,pending:r.status==='pending',helps:r.helps,helpful:Boolean(r.mine)})),seat:seat||null,closureReports:report.count});
   }
@@ -102,6 +123,15 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={},seedDi
     const state=['laptopFriendly','deskFits'].includes(field)&&valid.value===false?'hidden':place.status==='published'&&publicationIssues(payload).length?'candidate':place.status,next=JSON.stringify(payload);
     await db.batch([q('UPDATE places SET payload=?,status=?,updated_at=? WHERE id=? AND payload=? AND status=?',next,state,now,place.id,place.payload,place.status),q("UPDATE reviews SET status='approved',note=? WHERE id=? AND status='pending' AND EXISTS(SELECT 1 FROM places WHERE id=? AND payload=?)",note,id,place.id,next),q("INSERT INTO audit(id,actor,subject,action,note,at) SELECT ?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM reviews WHERE id=? AND status='approved')",uuid(),uid,id,'approve',note,now,id)]);
     if((await first('SELECT status FROM reviews WHERE id=?',id)).status!=='approved')fail(409,'地点刚刚被更新，请刷新后重新审核');return json({saved:true});
+   }
+   if(action==='approve'&&v.kind==='merchant'){
+    const place=await first("SELECT * FROM places WHERE id=? AND status IN ('pending','candidate','published')",r.place_id);if(!place)fail(409,'地点已隐藏或已退回，请先处理地点状态');
+    const payload=JSON.parse(place.payload);if(merchantConflict(payload,v))fail(409,'商家确认的项目已有更新，请退回后重新发送确认链接');
+    if(now-Date.parse(v.date+'T00:00:00+08:00')>30*86400000)fail(409,'商家确认已超过 30 天，请重新发送确认链接');
+    const updated=applyMerchant(payload,v,id),denied=updated.laptopFriendly===false||updated.deskFits===false;
+    const state=denied?'hidden':place.status==='published'&&publicationIssues(updated).length?'candidate':place.status,next=JSON.stringify(updated);
+    await db.batch([q('UPDATE places SET payload=?,status=?,note=?,updated_at=? WHERE id=? AND payload=? AND status=?',next,state,denied?'商家确认不支持电脑办公或桌面不足':place.note,now,place.id,place.payload,place.status),q("UPDATE reviews SET status='approved',note=? WHERE id=? AND status='pending' AND EXISTS(SELECT 1 FROM places WHERE id=? AND payload=?)",note,id,place.id,next),q("INSERT INTO audit(id,actor,subject,action,note,at) SELECT ?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM reviews WHERE id=? AND status='approved')",uuid(),uid,id,'approve',note,now,id)]);
+    if((await first('SELECT status FROM reviews WHERE id=?',id)).status!=='approved')fail(409,'地点刚刚被更新，请刷新后重新审核');return json({saved:true,visibility:state});
    }
    if(action==='approve'&&v.kind==='confirmation'){
     const place=await first("SELECT * FROM places WHERE id=? AND status='published'",r.place_id);if(!place)fail(409,'地点已隐藏，不能通过到访核对');const payload=JSON.parse(place.payload);

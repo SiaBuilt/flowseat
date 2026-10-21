@@ -26,7 +26,7 @@ export function evidenceInput(value){
  if(typeof value!=='object'||Array.isArray(value))fail(400,'来源记录格式无效');
  const result={};
  for(const field of coreFields){const e=value[field];if(!e)continue;
- result[field]={kind:one(e.kind,['official','merchant','visit','public']),url:url(e.url),date:date(e.date),note:text(e.note,2,240)};
+ const kind=one(e.kind,['official','merchant','visit','public']);result[field]={kind,url:url(e.url,kind==='merchant'),date:date(e.date),note:text(e.note,2,240)};
  }
  return result;
 }

@@ -8,7 +8,7 @@ const prefix=existsSync('server/api.mjs')?'':'site-preview/';
 let api;
 const discoveryReady=import(pathToFileURL(resolve(prefix+'server/discovery.mjs')).href);
 const ready=import(pathToFileURL(resolve(prefix+'server/api.mjs')).href).then(m=>api=m.handle);
-function database(){const raw=new DatabaseSync(':memory:');raw.exec(readFileSync(prefix+'drizzle/0000_mixed_talkback.sql','utf8'));return{exec(sql){raw.exec(sql);},prepare(sql){return{bind(...args){const p=raw.prepare(sql);return{first:async()=>p.get(...args)||null,all:async()=>({results:p.all(...args)}),run:async()=>p.run(...args),execute:()=>p.run(...args)}}}},async batch(items){raw.exec('BEGIN');try{const result=items.map(p=>p.execute());raw.exec('COMMIT');return result;}catch(e){raw.exec('ROLLBACK');throw e;}}};}
+function database(){const raw=new DatabaseSync(':memory:');raw.exec(readFileSync(prefix+'drizzle/0000_mixed_talkback.sql','utf8'));raw.exec(readFileSync(prefix+'drizzle/0002_merchant_links.sql','utf8'));return{exec(sql){raw.exec(sql);},prepare(sql){return{bind(...args){const p=raw.prepare(sql);return{first:async()=>p.get(...args)||null,all:async()=>({results:p.all(...args)}),run:async()=>p.run(...args),execute:()=>p.run(...args)}}}},async batch(items){raw.exec('BEGIN');try{const result=items.map(p=>p.execute());raw.exec('COMMIT');return result;}catch(e){raw.exec('ROLLBACK');throw e;}}};}
 const today=()=>new Date(Date.now()+8*3600000).toISOString().slice(0,10);
 const place=()=>({name:'测试工作空间',address:'上海市静安区测试路 123 号',district:'静安',type:'咖啡馆',cost:'purchase',budget:'¥30',basis:'一杯饮品',sourceUrl:'https://merchant.example/place',sourceDate:today(),laptopFriendly:true,deskFits:true,hours:'09:00—18:00',entry:'直接进入',evidence:Object.fromEntries(['laptopFriendly','deskFits','cost','hours'].map(f=>[f,{kind:'official',url:'https://merchant.example/place',date:today(),note:'已逐项核对具体规则'}]))});
 async function setup(){await ready;const db=database();const call=async(path,method='GET',body,uid='a',origin='https://flowseat.example')=>{const headers={'Content-Type':'application/json',Origin:origin};if(uid)headers['oai-authenticated-user-id']=uid;const r=await api(new Request('https://flowseat.example/api/'+path,{method,headers,...(body?{body:JSON.stringify(body)}:{})}),{db,seedDiscovery:false,reviewerIds:'owner'});return{...await r.json(),status:r.status};};for(const id of ['a','b','owner'])assert.equal((await call('me','PUT',{displayName:'用户'+id},id)).status,200);return{db,call};}
@@ -179,4 +179,51 @@ test('冲突补充不覆盖新依据；否定电脑办公的审核会隐藏地�
 test('核心字段无链接补充不能沿用旧证据，也不自动宣称已核实',async()=>{
  const {call}=await setup(),id=await published(call);const r=await call('places/'+id+'/supplements','POST',{field:'hours',value:'10:00—17:00',date:today(),text:'本周门口告示调整营业时间',sourceUrl:''});
  await call('review/review/'+r.id,'POST',{action:'approve',note:'通过现场补充但缺少公开依据'},'owner');const p=(await call('places/'+id)).place;assert.equal(p.hours,'10:00—17:00');assert.equal(p.discovery,true);assert.equal(p.evidence.hours,undefined);
+});
+
+test('商家确认链接仅审核员生成，一次性，新链接撤销旧链接',async()=>{
+ const{call,db}=await setup(),id=await published(call);
+ assert.equal((await call('merchant-links','POST',{placeId:id},'a')).status,403);
+ const first=await call('merchant-links','POST',{placeId:id,fields:['hours','wifi']},'owner');assert.equal(first.status,201);
+ assert.equal((await call('merchant/'+first.token,'GET',undefined,'')).fields.length,2);
+ const second=await call('merchant-links','POST',{placeId:id},'owner');
+ assert.equal((await call('merchant/'+first.token,'GET',undefined,'')).status,404);
+ assert.equal((await call('merchant/'+second.token,'POST',{answers:{plugs:'1—5 个'},contact:'店长'},'')).status,201);
+ assert.equal((await call('merchant/'+second.token,'GET',undefined,'')).status,404);
+ assert.equal((await call('merchant/'+second.token,'POST',{answers:{plugs:'1—5 个'},contact:'店长'},'')).status,404);
+ const third=await call('merchant-links','POST',{placeId:id},'owner');await db.prepare('UPDATE merchant_links SET expires_at=?').bind(Date.now()-1).run();
+ assert.equal((await call('merchant/'+third.token,'GET',undefined,'')).status,404);
+ assert.equal((await call('merchant/not-a-real-token','GET',undefined,'')).status,404);
+ assert.equal((await call('merchant/'+first.token,'POST',{answers:{plugs:'1—5 个'},contact:'店长'},'','https://evil.example')).status,403);
+});
+test('商家确认先审核、不进社区体验，通过后按商家自述更新依据',async()=>{
+ const{call}=await setup(),id=await published(call);
+ const link=await call('merchant-links','POST',{placeId:id},'owner');
+ assert.equal((await call('merchant/'+link.token,'POST',{answers:{hours:'待确认'},contact:'店长'},'')).status,400);
+ assert.equal((await call('merchant/'+link.token,'POST',{answers:{cost:'free',budget:'¥30'},contact:'店长'},'')).status,400);
+ assert.equal((await call('merchant/'+link.token,'POST',{answers:{hours:'08:00—22:00',plugs:'6—10 个'},contact:'店长 王',note:'靠窗长桌都有插座'},'')).status,201);
+ assert.equal((await call('places/'+id)).place.hours,'09:00—18:00');
+ assert.equal((await call('places/'+id+'/community')).visits.length,0);
+ const queue=await call('review-queue','GET',undefined,'owner'),r=queue.reviews.find(x=>x.payload.kind==='merchant');
+ assert.equal(r.payload.previous.hours,'09:00—18:00');
+ assert.equal((await call('review/review/'+r.id,'POST',{action:'approve',note:'电话回访一致'},'owner')).status,200);
+ const p=(await call('places/'+id)).place;
+ assert.equal(p.hours,'08:00—22:00');assert.equal(p.plugs,'6—10 个');assert.equal(p.evidence.hours.kind,'merchant');assert.equal(p.evidence.hours.url,'');assert.equal(p.evidence.cost.kind,'official');
+ assert.deepEqual(p.merchant.fields,['hours','plugs']);assert.equal(p.reviewStatus,'published');
+ assert.equal((await call('places/'+id+'/community')).visits.length,0);
+});
+test('商家确认遇到字段已变动拒绝通过；否定电脑办公会隐藏地点',async()=>{
+ const{call,db}=await setup(),id=await published(call);
+ let link=await call('merchant-links','POST',{placeId:id},'owner');
+ await call('merchant/'+link.token,'POST',{answers:{hours:'10:00—20:00'},contact:'前台'},'');
+ const row=await db.prepare('SELECT payload FROM places WHERE id=?').bind(id).first(),payload=JSON.parse(row.payload);payload.hours='07:00—23:00';
+ await db.prepare('UPDATE places SET payload=? WHERE id=?').bind(JSON.stringify(payload),id).run();
+ let r=(await call('review-queue','GET',undefined,'owner')).reviews.find(x=>x.payload.kind==='merchant');
+ assert.equal((await call('review/review/'+r.id,'POST',{action:'approve',note:'核对'},'owner')).status,409);
+ assert.equal((await call('review/review/'+r.id,'POST',{action:'reject',note:'信息已更新'},'owner')).status,200);
+ link=await call('merchant-links','POST',{placeId:id},'owner');
+ await call('merchant/'+link.token,'POST',{answers:{laptopFriendly:false},contact:'店长'},'');
+ r=(await call('review-queue','GET',undefined,'owner')).reviews.find(x=>x.payload.kind==='merchant');
+ const res=await call('review/review/'+r.id,'POST',{action:'approve',note:'商家明确不允许'},'owner');assert.equal(res.status,200);assert.equal(res.visibility,'hidden');
+ assert.equal((await call('places/'+id)).status,404);
 });

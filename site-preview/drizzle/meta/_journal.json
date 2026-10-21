@@ -15,6 +15,13 @@
       "when": 1792396993864,
       "tag": "0001_public_candidates",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792563524692,
+      "tag": "0002_merchant_links",
+      "breakpoints": true
     }
   ]
 }
