@@ -6,11 +6,12 @@ const {pathToFileURL}=require('node:url');
 const {resolve}=require('node:path');
 const prefix=existsSync('server/api.mjs')?'':'site-preview/';
 let api;
+const discoveryReady=import(pathToFileURL(resolve(prefix+'server/discovery.mjs')).href);
 const ready=import(pathToFileURL(resolve(prefix+'server/api.mjs')).href).then(m=>api=m.handle);
 function database(){const raw=new DatabaseSync(':memory:');raw.exec(readFileSync(prefix+'drizzle/0000_mixed_talkback.sql','utf8'));return{exec(sql){raw.exec(sql);},prepare(sql){return{bind(...args){const p=raw.prepare(sql);return{first:async()=>p.get(...args)||null,all:async()=>({results:p.all(...args)}),run:async()=>p.run(...args),execute:()=>p.run(...args)}}}},async batch(items){raw.exec('BEGIN');try{const result=items.map(p=>p.execute());raw.exec('COMMIT');return result;}catch(e){raw.exec('ROLLBACK');throw e;}}};}
 const today=()=>new Date(Date.now()+8*3600000).toISOString().slice(0,10);
 const place=()=>({name:'测试工作空间',address:'上海市静安区测试路 123 号',district:'静安',type:'咖啡馆',cost:'purchase',budget:'¥30',basis:'一杯饮品',sourceUrl:'https://merchant.example/place',sourceDate:today(),laptopFriendly:true,deskFits:true,hours:'09:00—18:00',entry:'直接进入',evidence:Object.fromEntries(['laptopFriendly','deskFits','cost','hours'].map(f=>[f,{kind:'official',url:'https://merchant.example/place',date:today(),note:'已逐项核对具体规则'}]))});
-async function setup(){await ready;const db=database();const call=async(path,method='GET',body,uid='a',origin='https://flowseat.example')=>{const headers={'Content-Type':'application/json',Origin:origin};if(uid)headers['oai-authenticated-user-id']=uid;const r=await api(new Request('https://flowseat.example/api/'+path,{method,headers,...(body?{body:JSON.stringify(body)}:{})}),{db,reviewerIds:'owner'});return{...await r.json(),status:r.status};};for(const id of ['a','b','owner'])assert.equal((await call('me','PUT',{displayName:'用户'+id},id)).status,200);return{db,call};}
+async function setup(){await ready;const db=database();const call=async(path,method='GET',body,uid='a',origin='https://flowseat.example')=>{const headers={'Content-Type':'application/json',Origin:origin};if(uid)headers['oai-authenticated-user-id']=uid;const r=await api(new Request('https://flowseat.example/api/'+path,{method,headers,...(body?{body:JSON.stringify(body)}:{})}),{db,seedDiscovery:false,reviewerIds:'owner'});return{...await r.json(),status:r.status};};for(const id of ['a','b','owner'])assert.equal((await call('me','PUT',{displayName:'用户'+id},id)).status,200);return{db,call};}
 async function published(call){const p=await call('submissions','POST',place());assert.equal(p.status,201);const r=await call('review/place/'+p.id,'POST',{action:'approve',note:'已核对公开来源与两项办公门槛'},'owner');assert.equal(r.status,200);return p.id;}
 test('真实接口默认拒绝匿名写入、前端伪造审核角色和跨站写入',async()=>{const{call}=await setup();assert.equal((await call('submissions','POST',place(),'')).status,401);assert.equal((await call('review-queue','GET',undefined,'a')).status,403);assert.equal((await call('me','PUT',{displayName:'测试用户',canReview:true},'a','https://evil.example')).status,403);assert.equal((await call('me','PUT',{displayName:'测试用户',canReview:true},'a')).status,200);assert.equal((await call('me','GET',undefined,'a')).user.canReview,false);});
 test('投稿审核前不公开，拒绝重复门店和未确认电脑门槛',async()=>{const{call}=await setup();const p=await call('submissions','POST',{...place(),deskFits:false});assert.equal(p.status,201);assert.deepEqual((await call('places')).places,[]);assert.equal((await call('review/place/'+p.id,'POST',{action:'approve',note:'尝试绕过条件'},'owner')).status,400);assert.equal((await call('submissions','POST',place())).status,409);assert.equal((await call('submissions/'+p.id,'PUT',place(),'b')).status,404);assert.equal((await call('submissions/'+p.id,'PUT',place(),'a')).status,200);assert.equal((await call('review/place/'+p.id,'POST',{action:'approve',note:'两项条件已核对'},'owner')).status,200);assert.equal((await call('places')).places.length,1);});
@@ -120,4 +121,35 @@ test('到访核对在条件变动或地点隐藏后不能通过',async()=>{
  r=await call('places/'+id+'/confirm','POST',{fields:['hours'],note:'确认开放时间'});
  await call('review/place/'+id,'POST',{action:'hide',note:'等待重新核对'},'owner');
  assert.equal((await call('review/review/'+r.id,'POST',{action:'approve',note:'不能通过隐藏地点'},'owner')).status,409);
+});
+
+test('真实地点候选公开但不认证办公，普通投稿仍私有；隐藏不会被重新导入',async()=>{
+ const {db,call}=await setup();
+ db.exec(readFileSync(prefix+'drizzle/0001_public_candidates.sql','utf8'));
+ const {ensureDiscovery}=await discoveryReady;await ensureDiscovery(db);
+ const list=(await call('places')).places;assert.equal(list.length,8);
+ assert.ok(list.every(p=>p.discovery&&!p.demo&&!p.laptopFriendly&&p.cost==='unknown'&&p.location.system==='GCJ-02'));
+ assert.equal((await call('places/source-7754766b48220f30fe6d5c76')).status,404);
+ const id=list[0].id;
+ assert.equal((await call('saved/'+id,'PUT',{saved:true})).status,200);
+ assert.ok((await call('saved')).ids.includes(id));
+ assert.equal((await call('places/'+id+'/confirm','POST',{fields:['laptopFriendly'],note:'我看过了'})).status,400);
+ assert.equal((await call('review/place/'+id,'POST',{action:'approve',note:'仅有地图坐标'},'owner')).status,400);
+ await call('review/place/'+id,'POST',{action:'hide',note:'地点匹配有误，需要重新核对'},'owner');
+ await ensureDiscovery(db);assert.equal((await call('places/'+id)).status,404);assert.equal((await call('places')).places.length,7);
+ assert.ok(!(await call('saved')).ids.includes(id));
+});
+test('候选的社区闭店反馈也能隐藏；只有审核员可以补充候选资料',async()=>{
+ const {db,call}=await setup();await (await discoveryReady).ensureDiscovery(db);
+ const list=(await call('places')).places,id=list[0].id;
+ const report=sourceUrl=>({kind:'closed',reason:'怀疑永久闭店',date:today(),detail:'现场有关闭通知，请核对',sourceUrl});
+ await call('places/'+id+'/report','PUT',report('https://merchant.example/closed'),'a');
+ assert.equal((await call('places/'+id)).status,200);
+ await call('places/'+id+'/report','PUT',report('https://other.example/closed'),'b');
+ assert.equal((await call('places/'+id)).status,404);
+ const second=list[1];assert.equal((await call('submissions/'+second.id,'PUT',place(),'a')).status,404);
+ assert.equal((await call('submissions/'+second.id,'PUT',{...place(),name:second.name,address:second.address,location:second.location},'owner')).status,200);
+ assert.equal((await call('places/'+second.id)).status,404);
+ await call('review/place/'+second.id,'POST',{action:'approve',note:'逐项核对全部办公条件'},'owner');
+ assert.equal((await call('places/'+second.id)).place.discovery,false);
 });

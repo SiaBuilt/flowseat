@@ -50,3 +50,24 @@ page{--paper:#fafafa;--canvas:#f0f0f0;--line:#e3e3e3;--ink:#111;--muted:#686868;
 @media(max-width:650px){.workspace{margin:0 -18px}.map-panel{border-radius:0;border-left:0;border-right:0}}
 
 .detail-nav button.active:after{top:auto;left:0;right:0;transform-origin:center}
+
+/* Shared icon geometry and restrained, pointer-aware feedback. */
+:root{--motion-quick:140ms;--motion-standard:240ms;--motion-slow:360ms;--motion-ease:cubic-bezier(.2,.7,.2,1)}
+.app-icon{display:inline-block;width:18px;height:18px;flex-shrink:0;vertical-align:middle;pointer-events:none;transition:transform var(--motion-standard) var(--motion-ease),opacity var(--motion-quick) ease}
+.black-button .app-icon,.profile .app-icon,.mobile-view-toggle .app-icon{filter:invert(1)}
+.icon-button,.round-control{display:inline-flex;align-items:center;justify-content:center}
+.heading-period{display:inline-flex!important;align-items:center;justify-content:center;width:36px!important;height:36px!important;margin-left:14px;border:1px solid #d9dad7;border-radius:50%;vertical-align:middle;transform:none!important;background:transparent!important}
+.heading-period .app-icon{width:22px;height:22px;filter:none}
+.candidate-label{font-size:11px;color:#7c7054;margin:5px 0 8px;letter-spacing:.02em}
+button{transition:background-color var(--motion-quick) ease,border-color var(--motion-quick) ease,transform var(--motion-quick) var(--motion-ease),box-shadow var(--motion-standard) ease}
+button:active:not(:disabled){transform:scale(.98)}
+button:focus-visible{outline:2px solid #646a60;outline-offset:4px}
+button[aria-pressed="true"] .app-icon{opacity:.65}
+@media(hover:hover) and (pointer:fine){
+ .underlink:hover .app-icon,.black-button:hover .app-icon,.card-open:hover .app-icon{transform:translate(2px,-2px)}
+ .round-control:hover,.icon-button:hover{box-shadow:0 0 0 4px #20202008}
+ .place-card:hover{box-shadow:0 8px 24px #20202008}
+}
+@media(prefers-reduced-motion:reduce){.app-icon,button,.place-card{transition:none!important;animation:none!important}button:active:not(:disabled),button:hover .app-icon{transform:none!important}}
+
+.intent.active .app-icon{filter:invert(1)}

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AppIcon from '../../components/AppIcon.vue';
 import {coreFields,evidenceKinds,type FieldEvidence} from '../../domain/place';
 import {reactive,ref,watch} from 'vue';
 import {onLoad} from '@dcloudio/uni-app';
