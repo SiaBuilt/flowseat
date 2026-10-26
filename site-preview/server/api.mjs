@@ -1,3 +1,4 @@
+import {withResearch} from './research.mjs';
 import {supplementInput,supplementLabels,validateSupplementContext} from './supplements.mjs';
 import {merchantLabels,merchantFieldsInput,merchantInput,newToken,hashToken,applyMerchant,merchantConflict,linkDays} from './merchant.mjs';
 import {ensureDiscovery} from './discovery.mjs';
@@ -27,7 +28,7 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={},seedDi
  const profile=async()=>{auth();const p=await first('SELECT name FROM profiles WHERE uid=?',uid);if(!p)fail(400,'请先在我的页面设置贡献署名');return p;};
  const rate=async(limit=30)=>{const r=await first('SELECT COUNT(*) AS n FROM audit WHERE actor=? AND at>?',uid,now-60000);if(r.n>=limit)fail(429,'操作较频繁，请一分钟后重试');};
  const visible=async id=>{const p=await first("SELECT p.*,u.name AS contributor FROM places p LEFT JOIN profiles u ON u.uid=p.author WHERE p.id=? AND p.status IN ('published','candidate')",id);if(!p)fail(404,'地点不存在或已隐藏');return p;};
- const project=p=>({...JSON.parse(p.payload),id:p.id,contributor:p.contributor||'社区贡献者',updatedAt:p.updated_at,reviewStatus:p.status,discovery:p.status==='candidate',note:p.note,publicationIssues:publicationIssues(JSON.parse(p.payload)),...(p.seat_at?{seat:{status:p.seat_status,at:p.seat_at}}:{})});
+ const project=p=>withResearch({...JSON.parse(p.payload),id:p.id,contributor:p.contributor||'社区贡献者',updatedAt:p.updated_at,reviewStatus:p.status,discovery:p.status==='candidate',note:p.note,publicationIssues:publicationIssues(JSON.parse(p.payload)),...(p.seat_at?{seat:{status:p.seat_status,at:p.seat_at}}:{})});
  if(path[0]==='merchant'&&path[1]){
   const hash=await hashToken(path[1]),link=await first("SELECT * FROM merchant_links WHERE token_hash=? AND status='open' AND expires_at>?",hash,now);if(!link)fail(404,'链接无效或已过期');
   const p=await first("SELECT * FROM places WHERE id=? AND status IN ('pending','candidate','published')",link.place_id);if(!p)fail(404,'链接无效或已过期');

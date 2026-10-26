@@ -1,0 +1,258 @@
+{
+  "source-f97015e6b64bf8feb7d28635": [
+    {
+      "field": "办公设施",
+      "value": "报道列有 Wi-Fi 和电源插座，未提供插座数量。",
+      "status": "历史资料",
+      "url": "https://english.shanghai.gov.cn/en-Cafes/20240829/ab2b2c54eec5450c88d217d1e67e69d4.html",
+      "publishedAt": "2024-08-29",
+      "checkedAt": "2026-10-26",
+      "scope": "仅利西路102号门店；不作为当前可用保证"
+    },
+    {
+      "field": "消费",
+      "value": "旧报道参考人均38元；不是最低消费或当前菜单价。",
+      "status": "历史资料",
+      "url": "https://english.shanghai.gov.cn/en-Cafes/20240829/ab2b2c54eec5450c88d217d1e67e69d4.html",
+      "publishedAt": "2024-08-29",
+      "checkedAt": "2026-10-26",
+      "scope": ""
+    }
+  ],
+  "tencent-9995210512914434208": [
+    {
+      "field": "门店匹配",
+      "value": "设计报道位于长宁 Anken AIR 园区，现有腾讯记录为静安万航渡路889号；暂不合并设施信息。",
+      "status": "信息冲突",
+      "url": "https://www.gooood.cn/paddy-lab-by-be-design-consultancy.htm",
+      "publishedAt": "",
+      "checkedAt": "2026-10-26",
+      "scope": ""
+    }
+  ],
+  "source-60edd59f1c355e5d3c716366": [
+    {
+      "field": "进入方式",
+      "value": "官方悠座列表收录威海路696号，提供购买咨询；具体使用时段、报价以预订确认为准。",
+      "status": "官方资料",
+      "url": "https://www.wework.cn/zh-CN/business-solutions/pass/list/",
+      "publishedAt": "",
+      "checkedAt": "2026-10-26",
+      "scope": ""
+    }
+  ],
+  "source-27b86569b0a2314c24ba1019": [
+    {
+      "field": "消费",
+      "value": "用户提供的笔记截图提到新人体验价；未找到可确认本门店当前资格和价格的官方条款，不采用9.9元作现价。",
+      "status": "待补依据",
+      "url": "https://www.xiaohongshu.com/explore/68d65f96000000000702b54a",
+      "publishedAt": "",
+      "checkedAt": "2026-10-26",
+      "scope": "仅用户截图，未读取完整笔记"
+    }
+  ],
+  "source-fdd6087b757eca34e5175439": [
+    {
+      "field": "费用",
+      "value": "公开报道说明二楼自习区和工位可免费使用。",
+      "status": "公开报道",
+      "url": "https://www.shobserver.com/sgh/detail?id=4030002",
+      "publishedAt": "2026-07-30",
+      "checkedAt": "2026-10-26",
+      "scope": "仅所述自习区；食堂等消费另计"
+    },
+    {
+      "field": "网络与插座",
+      "value": "报道明确提及 Wi-Fi、插座；数量、松紧和当天网络状态未确认。",
+      "status": "公开报道",
+      "url": "https://www.shobserver.com/sgh/detail?id=4030002",
+      "publishedAt": "2026-07-30",
+      "checkedAt": "2026-10-26",
+      "scope": ""
+    }
+  ],
+  "tencent-1784892308627747305": [
+    {
+      "field": "办公许可",
+      "value": "政府介绍确认社区公共服务功能，未明确允许长期电脑办公；不套用斜对面的美好生活服务站信息。",
+      "status": "待补依据",
+      "url": "https://www.shcn.gov.cn/col6991/20220104/1208480.html",
+      "publishedAt": "2022-01-04",
+      "checkedAt": "2026-10-26",
+      "scope": ""
+    }
+  ],
+  "tencent-5528072624503891635": [
+    {
+      "field": "进入与分区",
+      "value": "四楼安静学习空间需年满18周岁、持有效读者证并完成身份核验，通过上图小程序预约。电子设备须静音。",
+      "status": "官方资料",
+      "url": "https://yuyue.library.sh.cn/notice/seatAllNotice.html",
+      "publishedAt": "",
+      "checkedAt": "2026-10-26",
+      "scope": "仅四楼安静学习空间，不代表全馆限制"
+    },
+    {
+      "field": "停车入口",
+      "value": "官方交通信息指定驾车从合欢路300号进入；不代表车位可用。",
+      "status": "官方资料",
+      "url": "https://www.library.sh.cn/?id=1",
+      "publishedAt": "",
+      "checkedAt": "2026-10-26",
+      "scope": ""
+    }
+  ],
+  "tencent-3299611627541318899": [
+    {
+      "field": "开放时间",
+      "value": "周一至周四、周六日9:00–21:00；周五12:30–21:00。",
+      "status": "官方资料",
+      "url": "https://www.yplib.org.cn/",
+      "publishedAt": "",
+      "checkedAt": "2026-10-26",
+      "scope": "长海路366号总馆；节假日另看公告"
+    }
+  ],
+  "tencent-16435788558534883525": [
+    {
+      "field": "工作区域",
+      "value": "报道确认阅读空间和便民服务。24小时淋浴或服务厅不代表自习区域24小时可用。",
+      "status": "公开报道",
+      "url": "https://www.shobserver.com/sgh/detail?id=4030002",
+      "publishedAt": "2026-07-30",
+      "checkedAt": "2026-10-26",
+      "scope": ""
+    }
+  ],
+  "tencent-13353016511687307342": [
+    {
+      "field": "阅读自习",
+      "value": "报道提到复兴西路8号的咖啡区、看书自习场景；电脑许可、停留限制和消费门槛未明确。",
+      "status": "公开报道",
+      "url": "https://www.why.com.cn/wx/article/2025/05/19/17476252601407149598.html",
+      "publishedAt": "2025-05-19",
+      "checkedAt": "2026-10-26",
+      "scope": ""
+    }
+  ],
+  "tencent-17364212556120645478": [
+    {
+      "field": "空间范围",
+      "value": "报道包含多个楼栋；食堂与图书自习空间须分别看待，不把餐饮营业时间用于工位。",
+      "status": "公开报道",
+      "url": "https://m.thepaper.cn/newsDetail_forward_33222886",
+      "publishedAt": "",
+      "checkedAt": "2026-10-26",
+      "scope": ""
+    }
+  ],
+  "tencent-5077489784331986024": [
+    {
+      "field": "工作区域",
+      "value": "报道提到二楼临时办公长桌、三楼图书馆；一楼24小时驿站有特定使用条件。",
+      "status": "公开报道",
+      "url": "https://www.shobserver.com/sgh/detail?id=4030002",
+      "publishedAt": "2026-07-30",
+      "checkedAt": "2026-10-26",
+      "scope": "蒙自路223号；不推断全楼全天开放"
+    }
+  ],
+  "tencent-9041022309288894993": [
+    {
+      "field": "办公场景",
+      "value": "三楼宁的书房被报道有携电脑学习办公的使用场景。",
+      "status": "公开报道",
+      "url": "https://www.shobserver.com/sgh/detail?id=4030002",
+      "publishedAt": "2026-07-30",
+      "checkedAt": "2026-10-26",
+      "scope": "平型关路1179号；不套用旧商圈同名书房信息"
+    }
+  ],
+  "tencent-16899764175500191690": [
+    {
+      "field": "开放时间",
+      "value": "官网列示8:30–20:30，周末开放。",
+      "status": "官方资料",
+      "url": "https://www.fanshu.cn/intro/bookshop",
+      "publishedAt": "",
+      "checkedAt": "2026-10-26",
+      "scope": "仅海粟文化广场店，不适用于娄山关路店"
+    }
+  ],
+  "tencent-9377116381857951663": [
+    {
+      "field": "进入方式",
+      "value": "政府报道说明可步入书店翻阅帆书驿站图书；未明确电脑办公、插座与座位消费规则。",
+      "status": "官方资料",
+      "url": "https://www.shcn.gov.cn/col7343/20260818/1316901.html",
+      "publishedAt": "2026-08-18",
+      "checkedAt": "2026-10-26",
+      "scope": ""
+    }
+  ],
+  "tencent-1495878479948436991": [
+    {
+      "field": "费用与分区",
+      "value": "旧报道区分一楼咖啡空间与二、三楼按小时收费的私密空间，建议预约。",
+      "status": "历史资料",
+      "url": "https://english.shanghai.gov.cn/en-Cafes/20240829/ab2b2c54eec5450c88d217d1e67e69d4.html",
+      "publishedAt": "2024-08-29",
+      "checkedAt": "2026-10-26",
+      "scope": "仅虎丘路78号；不采用旧人均价格作为工位报价"
+    }
+  ],
+  "tencent-1016586809765912258": [
+    {
+      "field": "办公区域",
+      "value": "开业报道明确设有市民临时办公区；收费及最长停留时间未明确。",
+      "status": "公开报道",
+      "url": "https://m.thepaper.cn/baijiahao_33039146",
+      "publishedAt": "",
+      "checkedAt": "2026-10-26",
+      "scope": ""
+    }
+  ],
+  "tencent-7356209017016184253": [
+    {
+      "field": "开放时间",
+      "value": "综合馆一楼24小时、二楼9:00–21:00；每周一8:00–13:00全馆闭馆。",
+      "status": "官方资料",
+      "url": "https://www.shhk.gov.cn/bmff/004001/004001006/004001006001/20260428/a51936da-e503-4743-9bbb-9e00c0e3a207.html",
+      "publishedAt": "2026-04-28",
+      "checkedAt": "2026-10-26",
+      "scope": "分区开放，不能概括成所有座位全天开放"
+    },
+    {
+      "field": "座位预约",
+      "value": "报道说明部分座位已试行预约；到访前查看和平书院预约渠道。",
+      "status": "公开报道",
+      "url": "https://m.thepaper.cn/newsDetail_forward_31101798",
+      "publishedAt": "",
+      "checkedAt": "2026-10-26",
+      "scope": "部分座位，不推断所有位置均需预约"
+    }
+  ],
+  "tencent-16790604963118065515": [
+    {
+      "field": "费用",
+      "value": "报道区分特定先进典型人群免费福利与普通市民优惠收费，不能标记全民免费。",
+      "status": "公开报道",
+      "url": "https://www.shobserver.com/sgh/detail?id=1754523",
+      "publishedAt": "",
+      "checkedAt": "2026-10-26",
+      "scope": ""
+    }
+  ],
+  "tencent-13603216452817986717": [
+    {
+      "field": "门店与预订",
+      "value": "官方搜索结果有复兴中路1237号社区；悠座列表本次未检出该店，日票可订性尚不能确认。",
+      "status": "待补依据",
+      "url": "https://www.wework.cn/zh-CN/building/fuxingzhonglu/?lang=en-us",
+      "publishedAt": "",
+      "checkedAt": "2026-10-26",
+      "scope": "官网详情抓取超时，仅检索到摘要；不认定闭店"
+    }
+  ]
+}
