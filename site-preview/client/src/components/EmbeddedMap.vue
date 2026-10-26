@@ -9,7 +9,7 @@ const props=defineProps<{places:Place[];selected:string;visible:boolean}>();
 const emit=defineEmits<{status:[value:string];select:[id:string]}>();
 const containerId='flowseat-map-'+Math.random().toString(36).slice(2),ready=ref(false),instance=getCurrentInstance();
 const points=computed(()=>mapPlaces(props.places)),latitude=ref(31.2304),longitude=ref(121.4737),nativeScale=ref(11);
-const nativeMarkers=computed(()=>points.value.map((p,index)=>({id:index+1,latitude:p.location!.lat,longitude:p.location!.lng,iconPath:'/static/map-pin-'+p.cost+'.png',width:28,height:36,callout:{content:(p.cost==='free'?'免费':practical[p.id]?.budget||costLabels[p.cost])+' · '+p.type,color:props.selected===p.id?'#ffffff':'#202020',bgColor:props.selected===p.id?'#202020':'#ffffff',fontSize:11,borderRadius:12,padding:8,display:'ALWAYS'}})));
+const nativeMarkers=computed(()=>points.value.map((p,index)=>({id:index+1,latitude:p.location!.lat,longitude:p.location!.lng,iconPath:'/static/map-pin-'+p.cost+'.png',width:28,height:36,callout:{content:(p.cost==='unknown'?p.name:p.cost==='free'?'免费':practical[p.id]?.budget||costLabels[p.cost])+' · '+p.type,color:props.selected===p.id?'#ffffff':'#202020',bgColor:props.selected===p.id?'#202020':'#ffffff',fontSize:11,borderRadius:12,padding:8,display:'ALWAYS'}})));
 let map:any,TMap:any,markers:any[]=[],nativeContext:any;let stopped=false,generation=0;let readyTimer:ReturnType<typeof setTimeout>|undefined;
 function nativeReady(){if(stopped)return;clearTimeout(readyTimer);ready.value=true;emit('status','ready');}
 function nativeSelect(e:{detail:{markerId:number}}){const p=points.value[e.detail.markerId-1];if(p)emit('select',p.id);}
@@ -21,8 +21,8 @@ function paint(){
   declare point:any;declare place:Place;declare node:HTMLButtonElement;declare listener:()=>void;
   onInit(options:any){this.point=options.point;this.place=options.place;}
   createDOM(){
-   const p=this.place,button=document.createElement('button');button.type='button';button.className='live-map-pin pin-'+p.cost+(props.selected===p.id?' selected':'');button.setAttribute('aria-label',p.name+'，'+costLabels[p.cost]);button.setAttribute('aria-pressed',String(props.selected===p.id));button.style.position='absolute';button.style.left='0';button.style.top='0';button.style.zIndex=props.selected===p.id?'200':'100';
-   const price=document.createElement('span');price.textContent=p.cost==='free'?'免费':(practical[p.id]?.budget||costLabels[p.cost]);const type=document.createElement('small');type.textContent=p.type;button.append(price,type);this.listener=()=>emit('select',p.id);button.addEventListener('click',this.listener);this.node=button;return button;
+   const p=this.place,button=document.createElement('button');button.type='button';button.className='live-map-pin pin-'+p.cost+(props.selected===p.id?' selected':'');button.setAttribute('aria-label',p.name+'，'+costLabels[p.cost]);button.title=p.name+' · '+costLabels[p.cost];button.setAttribute('aria-pressed',String(props.selected===p.id));button.style.position='absolute';button.style.left='0';button.style.top='0';button.style.zIndex=props.selected===p.id?'200':'100';
+   const price=document.createElement('span');price.textContent=p.cost==='unknown'?p.name:p.cost==='free'?'免费':(practical[p.id]?.budget||costLabels[p.cost]);const type=document.createElement('small');type.textContent=p.type;button.append(price,type);this.listener=()=>emit('select',p.id);button.addEventListener('click',this.listener);this.node=button;return button;
   }
   updateDOM(){if(!this.node)return;const p=this.getMap().projectToContainer(this.point);this.node.style.transform='translate('+(p.x-this.node.offsetWidth/2)+'px,'+(p.y-this.node.offsetHeight/2)+'px)';}
   onDestroy(){this.node?.removeEventListener('click',this.listener);}

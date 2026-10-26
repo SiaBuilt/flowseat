@@ -1,9 +1,13 @@
-export const supplementLabels:Record<string,string>={plugs:'插座数量',chair:'座椅舒适度',wifi:'Wi-Fi',laptopFriendly:'电脑办公许可',deskFits:'桌面条件',hours:'开放时间',entry:'进入方式'};
-export function supplementValue(value:unknown){return value===true?'是':value===false?'否':value==null?'待确认':String(value);}
+export const supplementLabels:Record<string,string>={zones:'工作分区',plugs:'插座数量',chair:'座椅舒适度',wifi:'Wi-Fi',laptopFriendly:'电脑办公许可',deskFits:'桌面条件',hours:'开放时间',entry:'进入方式',cost:'费用类型',budget:'消费预算',stay:'停留规则',menuUrl:'菜单或价目链接'};
+export function supplementValue(value:unknown){if(Array.isArray(value))return value.length?value.map(v=>({quiet:'安静工作区',discussion:'多人讨论区',booth:'独立电话间'} as Record<string,string>)[String(v)]||String(v)).join('、'):'未设专门分区';return value===true?'是':value===false?'否':value==null?'待确认':({free:'免费使用',purchase:'消费后使用',paid:'付费工位'} as Record<string,string>)[String(value)]||String(value);}
 export const supplementOptions:Record<string,{value:string|boolean;label:string}[]>={
+ zones:[{value:'quiet',label:'安静工作区'},{value:'discussion',label:'多人讨论区'},{value:'booth',label:'独立电话间'}],
+ cost:[{value:'free',label:'免费使用'},{value:'purchase',label:'消费后使用'},{value:'paid',label:'付费工位'}],
  plugs:['0 个','1—5 个','6—10 个','10 个以上'].map(value=>({value,label:value})),
  chair:['硬座','舒适','超舒适'].map(value=>({value,label:value})),
  wifi:[{value:true,label:'提供 Wi-Fi'},{value:false,label:'不提供'}],
  laptopFriendly:[{value:true,label:'允许电脑办公'},{value:false,label:'不允许'}],
  deskFits:[{value:true,label:'电脑和鼠标放得下'},{value:false,label:'放不下'}]
 };
+
+export const supplementHints:Record<string,string>={hours:'例如：周一至周五 9:00–18:00',entry:'例如：提前预约，入口需登记',budget:'例如：¥35 / 人，购买一杯饮品',stay:'例如：工作日限坐 2 小时',menuUrl:'商家公开菜单或价目表的 HTTPS 链接'};

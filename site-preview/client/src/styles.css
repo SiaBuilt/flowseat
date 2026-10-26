@@ -73,3 +73,6 @@ button[aria-pressed="true"] .app-icon{opacity:.65}
 .intent.active .app-icon{filter:invert(1)}
 
 .contribution-prompt{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:20px 0;margin-bottom:12px;border-bottom:1px solid #e8e8e6}.contribution-prompt .outline-button{flex-shrink:0}@media(max-width:600px){.contribution-prompt{align-items:flex-start;flex-direction:column}}
+
+/* Unknown prices use place names so nearby candidates remain identifiable. */
+.live-map-pin.pin-unknown>span{max-width:112px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.live-map-pin.pin-unknown.selected>span{max-width:220px}

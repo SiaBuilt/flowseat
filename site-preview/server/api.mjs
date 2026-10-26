@@ -77,7 +77,7 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={},seedDi
    const v=supplementInput(b),payload=JSON.parse(p.payload);
    const existing=await all("SELECT payload FROM reviews WHERE place_id=? AND author=? AND status='pending' AND json_extract(payload,'$.kind')='supplement'",id,uid);
    if(existing.some(row=>JSON.parse(row.payload).field===v.field))fail(409,'这一项已有待审核补充，请在我的贡献查看');
-   v.previous=payload[v.field]??null;v.previousObservation=payload.observations?.[v.field]?.reviewId||'';
+   if(v.field==='budget')v.previousCost=payload.cost;v.previous=payload[v.field]??null;v.previousObservation=payload.observations?.[v.field]?.reviewId||'';
    const reviewId=uuid();await db.batch([q("INSERT INTO reviews(id,author,place_id,payload,status,note,created_at) VALUES(?,?,?,?,'pending','',?)",reviewId,uid,id,JSON.stringify(v),now),audit(id,'supplement',supplementLabels[v.field])]);return json({saved:true,id:reviewId,status:'pending'},201);
   }
   if(path[2]==='confirm'){
@@ -116,8 +116,11 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={},seedDi
    if(action==='approve'&&v.kind==='supplement'){
     const valid=supplementInput(v),place=await first("SELECT * FROM places WHERE id=? AND status IN ('candidate','published')",r.place_id);if(!place)fail(409,'地点已隐藏或转入审核，请先处理地点状态');
     const payload=JSON.parse(place.payload),field=valid.field;
+    if(field==='budget'&&v.previousCost!==payload.cost)fail(409,'费用类型已有变化，请重新核对消费预算');
     if(JSON.stringify(payload[field]??null)!==JSON.stringify(v.previous)||(payload.observations?.[field]?.reviewId||'')!==v.previousObservation)fail(409,'这一项已有更新，请退回后重新核对');
     if(now-Date.parse(valid.date+'T00:00:00+08:00')>30*86400000)fail(409,'到访依据已超过 30 天，请重新核对');
+    if(field==='cost'&&payload.cost!==valid.value){payload.budget='费用待确认';payload.basis=valid.text;delete payload.observations?.budget;}
+    if(field==='budget')payload.basis=valid.text;
     payload[field]=valid.value;if(field==='plugs')payload.charging=valid.text;if(field==='chair')payload.chairNote=valid.text;payload.observations={...payload.observations,[field]:{value:valid.value,date:valid.date,note:valid.text,sourceUrl:valid.sourceUrl,reviewId:id}};
     if(coreFields.includes(field)){payload.evidence={...payload.evidence};delete payload.confirmations?.[field];if(valid.sourceUrl)payload.evidence[field]={kind:'visit',url:valid.sourceUrl,date:valid.date,note:valid.text};else delete payload.evidence[field];}
     const state=['laptopFriendly','deskFits'].includes(field)&&valid.value===false?'hidden':place.status==='published'&&publicationIssues(payload).length?'candidate':place.status,next=JSON.stringify(payload);
