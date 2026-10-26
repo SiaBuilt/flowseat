@@ -275,3 +275,28 @@ test('工作分区可多选或明确无分区，审核前不更新且拒绝非�
  assert.equal((await call('review/review/'+none.id,'POST',{action:'approve',note:'现已撤除专门分区'},'owner')).status,200);
  const p=(await call('places/'+id)).place;assert.deepEqual(p.zones,[]);assert.deepEqual(p.observations.zones.value,[]);
 });
+
+test('地图导入地点同名同址不可重复投稿，忽略空格与全角符号；隐藏后仍不重复',async()=>{
+ const {db,call}=await setup();await (await discoveryReady).ensureDiscovery(db);
+ const p=(await call('places')).places.find(p=>p.id==='tencent-16435788558534883525');
+ const submission={...place(),name:p.name,address:p.address,district:p.district,type:p.type};
+ assert.equal((await call('submissions','POST',submission)).status,409);
+ assert.equal((await call('submissions','POST',{...submission,name:' '+p.name+' ',address:p.address.replace(/\(/g,'（').replace(/\)/g,'）')})).status,409);
+ const other=await call('submissions','POST',{...place(),name:'另一处独立空间'});
+ assert.equal(other.status,201);
+ assert.equal((await call('submissions/'+other.id,'PUT',submission)).status,409);
+ await call('review/place/'+p.id,'POST',{action:'hide',note:'暂不开放'},'owner');
+ assert.equal((await call('submissions','POST',submission)).status,409);
+ assert.equal((await call('submissions','POST',{...submission,address:'上海市徐汇区另一条路100号'})).status,201);
+});
+
+test('免费地点的预算补充不允许非零收费，费用变免费后展示零预算',async()=>{
+ const {call}=await setup(),id=await published(call);
+ const draft=(field,value)=>({field,value,date:today(),text:'现场核对空间使用不收费，饮品自选',sourceUrl:''});
+ const r=await call('places/'+id+'/supplements','POST',draft('cost','free'));
+ assert.equal((await call('review/review/'+r.id,'POST',{action:'approve',note:'核对免费使用规则'},'owner')).status,200);
+ assert.equal((await call('places/'+id)).place.budget,'¥0');
+ assert.equal((await call('places/'+id+'/supplements','POST',draft('budget','¥35'))).status,400);
+ const zero=await call('places/'+id+'/supplements','POST',draft('budget','0'));assert.equal(zero.status,201);
+ assert.equal((await call('review/review/'+zero.id,'POST',{action:'approve',note:'空间费为零'},'owner')).status,200);
+});

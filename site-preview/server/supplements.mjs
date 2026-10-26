@@ -5,11 +5,15 @@ export function supplementInput(b){
  if(field==='zones'){if(!Array.isArray(value)||value.length>3||value.some(v=>!['quiet','discussion','booth'].includes(v)))fail(400,'请选择有效的工作分区');value=[...new Set(value)].sort();}
  else if(field==='cost')value=one(value,['free','purchase','paid']);
  else if(field==='menuUrl')value=url(value);
- else if(field==='budget')value=text(value,2,70);
+ else if(field==='budget')value=text(value,1,70);
  else if(field==='stay'||field==='entry')value=text(value,2,160);
  else if(field==='plugs')value=one(value,['0 个','1—5 个','6—10 个','10 个以上']);
  else if(field==='chair')value=one(value,['硬座','舒适','超舒适']);
  else if(['wifi','laptopFriendly','deskFits'].includes(field)){if(typeof value!=='boolean')fail(400,'请选择明确的现场情况');}
  else value=text(value,2,100);
  return {kind:'supplement',field,value,date:date(b.date),text:text(b.text,5,240),sourceUrl:url(b.sourceUrl,true),period:'信息补充',spend:''};
+}
+
+export function validateSupplementContext(input,place){
+ if(input.field==='budget'&&place.cost==='free'&&!/^([¥￥]?0|免费|无需消费)$/.test(input.value))fail(400,'当前地点标记为免费；空间预算应为0，其他消费请写入依据。收费规则变化请先补充费用类型');
 }

@@ -1,4 +1,4 @@
-import {supplementInput,supplementLabels} from './supplements.mjs';
+import {supplementInput,supplementLabels,validateSupplementContext} from './supplements.mjs';
 import {merchantLabels,merchantFieldsInput,merchantInput,newToken,hashToken,applyMerchant,merchantConflict,linkDays} from './merchant.mjs';
 import {ensureDiscovery} from './discovery.mjs';
 import {nearbyParking} from './parking.mjs';
@@ -53,9 +53,16 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={},seedDi
   auth();const b=await body();const name=text(b.displayName,2,24);await q('INSERT INTO profiles(uid,name,updated_at) VALUES(?,?,?) ON CONFLICT(uid) DO UPDATE SET name=excluded.name,updated_at=excluded.updated_at',uid,name,now).run();return json({saved:true});
  }
  if(path[0]==='places'&&path.length===1&&method==='GET')return json({places:(await all("SELECT p.*,u.name AS contributor,s.status AS seat_status,s.at AS seat_at FROM places p LEFT JOIN profiles u ON u.uid=p.author LEFT JOIN seats s ON s.rowid=(SELECT recent.rowid FROM seats recent WHERE recent.place_id=p.id AND recent.at>? AND recent.at<=? ORDER BY recent.at DESC,recent.rowid DESC LIMIT 1) WHERE p.status IN ('published','candidate') ORDER BY p.updated_at DESC LIMIT 300",now-3600000,now)).map(project)});
+ const duplicatePlace=async(p,exclude='')=>{
+  const fp=fingerprint(p.name,p.address),direct=await first('SELECT id FROM places WHERE fingerprint=? AND id<>?',fp,exclude);
+  if(direct)return direct;
+  // Older map imports use provider IDs as fingerprints; compare their normalized names and addresses too.
+  const imported=await all("SELECT id,payload FROM places WHERE fingerprint LIKE 'tencent:%' AND id<>?",exclude);
+  return imported.find(row=>{const old=JSON.parse(row.payload);return fingerprint(old.name,old.address)===fp;});
+ };
  if(path[0]==='submissions'){
-  auth();if(method==='PUT'&&path[1]){await profile();await rate(8);const old=await first('SELECT * FROM places WHERE id=?',path[1]);if(!old||(old.author!==uid&&!canReview))fail(404,'投稿不存在');if(!['pending','rejected'].includes(old.status)&&!(canReview&&old.status==='candidate'))fail(409,'仅待审核或退回的投稿可以修改');const p=placeInput(await body());const fp=fingerprint(p.name,p.address);const duplicate=await first('SELECT id FROM places WHERE fingerprint=? AND id<>?',fp,old.id);if(duplicate)fail(409,'与已有地点重复');await db.batch([q("UPDATE places SET payload=?,fingerprint=?,status='pending',note='',updated_at=? WHERE id=?",JSON.stringify(p),fp,now,old.id),audit(old.id,'resubmit')]);return json({id:old.id,status:'pending'});}
-  if(method==='POST'){await profile();await rate(8);const p=placeInput(await body()),id=uuid();const duplicate=await first('SELECT id FROM places WHERE fingerprint=?',fingerprint(p.name,p.address));if(duplicate)fail(409,'该地点已有投稿记录，请在我的贡献中查看或补充信息');await db.batch([q("INSERT INTO places(id,author,fingerprint,payload,status,note,created_at,updated_at) VALUES(?,?,?,?,'pending','',?,?)",id,uid,fingerprint(p.name,p.address),JSON.stringify(p),now,now),audit(id,'submit')]);return json({id,status:'pending'},201);}
+  auth();if(method==='PUT'&&path[1]){await profile();await rate(8);const old=await first('SELECT * FROM places WHERE id=?',path[1]);if(!old||(old.author!==uid&&!canReview))fail(404,'投稿不存在');if(!['pending','rejected'].includes(old.status)&&!(canReview&&old.status==='candidate'))fail(409,'仅待审核或退回的投稿可以修改');const p=placeInput(await body());const fp=fingerprint(p.name,p.address);const duplicate=await duplicatePlace(p,old.id);if(duplicate)fail(409,'与已有地点重复');await db.batch([q("UPDATE places SET payload=?,fingerprint=?,status='pending',note='',updated_at=? WHERE id=?",JSON.stringify(p),fp,now,old.id),audit(old.id,'resubmit')]);return json({id:old.id,status:'pending'});}
+  if(method==='POST'){await profile();await rate(8);const p=placeInput(await body()),id=uuid();const duplicate=await duplicatePlace(p);if(duplicate)fail(409,'该地点已有记录，请先搜索现有地点；自己的投稿可在我的贡献中查看');await db.batch([q("INSERT INTO places(id,author,fingerprint,payload,status,note,created_at,updated_at) VALUES(?,?,?,?,'pending','',?,?)",id,uid,fingerprint(p.name,p.address),JSON.stringify(p),now,now),audit(id,'submit')]);return json({id,status:'pending'},201);}
  }
  if(path[0]==='contributions'&&method==='GET'){
   auth();const rows=await all('SELECT id,payload,status,note,created_at,updated_at FROM places WHERE author=? ORDER BY created_at DESC LIMIT 100',uid);const rv=await all('SELECT r.id,r.payload,r.status,r.note,r.created_at,p.payload AS place_payload FROM reviews r JOIN places p ON p.id=r.place_id WHERE r.author=? ORDER BY r.created_at DESC LIMIT 100',uid);return json({places:rows.map(p=>({...p,payload:JSON.parse(p.payload)})),reviews:rv.map(r=>({...r,payload:JSON.parse(r.payload),placeName:JSON.parse(r.place_payload).name,place_payload:undefined}))});
@@ -74,7 +81,7 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={},seedDi
   }
   auth();await profile();await rate();const b=await body();
   if(path[2]==='supplements'&&method==='POST'){
-   const v=supplementInput(b),payload=JSON.parse(p.payload);
+   const v=supplementInput(b),payload=JSON.parse(p.payload);validateSupplementContext(v,payload);
    const existing=await all("SELECT payload FROM reviews WHERE place_id=? AND author=? AND status='pending' AND json_extract(payload,'$.kind')='supplement'",id,uid);
    if(existing.some(row=>JSON.parse(row.payload).field===v.field))fail(409,'这一项已有待审核补充，请在我的贡献查看');
    if(v.field==='budget')v.previousCost=payload.cost;v.previous=payload[v.field]??null;v.previousObservation=payload.observations?.[v.field]?.reviewId||'';
@@ -115,11 +122,11 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={},seedDi
   if(kind==='review'){one(action,['approve','reject']);const r=await first("SELECT * FROM reviews WHERE id=? AND status='pending'",id);if(!r)fail(409,'该体验已处理或不存在');const v=JSON.parse(r.payload),tasks=[];
    if(action==='approve'&&v.kind==='supplement'){
     const valid=supplementInput(v),place=await first("SELECT * FROM places WHERE id=? AND status IN ('candidate','published')",r.place_id);if(!place)fail(409,'地点已隐藏或转入审核，请先处理地点状态');
-    const payload=JSON.parse(place.payload),field=valid.field;
+    const payload=JSON.parse(place.payload),field=valid.field;validateSupplementContext(valid,payload);
     if(field==='budget'&&v.previousCost!==payload.cost)fail(409,'费用类型已有变化，请重新核对消费预算');
     if(JSON.stringify(payload[field]??null)!==JSON.stringify(v.previous)||(payload.observations?.[field]?.reviewId||'')!==v.previousObservation)fail(409,'这一项已有更新，请退回后重新核对');
     if(now-Date.parse(valid.date+'T00:00:00+08:00')>30*86400000)fail(409,'到访依据已超过 30 天，请重新核对');
-    if(field==='cost'&&payload.cost!==valid.value){payload.budget='费用待确认';payload.basis=valid.text;delete payload.observations?.budget;}
+    if(field==='cost'&&payload.cost!==valid.value){payload.budget=valid.value==='free'?'¥0':'费用待确认';payload.basis=valid.text;delete payload.observations?.budget;}
     if(field==='budget')payload.basis=valid.text;
     payload[field]=valid.value;if(field==='plugs')payload.charging=valid.text;if(field==='chair')payload.chairNote=valid.text;payload.observations={...payload.observations,[field]:{value:valid.value,date:valid.date,note:valid.text,sourceUrl:valid.sourceUrl,reviewId:id}};
     if(coreFields.includes(field)){payload.evidence={...payload.evidence};delete payload.confirmations?.[field];if(valid.sourceUrl)payload.evidence[field]={kind:'visit',url:valid.sourceUrl,date:valid.date,note:valid.text};else delete payload.evidence[field];}
