@@ -30,3 +30,7 @@ site-preview-release*.tar.gz
 
 __pycache__/
 *.pyc
+
+# Retained visual worktree and dependency links
+/.worktrees/
+**/node_modules
