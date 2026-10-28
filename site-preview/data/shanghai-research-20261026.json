@@ -17,6 +17,24 @@
    "publishedAt": "2024-08-29",
    "checkedAt": "2026-10-27",
    "scope": "仅利西路102号"
+  },
+  {
+   "field": "电脑办公",
+   "value": "多篇笔记写适合带电脑自习办公，可坐一天；有插座和Wi-Fi，小桌带台灯，另有共享大桌。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/695a291a000000001d03b566",
+   "publishedAt": "2026-01-04",
+   "checkedAt": "2026-10-28",
+   "scope": "仅利西路店；个人到访体验"
+  },
+  {
+   "field": "营业时间",
+   "value": "笔记写10:00–18:00。发帖较早，出发前请确认。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/67d56f6f0000000009017fd3",
+   "publishedAt": "2025-03-15",
+   "checkedAt": "2026-10-28",
+   "scope": "仅利西路店"
   }
  ],
  "tencent-9995210512914434208": [
@@ -37,6 +55,24 @@
    "publishedAt": "",
    "checkedAt": "2026-10-27",
    "scope": "地图数据，非官方；营业时间未采用"
+  },
+  {
+   "field": "插座与座位",
+   "value": "写基本每个位置都有插座；有靠窗位和几张大桌；营业10:00–22:00；团购饮品约20元一杯。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/69c795cf000000001d01b23f",
+   "publishedAt": "2026-03-28",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
+  },
+  {
+   "field": "网络与营业时间",
+   "value": "写Wi-Fi信号稳定、插座充足、有长条大桌和单人位；营业时间写作9:00–22:00，与另一篇不一致。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a98e087000000000d0261c0",
+   "publishedAt": "2026-09-03",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
   }
  ],
  "source-60edd59f1c355e5d3c716366": [
@@ -48,6 +84,15 @@
    "publishedAt": "",
    "checkedAt": "2026-10-26",
    "scope": ""
+  },
+  {
+   "field": "费用",
+   "value": "灵活工位次卡1次为半天，全天扣2次；单次日卡工作日9:00–18:00可用，法定假日不可用。具体价格各篇口径不一，不写数字。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/69b6c769000000002200100a",
+   "publishedAt": "2026-03-15",
+   "checkedAt": "2026-10-28",
+   "scope": "全品牌规则；以小程序为准"
   }
  ],
  "source-27b86569b0a2314c24ba1019": [
@@ -68,6 +113,15 @@
    "publishedAt": "",
    "checkedAt": "2026-10-27",
    "scope": "价格须在官方小程序/App查看"
+  },
+  {
+   "field": "费用",
+   "value": "灵活工位次卡1次为半天，全天扣2次；单次日卡工作日9:00–18:00可用，法定假日不可用。具体价格各篇口径不一，不写数字。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/69b6c769000000002200100a",
+   "publishedAt": "2026-03-15",
+   "checkedAt": "2026-10-28",
+   "scope": "全品牌规则；以小程序为准"
   }
  ],
  "source-fdd6087b757eca34e5175439": [
@@ -88,6 +142,24 @@
    "publishedAt": "2026-07-30",
    "checkedAt": "2026-10-26",
    "scope": ""
+  },
+  {
+   "field": "电脑办公",
+   "value": "作者上午直接进入，带电脑实测：Wi-Fi流畅，插座较多，可接饮用水；灯光偏暗。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a9a832b0000000028002e29",
+   "publishedAt": "2026-09-04",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
+  },
+  {
+   "field": "开放时间",
+   "value": "写二楼新里大书房开到19:30。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6abe1ab0000000001500662e",
+   "publishedAt": "2026-10-01",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
   }
  ],
  "tencent-1784892308627747305": [
@@ -108,6 +180,15 @@
    "publishedAt": "2026-08-18",
    "checkedAt": "2026-10-27",
    "scope": "仅古北天空书苑；市民中心展厅时间不同"
+  },
+  {
+   "field": "开放时间",
+   "value": "作者实测8:30–20:30，周一也开；内设古北天空书苑，适合阅读和短时办公。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a6bda4e00000000250010df",
+   "publishedAt": "2026-07-30",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
   }
  ],
  "tencent-5528072624503891635": [
@@ -155,6 +236,15 @@
    "publishedAt": "",
    "checkedAt": "2026-10-27",
    "scope": "仅预约座位区域"
+  },
+  {
+   "field": "电脑办公",
+   "value": "作者带电脑办公一整天：桌位基本都有电源，有Wi-Fi；3、4楼标准座位需在上海图书馆App或小程序预约，每天中午12点放号；沙发和窗边非标准区域可直接坐。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a6ae72a00000000110149ca",
+   "publishedAt": "2026-07-30",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验；楼层规则以馆方为准"
   }
  ],
  "tencent-3299611627541318899": [
@@ -175,6 +265,15 @@
    "publishedAt": "2026-08-18",
    "checkedAt": "2026-10-27",
    "scope": "长海路366号总馆"
+  },
+  {
+   "field": "电脑办公",
+   "value": "作者带电脑实测：大部分阅读桌有插座和台灯，个别插座不能用；有免费Wi-Fi；室内偏暗，靠窗更好；馆边有临时就餐区。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6979effa000000002802112c",
+   "publishedAt": "2026-01-28",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
   }
  ],
  "tencent-16435788558534883525": [
@@ -195,6 +294,15 @@
    "publishedAt": "2024-04-29",
    "checkedAt": "2026-10-27",
    "scope": "报道口径不一，暂不写入时间"
+  },
+  {
+   "field": "开放时间",
+   "value": "作者实测7:00–21:00，周一也开；有Wi-Fi和淋浴，电源较少。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a6bda4e00000000250010df",
+   "publishedAt": "2026-07-30",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
   }
  ],
  "tencent-13353016511687307342": [
@@ -215,6 +323,15 @@
    "publishedAt": "2025-07-04",
    "checkedAt": "2026-10-27",
    "scope": "办公证据不足"
+  },
+  {
+   "field": "空间",
+   "value": "写复8邻里汇开放8:30–17:00，有社区食堂、中医馆和街区导览，更像步行补给站；未提办公座位。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a7ed31b000000002c0027dc",
+   "publishedAt": "2026-08-14",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
   }
  ],
  "tencent-17364212556120645478": [
@@ -235,6 +352,15 @@
    "publishedAt": "2026-08-18",
    "checkedAt": "2026-10-27",
    "scope": "图书馆；食堂和咖啡吧台时间另计"
+  },
+  {
+   "field": "空间",
+   "value": "写中心每天8:30–20:30，图书馆周一下午开；小洋房阅览空间，有活动时人多。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a7ed31b000000002c0027dc",
+   "publishedAt": "2026-08-14",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
   }
  ],
  "tencent-5077489784331986024": [
@@ -264,6 +390,15 @@
    "publishedAt": "2026-07-30",
    "checkedAt": "2026-10-27",
    "scope": "仅一楼驿站，不代表二楼办公长桌"
+  },
+  {
+   "field": "开放时间",
+   "value": "作者实测周一也开，8:30–20:30，有网有电。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a6bda4e00000000250010df",
+   "publishedAt": "2026-07-30",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
   }
  ],
  "tencent-9041022309288894993": [
@@ -284,6 +419,23 @@
    "publishedAt": "2026-08-18",
    "checkedAt": "2026-10-27",
    "scope": "3楼；名录另有同名“宁的书房”在大宁国际商业广场，不是此处"
+  },
+  {
+   "field": "地址",
+   "value": "笔记写大宁路街道社区党群服务中心与静安区档案馆同在灵石路169号，与本条坐标（平型关路1179号）不一致，需复核是哪一处。",
+   "status": "信息冲突",
+   "url": "https://www.xiaohongshu.com/explore/694aa803000000001f004767",
+   "publishedAt": "2025-12-23",
+   "checkedAt": "2026-10-28"
+  },
+  {
+   "field": "办公条件",
+   "value": "灵石路169号三楼自习区：免费，有Wi-Fi和热水；插座不足，建议带充电宝；座椅久坐不舒服。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/694aa803000000001f004767",
+   "publishedAt": "2025-12-23",
+   "checkedAt": "2026-10-28",
+   "scope": "仅灵石路169号；个人到访体验"
   }
  ],
  "tencent-16899764175500191690": [
@@ -306,6 +458,15 @@
    "publishedAt": "2026-08-18",
    "checkedAt": "2026-10-26",
    "scope": ""
+  },
+  {
+   "field": "开业",
+   "value": "2026年6月新开，笔记只提环境和文创，没有座位或办公信息。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a1d38ce00000000070259df",
+   "publishedAt": "2026-06-01",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
   }
  ],
  "tencent-1495878479948436991": [
@@ -326,6 +487,24 @@
    "publishedAt": "",
    "checkedAt": "2026-10-27",
    "scope": "仅虎丘路78号"
+  },
+  {
+   "field": "费用与分区",
+   "value": "一楼开放座位点饮品即可；二楼图书馆自习室15元/小时、心流舱50元/小时，小程序预约；营业9:00–20:00；有Wi-Fi和插座。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6901cb7f00000000040140f6",
+   "publishedAt": "2025-10-29",
+   "checkedAt": "2026-10-28",
+   "scope": "价格为发帖时；以门店为准"
+  },
+  {
+   "field": "电脑办公",
+   "value": "写二楼靠窗坐一下午，电源和网络随手可得；开放座位不另收费，美式可续杯。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a54ec3c000000002201bc1b",
+   "publishedAt": "2026-07-13",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
   }
  ],
  "tencent-1016586809765912258": [
@@ -337,6 +516,15 @@
    "publishedAt": "",
    "checkedAt": "2026-10-26",
    "scope": ""
+  },
+  {
+   "field": "空间",
+   "value": "2026年4月23日由滨江市民驿站改造开业，自述为书、轻餐饮、黑胶和临时办公一体的空间。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/69f30d6f0000000037036c3f",
+   "publishedAt": "2026-04-30",
+   "checkedAt": "2026-10-28",
+   "scope": "发帖账号像是合作号；无插座网络描述"
   }
  ],
  "tencent-7356209017016184253": [
@@ -366,6 +554,15 @@
    "publishedAt": "2026-08-18",
    "checkedAt": "2026-10-27",
    "scope": "大连路1391号综合馆"
+  },
+  {
+   "field": "插座",
+   "value": "写有台灯和插座的座位有限，一楼24小时开放。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/697844f7000000002802310a",
+   "publishedAt": "2026-01-27",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
   }
  ],
  "tencent-16790604963118065515": [
@@ -386,6 +583,15 @@
    "publishedAt": "2026-05-24",
    "checkedAt": "2026-10-27",
    "scope": ""
+  },
+  {
+   "field": "费用",
+   "value": "2021年笔记写这里的自习室30元一整天。时间过久，不作为现价。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6195b18e0000000021038514",
+   "publishedAt": "2021-11-18",
+   "checkedAt": "2026-10-28",
+   "scope": "历史分享"
   }
  ],
  "tencent-13603216452817986717": [
@@ -406,6 +612,15 @@
    "publishedAt": "",
    "checkedAt": "2026-10-27",
    "scope": "取代10-26“未检出”的记录"
+  },
+  {
+   "field": "费用",
+   "value": "灵活工位次卡1次为半天，全天扣2次；单次日卡工作日9:00–18:00可用，法定假日不可用。具体价格各篇口径不一，不写数字。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/69b6c769000000002200100a",
+   "publishedAt": "2026-03-15",
+   "checkedAt": "2026-10-28",
+   "scope": "全品牌规则；以小程序为准"
   }
  ],
  "tencent-1156071251300695158": [
@@ -426,6 +641,15 @@
    "publishedAt": "2026-07-24",
    "checkedAt": "2026-10-27",
    "scope": "数量和位置未说明"
+  },
+  {
+   "field": "网络与插座",
+   "value": "写插座、Wi-Fi、饮水齐全，馆内无餐厅；一楼有城市书房。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/697844f7000000002802310a",
+   "publishedAt": "2026-01-27",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
   }
  ],
  "tencent-13945010968978969521": [
@@ -437,6 +661,15 @@
    "publishedAt": "2026-08-18",
    "checkedAt": "2026-10-27",
    "scope": "6F自修室"
+  },
+  {
+   "field": "网络与插座",
+   "value": "写Wi-Fi、饮水、插座齐全，馆内无食堂和微波炉。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/697844f7000000002802310a",
+   "publishedAt": "2026-01-27",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
   }
  ],
  "tencent-1151739292395603110": [
@@ -457,6 +690,24 @@
    "publishedAt": "2023-10-25",
    "checkedAt": "2026-10-28",
    "scope": "仅新页书房；一楼自习区是否同样预约未说明"
+  },
+  {
+   "field": "插座分布",
+   "value": "写自习区分布在1、2、4至7楼，二楼座位最多；免费Wi-Fi需手机验证码登录；评论称一楼右侧和四楼插座多，五六楼少。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/69e4c8ef000000002302071c",
+   "publishedAt": "2026-04-19",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
+  },
+  {
+   "field": "电脑办公",
+   "value": "写可以带电脑，有插座，座位多。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/69298a93000000001f00911a",
+   "publishedAt": "2025-11-28",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
   }
  ],
  "tencent-4290032747528582581": [
@@ -477,6 +728,24 @@
    "publishedAt": "2026-08-04",
    "checkedAt": "2026-10-27",
    "scope": "三楼"
+  },
+  {
+   "field": "自习预约",
+   "value": "三楼单人自习室和共享空间用「虹图预约」小程序，可约第二至第六天，不能约当天，半小时内扫码签到；三楼图书室学习桌无需预约；Wi-Fi用读者证号登录。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6aaa5a98000000002802f665",
+   "publishedAt": "2026-09-16",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
+  },
+  {
+   "field": "插座",
+   "value": "写几乎每张桌子都有充电设备，完全免费，有免费Wi-Fi。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6aa274ff0000000026038d06",
+   "publishedAt": "2026-09-10",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
   }
  ],
  "tencent-1323168865883257290": [
@@ -488,6 +757,15 @@
    "publishedAt": "2026-08-18",
    "checkedAt": "2026-10-27",
    "scope": "分楼层开放"
+  },
+  {
+   "field": "电脑办公",
+   "value": "写大部分座位旁有插座，Wi-Fi稳定；2楼有专门自习区但座位有限；游客较多。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/694d1cc4000000001e0225d2",
+   "publishedAt": "2025-12-25",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
   }
  ],
  "tencent-8203150398336251525": [
@@ -499,6 +777,15 @@
    "publishedAt": "2026-09-09",
    "checkedAt": "2026-10-27",
    "scope": "仅红砖书屋；电脑办公未说明"
+  },
+  {
+   "field": "办公条件",
+   "value": "作者实测：无Wi-Fi，2楼有插座，桌子只有1–2张，可坐台阶，无厕所；只适合临时小坐。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/696db924000000000a03c7d2",
+   "publishedAt": "2026-01-19",
+   "checkedAt": "2026-10-28",
+   "scope": "个人到访体验"
   }
  ],
  "tencent-3925815058445894139": [
@@ -510,6 +797,15 @@
    "publishedAt": "",
    "checkedAt": "2026-10-27",
    "scope": ""
+  },
+  {
+   "field": "费用",
+   "value": "灵活工位次卡1次为半天，全天扣2次；单次日卡工作日9:00–18:00可用，法定假日不可用。具体价格各篇口径不一，不写数字。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/69b6c769000000002200100a",
+   "publishedAt": "2026-03-15",
+   "checkedAt": "2026-10-28",
+   "scope": "全品牌规则；以小程序为准"
   }
  ],
  "tencent-3712421871869865800": [
@@ -521,6 +817,15 @@
    "publishedAt": "",
    "checkedAt": "2026-10-27",
    "scope": ""
+  },
+  {
+   "field": "费用",
+   "value": "灵活工位次卡1次为半天，全天扣2次；单次日卡工作日9:00–18:00可用，法定假日不可用。具体价格各篇口径不一，不写数字。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/69b6c769000000002200100a",
+   "publishedAt": "2026-03-15",
+   "checkedAt": "2026-10-28",
+   "scope": "全品牌规则；以小程序为准"
   }
  ]
 }
