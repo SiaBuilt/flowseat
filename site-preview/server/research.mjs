@@ -2,10 +2,23 @@ import records from '../data/shanghai-research-20261026.json' with {type:'json'}
 const hours={
  'tencent-3299611627541318899':'周一至周四、周六日9:00–21:00；周五12:30–21:00（馆方官网）',
  'tencent-16899764175500191690':'8:30–20:30，周末开放（品牌官网，海粟店）',
- 'tencent-7356209017016184253':'综合馆1楼24小时、2楼9:00–21:00；周一8:00–13:00全馆闭馆（政府公告）'
+ 'tencent-7356209017016184253':'综合馆1楼24小时、2楼9:00–21:00；周一8:00–13:00全馆闭馆（政府公告）',
+ 'tencent-5528072624503891635':'周一13:30–20:30，周二至周日9:00–20:30（2026全市图书馆名录）',
+ 'tencent-5077489784331986024':'2楼、3楼图书馆周一至周日8:30–20:30（2026全市图书馆名录）',
+ 'tencent-17364212556120645478':'街道图书馆周二至周日8:30–20:30，周一13:00–20:30（2026全市图书馆名录）',
+ 'tencent-9041022309288894993':'3楼街道分馆周一8:30–17:00，周二至周日8:30–20:30（2026全市图书馆名录）',
+ 'tencent-1784892308627747305':'古北天空书苑周一至周日8:30–20:30（2026全市图书馆名录）',
+ 'tencent-1156071251300695158':'城市书房周一至周日7:30–22:30（2026全市图书馆名录）',
+ 'tencent-13945010968978969521':'6F自修室周二至周日9:00–20:30（2026全市图书馆名录）',
+ 'tencent-1151739292395603110':'周二至周日9:00–20:30；周一13:00–17:00仅一楼自习区等开放（2026全市图书馆名录）',
+ 'tencent-4290032747528582581':'周一至周日9:00–21:00，周四13:00开放（2026全市图书馆名录）',
+ 'tencent-1323168865883257290':'周二至周日9:00–21:00，三楼至17:00，周一闭馆（2026全市图书馆名录）',
+ 'tencent-8203150398336251525':'红砖书屋周一至周日10:00–20:00（区政府报道）'
 };
-export function withResearch(place){
- const facts=records[place.id];if(!facts)return place;
+// 插座松紧无法长期可靠提供，已入库的旧占位文案在输出时去掉。
+const tidy=place=>typeof place.charging==='string'&&place.charging.includes('松紧')?{...place,charging:place.charging.replace('数量、位置与松紧','数量与位置').replace(/、?松紧/g,'')}:place;
+export function withResearch(input){
+ const place=tidy(input),facts=records[place.id];if(!facts)return place;
  const result={...place,researchFacts:facts};
  if(hours[place.id]&&(!place.hours||place.hours==='开放时间待确认')&&!place.observations?.hours&&!place.merchant?.fields?.includes('hours'))result.hours=hours[place.id];
  return result;
