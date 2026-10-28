@@ -74,3 +74,13 @@
 先读此文件与 `docs/development/`，核对实际目录、当前分支、未提交改动。主目录继续功能；新视觉从 `.worktrees/visual` 查看。运行测试用主目录 `npm test`，类型检查 `npm run typecheck:client`；Web构建后 `npm run sync:web` 同步服务端客户端源和public产物。服务端构建 `npm run build:server`。
 
 不要覆盖保留的新视觉；不要提交凭证、依赖链接、数据库、缓存或临时预览。用户未要求自动后续任务，本次不建立定时任务。
+
+## 待发布清单（2026-10-28，Claude 无 Sites 工具，需在 Codex 执行）
+
+用户已要求上线。GitHub 已推送 `feat/core-functions`；线上 Sites 部署尚未执行。
+
+1. 确认分支 `feat/core-functions` 最新提交，根目录 `npm test` 通过；`npm run build:web && npm run sync:web && npm run build:server`。
+2. 按 Sites skill 打开站点 `appgprj_6acfa49e8b048191bb1033cf05c346de` 的源仓，用本仓 `site-preview/` 完整内容（含 `data/`、`server/`、`client/`、`public/`、`drizzle/`）同步，不带 `.wrangler`、`node_modules`、`.dev.vars`。
+3. 线上 D1 按顺序应用尚未应用的迁移；`0002_merchant_links.sql`（商家确认链接表）若未应用必须先应用，已应用的不得重放。
+4. 构建、保存版本并部署；访问策略保持仅 owner，除非用户另行授权改受众。
+5. 验证：`/api/health`；`/api/places` 首次访问会自动执行导入批次 `bootstrap:shanghai-expansion-20261025`、`-20261027` 和隐藏批次 `bootstrap:hide-insufficient-20261028`，可见地点应为27处（若线上已有人工隐藏/审核记录，以实际为准）；`/api/places/tencent-13353016511687307342` 应为404；详情页不再出现“松紧”“当前空位待确认”，停车卡只显示距离。
