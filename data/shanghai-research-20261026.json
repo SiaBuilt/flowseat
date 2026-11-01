@@ -827,5 +827,237 @@
    "checkedAt": "2026-10-28",
    "scope": "全品牌规则；以小程序为准"
   }
+ ],
+ "tencent-2138397045690600724": [
+  {
+   "field": "开放时间",
+   "value": "周一至周五9:00–20:00，周六日及国定节假日9:00–17:00。",
+   "status": "官方资料",
+   "url": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+   "publishedAt": "2026-08-18",
+   "checkedAt": "2026-11-01"
+  },
+  {
+   "field": "插座与网络",
+   "value": "写座位配插座和USB口，有Wi-Fi，稳定性评价不一；另一篇写电源不多。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6966273c000000001a02bdbf",
+   "publishedAt": "2026-01-13",
+   "checkedAt": "2026-11-01",
+   "scope": "个人到访体验"
+  },
+  {
+   "field": "开放时间",
+   "value": "另一篇写8:30–20:30／周末8:30–17:00，与名录不一致，以名录为准。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a8e0549000000000b027c92",
+   "publishedAt": "2026-08-25",
+   "checkedAt": "2026-11-01"
+  },
+  {
+   "field": "座位",
+   "value": "笔记提到适合自习，座位数量和电源分布各篇说法不一。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6aab6309000000002a025ca9",
+   "publishedAt": "2026-09-17",
+   "checkedAt": "2026-11-01",
+   "scope": "个人到访体验"
+  }
+ ],
+ "tencent-6199779458128803917": [
+  {
+   "field": "开放与条件",
+   "value": "写每天8:00–20:00开放，免费；插座一般，有Wi-Fi但网速一般。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a953f9a000000001f01cec8",
+   "publishedAt": "2026-08-31",
+   "checkedAt": "2026-11-01",
+   "scope": "个人到访体验"
+  }
+ ],
+ "tencent-1907324987037633009": [
+  {
+   "field": "预约与时间",
+   "value": "写东塔楼5楼有免费工位，仅工作日9:00–17:00，需提前预约；每个工位旁有插座。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6945554f000000001e022051",
+   "publishedAt": "2025-12-19",
+   "checkedAt": "2026-11-01",
+   "scope": "仅东塔楼5楼；个人到访体验"
+  }
+ ],
+ "tencent-120619173309390702": [
+  {
+   "field": "预约与条件",
+   "value": "写一楼中庭咖啡馆旁有自习区，仅工作日10:00–17:00；需用会员积分（约100分）预约；座位旁有插座，Wi-Fi稳定。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/693bb0d6000000001e02f158",
+   "publishedAt": "2025-12-12",
+   "checkedAt": "2026-11-01",
+   "scope": "仅一楼自习区；个人到访体验"
+  }
+ ],
+ "tencent-2305757356620276530": [
+  {
+   "field": "开放与条件",
+   "value": "写在商场内（Manner旁），9:00–20:30；有独立自习室，配插座和Wi-Fi。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a563e3400000000110124c6",
+   "publishedAt": "2026-07-14",
+   "checkedAt": "2026-11-01",
+   "scope": "个人到访体验"
+  }
+ ],
+ "tencent-2356655115628971442": [
+  {
+   "field": "开放时间",
+   "value": "周家桥街道图书馆在玉屏南路560弄78号3楼，周一至周日8:30–20:30；名录注明原馆2025年2月起搬迁。",
+   "status": "官方资料",
+   "url": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+   "publishedAt": "2026-08-18",
+   "checkedAt": "2026-11-01",
+   "scope": "仅3楼街道图书馆"
+  },
+  {
+   "field": "开放时间",
+   "value": "写8:30–20:30，地址玉屏南路560弄78号，与名录一致。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a82718600000000220138a7",
+   "publishedAt": "2026-08-17",
+   "checkedAt": "2026-11-01"
+  }
+ ],
+ "tencent-10349402219054627940": [
+  {
+   "field": "开放与条件",
+   "value": "写3楼阅悦书房每天8:30–20:00，有插座和Wi-Fi，Wi-Fi不太稳定。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a878d3e00000000330346e9",
+   "publishedAt": "2026-08-20",
+   "checkedAt": "2026-11-01",
+   "scope": "仅3楼书房；个人到访体验"
+  }
+ ],
+ "tencent-2384553856944991160": [
+  {
+   "field": "开放与条件",
+   "value": "写仅工作日9:00–16:00，周末不开；没有Wi-Fi。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a730f03000000003301985b",
+   "publishedAt": "2026-08-05",
+   "checkedAt": "2026-11-01",
+   "scope": "个人到访体验"
+  }
+ ],
+ "tencent-1437547253435410292": [
+  {
+   "field": "开放时间",
+   "value": "写1–2楼7:30–20:50开放。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a6bda4e00000000250010df",
+   "publishedAt": "2026-07-30",
+   "checkedAt": "2026-11-01",
+   "scope": "合集笔记，个人到访体验"
+  }
+ ],
+ "tencent-6976072345841481006": [
+  {
+   "field": "开放时间",
+   "value": "虹梅路街道图书馆（全州路81号）周一至周日8:30–20:30。",
+   "status": "官方资料",
+   "url": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+   "publishedAt": "2026-08-18",
+   "checkedAt": "2026-11-01",
+   "scope": "仅街道图书馆"
+  },
+  {
+   "field": "开放时间",
+   "value": "写8:30–20:30，与名录一致。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a6bda4e00000000250010df",
+   "publishedAt": "2026-07-30",
+   "checkedAt": "2026-11-01",
+   "scope": "合集笔记"
+  }
+ ],
+ "tencent-13187874297833996871": [
+  {
+   "field": "开放时间",
+   "value": "桃浦镇图书馆（红棉路188号）周一至周日8:30–20:30，法定节假日另行通知。",
+   "status": "官方资料",
+   "url": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+   "publishedAt": "2026-08-18",
+   "checkedAt": "2026-11-01",
+   "scope": "仅镇图书馆"
+  },
+  {
+   "field": "座位与电源",
+   "value": "写座位和电源都比较多。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a6bda4e00000000250010df",
+   "publishedAt": "2026-07-30",
+   "checkedAt": "2026-11-01",
+   "scope": "合集笔记，个人到访体验"
+  }
+ ],
+ "tencent-8001542148609659615": [
+  {
+   "field": "开放时间",
+   "value": "北蔡镇图书馆在陈春路101号3楼，周一至周日8:00–20:00，节假日另行通知。",
+   "status": "官方资料",
+   "url": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+   "publishedAt": "2026-08-18",
+   "checkedAt": "2026-11-01",
+   "scope": "仅3楼镇图书馆"
+  },
+  {
+   "field": "网络",
+   "value": "写有Wi-Fi，全年开放；插座情况未确认。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a6bda4e00000000250010df",
+   "publishedAt": "2026-07-30",
+   "checkedAt": "2026-11-01",
+   "scope": "合集笔记"
+  }
+ ],
+ "tencent-1209419657397115628": [
+  {
+   "field": "开放时间",
+   "value": "写周一至周五8:30–20:00，周六8:30–17:00。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a7ed31b000000002c0027dc",
+   "publishedAt": "2026-08-14",
+   "checkedAt": "2026-11-01",
+   "scope": "合集笔记"
+  }
+ ],
+ "tencent-12514261518351685943": [
+  {
+   "field": "开放时间",
+   "value": "8:30–21:00，周二13:00–21:00，周四仅开放报刊阅览室。",
+   "status": "官方资料",
+   "url": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+   "publishedAt": "2026-08-18",
+   "checkedAt": "2026-11-01"
+  },
+  {
+   "field": "插座",
+   "value": "写桌面插座比较少。",
+   "status": "用户分享",
+   "url": "https://www.xiaohongshu.com/explore/6a7ed31b000000002c0027dc",
+   "publishedAt": "2026-08-14",
+   "checkedAt": "2026-11-01",
+   "scope": "合集笔记，个人到访体验"
+  }
+ ],
+ "tencent-13068563004408030446": [
+  {
+   "field": "开放时间",
+   "value": "周一至周日8:30–17:00，节假日9:00–16:00。",
+   "status": "官方资料",
+   "url": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+   "publishedAt": "2026-08-18",
+   "checkedAt": "2026-11-01"
+  }
  ]
 }

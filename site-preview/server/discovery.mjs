@@ -1,6 +1,7 @@
 import records from '../data/shanghai-real-discovery.json' with {type:'json'};
 import expansion from '../data/shanghai-expansion-20261025.json' with {type:'json'};
 import expansion1027 from '../data/shanghai-expansion-20261027.json' with {type:'json'};
+import expansion1101 from '../data/shanghai-expansion-20261101.json' with {type:'json'};
 const marker='bootstrap:real-shanghai-v06';
 // Bounded application data initialization. Never changes schema or replays after review.
 async function ensureBaseDiscovery(db){
@@ -20,7 +21,8 @@ const hidden=[{id:'tencent-13353016511687307342',note:'办公依据不足：原�
 const hideBatch='bootstrap:hide-insufficient-20261028';
 const batches=[
  {id:'bootstrap:shanghai-expansion-20261025',places:expansion,note:'新增12个公开资料候选，未认证办公条件'},
- {id:'bootstrap:shanghai-expansion-20261027',places:expansion1027,note:'新增8个官方名录与公开资料候选，未认证办公条件'}
+ {id:'bootstrap:shanghai-expansion-20261027',places:expansion1027,note:'新增8个官方名录与公开资料候选，未认证办公条件'},
+ {id:'bootstrap:shanghai-expansion-20261101',places:expansion1101,note:'新增15个小红书线索候选（7处有官方名录时间），未认证办公条件'}
 ];
 export async function ensureDiscovery(db){
  await ensureBaseDiscovery(db);

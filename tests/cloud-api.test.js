@@ -127,7 +127,7 @@ test('真实地点候选公开但不认证办公，普通投稿仍私有；隐�
  const {db,call}=await setup();
  db.exec(readFileSync(prefix+'drizzle/0001_public_candidates.sql','utf8'));
  const {ensureDiscovery}=await discoveryReady;await ensureDiscovery(db);
- const list=(await call('places')).places;assert.equal(list.length,27);
+ const list=(await call('places')).places;assert.equal(list.length,42);
  assert.ok(list.every(p=>p.discovery&&!p.demo&&!p.laptopFriendly&&p.cost==='unknown'&&p.location.system==='GCJ-02'));
  assert.equal((await call('places/source-7754766b48220f30fe6d5c76')).status,404);
  const id=list[0].id;
@@ -136,7 +136,7 @@ test('真实地点候选公开但不认证办公，普通投稿仍私有；隐�
  assert.equal((await call('places/'+id+'/confirm','POST',{fields:['laptopFriendly'],note:'我看过了'})).status,400);
  assert.equal((await call('review/place/'+id,'POST',{action:'approve',note:'仅有地图坐标'},'owner')).status,400);
  await call('review/place/'+id,'POST',{action:'hide',note:'地点匹配有误，需要重新核对'},'owner');
- await ensureDiscovery(db);assert.equal((await call('places/'+id)).status,404);assert.equal((await call('places')).places.length,26);
+ await ensureDiscovery(db);assert.equal((await call('places/'+id)).status,404);assert.equal((await call('places')).places.length,41);
  assert.ok(!(await call('saved')).ids.includes(id));
 });
 test('候选的社区闭店反馈也能隐藏；只有审核员可以补充候选资料',async()=>{
@@ -251,14 +251,14 @@ test('费用和菜单补充经审核更新；费用变化清空旧预算并阻�
 test('扩充批次幂等，保留已隐藏地点并公开发现来源',async()=>{
  const {db,call}=await setup();const {ensureDiscovery}=await discoveryReady;
  await ensureDiscovery(db);await ensureDiscovery(db);
- assert.equal((await call('places')).places.length,27);
+ assert.equal((await call('places')).places.length,42);
  const id='tencent-16435788558534883525';
  assert.ok((await call('places/'+id)).place.leadSources[0].url.startsWith('https:'));
  await call('review/place/'+id,'POST',{action:'hide',note:'等待再次核对'},'owner');
  db.exec("DELETE FROM audit WHERE id='bootstrap:shanghai-expansion-20261025'");
  await ensureDiscovery(db);
  assert.equal((await call('places/'+id)).status,404);
- assert.equal((await call('places')).places.length,26);
+ assert.equal((await call('places')).places.length,41);
 });
 
 test('工作分区可多选或明确无分区，审核前不更新且拒绝非法分区',async()=>{

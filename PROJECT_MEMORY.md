@@ -91,3 +91,9 @@
 - 用内置浏览器读已登录的小红书网页版，27 处现有地点新增 34 条「用户分享」记录（附原帖链接，不提升认证，不记 Wi-Fi 密码）。详见 `docs/development/小红书核对-2026-10-28.md`。
 - 17 处新地点线索在 `data/shanghai-xhs-leads-20261028.json`，缺腾讯坐标未入库；需要 TENCENT_MAP_KEY 后补坐标。
 - 待复核：大宁路街道党群服务中心地址（灵石路169号 vs 平型关路1179号）；红砖书屋办公条件弱，可考虑降级。
+
+## 2026-11-01 小红书新地点入库
+
+- 腾讯地图 Key（个人开发者账号，AI场景专用Key，临时额度到 2027-10-19）已存本机 `site-preview/.dev.vars`（已被 git 忽略），线上 Sites 另有自己的配置。
+- 17 处线索里 15 处入库为候选（`data/shanghai-expansion-20261101.json`，批次 `bootstrap:shanghai-expansion-20261101`），7 处补了名录官方时间（`site-preview/server/research.mjs`），2 处地址对不上暂不入库。本地地点总数 43（含本地未隐藏的湖南街道），测试里的可见数已从 27/26 改为 42/41。
+- 未部署上线。详见 `docs/development/小红书核对-2026-10-28.md` 末节。

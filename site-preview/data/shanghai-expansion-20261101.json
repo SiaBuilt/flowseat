@@ -1,0 +1,695 @@
+[
+ {
+  "id": "tencent-2138397045690600724",
+  "name": "北外滩街道图书馆",
+  "address": "上海市虹口区通州路99号2楼",
+  "district": "虹口",
+  "type": "图书馆",
+  "cost": "unknown",
+  "price": "费用待确认",
+  "budget": "费用待确认",
+  "plugs": "待确认",
+  "charging": "数量与位置待到访确认",
+  "chair": "待确认",
+  "chairNote": "尚无到访体验",
+  "zones": [],
+  "wifi": null,
+  "hours": "开放时间待确认",
+  "entry": "进入条件待确认",
+  "stay": "停留规则待确认",
+  "extras": [],
+  "demo": false,
+  "laptopFriendly": false,
+  "deskFits": false,
+  "evidence": {},
+  "sourceDate": "2026-11-01",
+  "poiSource": "腾讯位置服务",
+  "basis": "公开资料线索：官方名录列有街道图书馆（通州路99号2楼）；小红书多篇到访笔记提到插座和Wi-Fi；电脑办公规则需核对。",
+  "drawing": 4,
+  "location": {
+   "lat": 31.255136,
+   "lng": 121.498162,
+   "system": "GCJ-02"
+  },
+  "sourceUrl": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+  "poiId": "2138397045690600724",
+  "leadSources": [
+   {
+    "url": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+    "note": "2026全市图书馆名录列有开放时间",
+    "checkedAt": "2026-11-01",
+    "kind": "公开资料"
+   },
+   {
+    "url": "https://www.xiaohongshu.com/explore/6966273c000000001a02bdbf",
+    "note": "小红书用户到访分享，仅作线索",
+    "checkedAt": "2026-11-01",
+    "kind": "用户分享"
+   },
+   {
+    "url": "https://www.xiaohongshu.com/explore/6a8e0549000000000b027c92",
+    "note": "小红书用户到访分享，仅作线索",
+    "checkedAt": "2026-11-01",
+    "kind": "用户分享"
+   },
+   {
+    "url": "https://www.xiaohongshu.com/explore/6aab6309000000002a025ca9",
+    "note": "小红书用户到访分享，仅作线索",
+    "checkedAt": "2026-11-01",
+    "kind": "用户分享"
+   }
+  ]
+ },
+ {
+  "id": "tencent-6199779458128803917",
+  "name": "五里桥街道创意家园街区党群服务站",
+  "address": "上海市黄浦区局门路425号",
+  "district": "黄浦",
+  "type": "公共空间",
+  "cost": "unknown",
+  "price": "费用待确认",
+  "budget": "费用待确认",
+  "plugs": "待确认",
+  "charging": "数量与位置待到访确认",
+  "chair": "待确认",
+  "chairNote": "尚无到访体验",
+  "zones": [],
+  "wifi": null,
+  "hours": "开放时间待确认",
+  "entry": "进入条件待确认",
+  "stay": "停留规则待确认",
+  "extras": [],
+  "demo": false,
+  "laptopFriendly": false,
+  "deskFits": false,
+  "evidence": {},
+  "sourceDate": "2026-11-01",
+  "poiSource": "腾讯位置服务",
+  "basis": "公开资料线索：小红书到访笔记写免费开放、有Wi-Fi；暂无官方开放时间和办公规则。",
+  "drawing": 3,
+  "location": {
+   "lat": 31.20324,
+   "lng": 121.482241,
+   "system": "GCJ-02"
+  },
+  "sourceUrl": "https://www.xiaohongshu.com/explore/6a953f9a000000001f01cec8",
+  "poiId": "6199779458128803917",
+  "leadSources": [
+   {
+    "url": "https://www.xiaohongshu.com/explore/6a953f9a000000001f01cec8",
+    "note": "小红书用户到访分享，仅作线索",
+    "checkedAt": "2026-11-01",
+    "kind": "用户分享"
+   }
+  ]
+ },
+ {
+  "id": "tencent-1907324987037633009",
+  "name": "西岸智塔 5楼免费工位",
+  "address": "上海市徐汇区云锦路701号东塔楼5楼",
+  "district": "徐汇",
+  "type": "公共空间",
+  "cost": "unknown",
+  "price": "费用待确认",
+  "budget": "费用待确认",
+  "plugs": "待确认",
+  "charging": "数量与位置待到访确认",
+  "chair": "待确认",
+  "chairNote": "尚无到访体验",
+  "zones": [],
+  "wifi": null,
+  "hours": "开放时间待确认",
+  "entry": "需预约（以现场规则为准）",
+  "stay": "停留规则待确认",
+  "extras": [],
+  "demo": false,
+  "laptopFriendly": false,
+  "deskFits": false,
+  "evidence": {},
+  "sourceDate": "2026-11-01",
+  "poiSource": "腾讯位置服务",
+  "basis": "公开资料线索：小红书笔记写东塔楼5楼免费工位需预约；预约方式和开放对象需核对。",
+  "drawing": 3,
+  "location": {
+   "lat": 31.163141,
+   "lng": 121.459791,
+   "system": "GCJ-02"
+  },
+  "sourceUrl": "https://www.xiaohongshu.com/explore/6945554f000000001e022051",
+  "poiId": "1907324987037633009",
+  "leadSources": [
+   {
+    "url": "https://www.xiaohongshu.com/explore/6945554f000000001e022051",
+    "note": "小红书用户到访分享，仅作线索",
+    "checkedAt": "2026-11-01",
+    "kind": "用户分享"
+   }
+  ]
+ },
+ {
+  "id": "tencent-120619173309390702",
+  "name": "宜家徐汇店 自习区",
+  "address": "上海市徐汇区漕溪路126号(漕溪路地铁站3号口步行390米)",
+  "district": "徐汇",
+  "type": "公共空间",
+  "cost": "unknown",
+  "price": "费用待确认",
+  "budget": "费用待确认",
+  "plugs": "待确认",
+  "charging": "数量与位置待到访确认",
+  "chair": "待确认",
+  "chairNote": "尚无到访体验",
+  "zones": [],
+  "wifi": null,
+  "hours": "开放时间待确认",
+  "entry": "需宜家会员积分预约（以官方规则为准）",
+  "stay": "停留规则待确认",
+  "extras": [],
+  "demo": false,
+  "laptopFriendly": false,
+  "deskFits": false,
+  "evidence": {},
+  "sourceDate": "2026-11-01",
+  "poiSource": "腾讯位置服务",
+  "basis": "公开资料线索：小红书笔记写一楼自习区需会员积分预约；规则以宜家官方为准。",
+  "drawing": 3,
+  "location": {
+   "lat": 31.177956,
+   "lng": 121.434045,
+   "system": "GCJ-02"
+  },
+  "sourceUrl": "https://www.xiaohongshu.com/explore/693bb0d6000000001e02f158",
+  "poiId": "120619173309390702",
+  "leadSources": [
+   {
+    "url": "https://www.xiaohongshu.com/explore/693bb0d6000000001e02f158",
+    "note": "小红书用户到访分享，仅作线索",
+    "checkedAt": "2026-11-01",
+    "kind": "用户分享"
+   }
+  ]
+ },
+ {
+  "id": "tencent-2305757356620276530",
+  "name": "徐汇区党群服务中心",
+  "address": "上海市徐汇区田林鑫耀·光环LIVE(苍梧路)",
+  "district": "徐汇",
+  "type": "公共空间",
+  "cost": "unknown",
+  "price": "费用待确认",
+  "budget": "费用待确认",
+  "plugs": "待确认",
+  "charging": "数量与位置待到访确认",
+  "chair": "待确认",
+  "chairNote": "尚无到访体验",
+  "zones": [],
+  "wifi": null,
+  "hours": "开放时间待确认",
+  "entry": "进入条件待确认",
+  "stay": "停留规则待确认",
+  "extras": [],
+  "demo": false,
+  "laptopFriendly": false,
+  "deskFits": false,
+  "evidence": {},
+  "sourceDate": "2026-11-01",
+  "poiSource": "腾讯位置服务",
+  "basis": "公开资料线索：小红书到访笔记写有独立自习室、插座和Wi-Fi；暂无官方开放时间。",
+  "drawing": 3,
+  "location": {
+   "lat": 31.168008,
+   "lng": 121.415616,
+   "system": "GCJ-02"
+  },
+  "sourceUrl": "https://www.xiaohongshu.com/explore/6a563e3400000000110124c6",
+  "poiId": "2305757356620276530",
+  "leadSources": [
+   {
+    "url": "https://www.xiaohongshu.com/explore/6a563e3400000000110124c6",
+    "note": "小红书用户到访分享，仅作线索",
+    "checkedAt": "2026-11-01",
+    "kind": "用户分享"
+   }
+  ]
+ },
+ {
+  "id": "tencent-2356655115628971442",
+  "name": "周家桥街道党群服务中心",
+  "address": "上海市长宁区玉屏南路560弄78号",
+  "district": "长宁",
+  "type": "图书馆",
+  "cost": "unknown",
+  "price": "费用待确认",
+  "budget": "费用待确认",
+  "plugs": "待确认",
+  "charging": "数量与位置待到访确认",
+  "chair": "待确认",
+  "chairNote": "尚无到访体验",
+  "zones": [],
+  "wifi": null,
+  "hours": "开放时间待确认",
+  "entry": "进入条件待确认",
+  "stay": "停留规则待确认",
+  "extras": [],
+  "demo": false,
+  "laptopFriendly": false,
+  "deskFits": false,
+  "evidence": {},
+  "sourceDate": "2026-11-01",
+  "poiSource": "腾讯位置服务",
+  "basis": "公开资料线索：官方名录列有新址街道图书馆；腾讯地图旧点位在520弄18号，本条按名录新地址定位。",
+  "drawing": 4,
+  "location": {
+   "lat": 31.215466,
+   "lng": 121.402796,
+   "system": "GCJ-02"
+  },
+  "sourceUrl": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+  "poiId": "2356655115628971442",
+  "leadSources": [
+   {
+    "url": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+    "note": "2026全市图书馆名录列有开放时间",
+    "checkedAt": "2026-11-01",
+    "kind": "公开资料"
+   },
+   {
+    "url": "https://www.xiaohongshu.com/explore/6a82718600000000220138a7",
+    "note": "小红书用户到访分享，仅作线索",
+    "checkedAt": "2026-11-01",
+    "kind": "用户分享"
+   }
+  ]
+ },
+ {
+  "id": "tencent-10349402219054627940",
+  "name": "陆家嘴街道社区党群服务中心 阅悦书房",
+  "address": "上海市浦东新区昌邑路699号3楼",
+  "district": "浦东",
+  "type": "公共空间",
+  "cost": "unknown",
+  "price": "费用待确认",
+  "budget": "费用待确认",
+  "plugs": "待确认",
+  "charging": "数量与位置待到访确认",
+  "chair": "待确认",
+  "chairNote": "尚无到访体验",
+  "zones": [],
+  "wifi": null,
+  "hours": "开放时间待确认",
+  "entry": "进入条件待确认",
+  "stay": "停留规则待确认",
+  "extras": [],
+  "demo": false,
+  "laptopFriendly": false,
+  "deskFits": false,
+  "evidence": {},
+  "sourceDate": "2026-11-01",
+  "poiSource": "腾讯位置服务",
+  "basis": "公开资料线索：小红书到访笔记写3楼书房有插座和Wi-Fi；暂无官方开放时间。",
+  "drawing": 3,
+  "location": {
+   "lat": 31.242203,
+   "lng": 121.525394,
+   "system": "GCJ-02"
+  },
+  "sourceUrl": "https://www.xiaohongshu.com/explore/6a878d3e00000000330346e9",
+  "poiId": "10349402219054627940",
+  "leadSources": [
+   {
+    "url": "https://www.xiaohongshu.com/explore/6a878d3e00000000330346e9",
+    "note": "小红书用户到访分享，仅作线索",
+    "checkedAt": "2026-11-01",
+    "kind": "用户分享"
+   }
+  ]
+ },
+ {
+  "id": "tencent-2384553856944991160",
+  "name": "陆家嘴金融城党群服务中心（上海中心22楼）",
+  "address": "上海市浦东新区陆家嘴街道银城中路501号上海中心大厦22层",
+  "district": "浦东",
+  "type": "公共空间",
+  "cost": "unknown",
+  "price": "费用待确认",
+  "budget": "费用待确认",
+  "plugs": "待确认",
+  "charging": "数量与位置待到访确认",
+  "chair": "待确认",
+  "chairNote": "尚无到访体验",
+  "zones": [],
+  "wifi": null,
+  "hours": "开放时间待确认",
+  "entry": "进入条件待确认",
+  "stay": "停留规则待确认",
+  "extras": [],
+  "demo": false,
+  "laptopFriendly": false,
+  "deskFits": false,
+  "evidence": {},
+  "sourceDate": "2026-11-01",
+  "poiSource": "腾讯位置服务",
+  "basis": "公开资料线索：小红书到访笔记写工作日开放、无Wi-Fi；进入上海中心的方式需核对。",
+  "drawing": 3,
+  "location": {
+   "lat": 31.233552,
+   "lng": 121.505345,
+   "system": "GCJ-02"
+  },
+  "sourceUrl": "https://www.xiaohongshu.com/explore/6a730f03000000003301985b",
+  "poiId": "2384553856944991160",
+  "leadSources": [
+   {
+    "url": "https://www.xiaohongshu.com/explore/6a730f03000000003301985b",
+    "note": "小红书用户到访分享，仅作线索",
+    "checkedAt": "2026-11-01",
+    "kind": "用户分享"
+   }
+  ]
+ },
+ {
+  "id": "tencent-1437547253435410292",
+  "name": "虹桥镇党群服务中心",
+  "address": "上海市闵行区吴中路1238号1-2F",
+  "district": "闵行",
+  "type": "公共空间",
+  "cost": "unknown",
+  "price": "费用待确认",
+  "budget": "费用待确认",
+  "plugs": "待确认",
+  "charging": "数量与位置待到访确认",
+  "chair": "待确认",
+  "chairNote": "尚无到访体验",
+  "zones": [],
+  "wifi": null,
+  "hours": "开放时间待确认",
+  "entry": "进入条件待确认",
+  "stay": "停留规则待确认",
+  "extras": [],
+  "demo": false,
+  "laptopFriendly": false,
+  "deskFits": false,
+  "evidence": {},
+  "sourceDate": "2026-11-01",
+  "poiSource": "腾讯位置服务",
+  "basis": "公开资料线索：小红书合集笔记列入免费自习空间；插座和Wi-Fi未说明。",
+  "drawing": 3,
+  "location": {
+   "lat": 31.176035,
+   "lng": 121.380951,
+   "system": "GCJ-02"
+  },
+  "sourceUrl": "https://www.xiaohongshu.com/explore/6a6bda4e00000000250010df",
+  "poiId": "1437547253435410292",
+  "leadSources": [
+   {
+    "url": "https://www.xiaohongshu.com/explore/6a6bda4e00000000250010df",
+    "note": "小红书用户到访分享，仅作线索",
+    "checkedAt": "2026-11-01",
+    "kind": "用户分享"
+   }
+  ]
+ },
+ {
+  "id": "tencent-6976072345841481006",
+  "name": "虹梅街道党群服务中心",
+  "address": "上海市徐汇区全州路81号",
+  "district": "徐汇",
+  "type": "图书馆",
+  "cost": "unknown",
+  "price": "费用待确认",
+  "budget": "费用待确认",
+  "plugs": "待确认",
+  "charging": "数量与位置待到访确认",
+  "chair": "待确认",
+  "chairNote": "尚无到访体验",
+  "zones": [],
+  "wifi": null,
+  "hours": "开放时间待确认",
+  "entry": "进入条件待确认",
+  "stay": "停留规则待确认",
+  "extras": [],
+  "demo": false,
+  "laptopFriendly": false,
+  "deskFits": false,
+  "evidence": {},
+  "sourceDate": "2026-11-01",
+  "poiSource": "腾讯位置服务",
+  "basis": "公开资料线索：官方名录列有同址街道图书馆；小红书合集笔记列入免费自习空间；插座和Wi-Fi未说明。",
+  "drawing": 4,
+  "location": {
+   "lat": 31.166141,
+   "lng": 121.407473,
+   "system": "GCJ-02"
+  },
+  "sourceUrl": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+  "poiId": "6976072345841481006",
+  "leadSources": [
+   {
+    "url": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+    "note": "2026全市图书馆名录列有开放时间",
+    "checkedAt": "2026-11-01",
+    "kind": "公开资料"
+   },
+   {
+    "url": "https://www.xiaohongshu.com/explore/6a6bda4e00000000250010df",
+    "note": "小红书用户到访分享，仅作线索",
+    "checkedAt": "2026-11-01",
+    "kind": "用户分享"
+   }
+  ]
+ },
+ {
+  "id": "tencent-13187874297833996871",
+  "name": "桃浦镇社区党群服务中心",
+  "address": "上海市普陀区桃浦镇红棉路188号",
+  "district": "普陀",
+  "type": "图书馆",
+  "cost": "unknown",
+  "price": "费用待确认",
+  "budget": "费用待确认",
+  "plugs": "待确认",
+  "charging": "数量与位置待到访确认",
+  "chair": "待确认",
+  "chairNote": "尚无到访体验",
+  "zones": [],
+  "wifi": null,
+  "hours": "开放时间待确认",
+  "entry": "进入条件待确认",
+  "stay": "停留规则待确认",
+  "extras": [],
+  "demo": false,
+  "laptopFriendly": false,
+  "deskFits": false,
+  "evidence": {},
+  "sourceDate": "2026-11-01",
+  "poiSource": "腾讯位置服务",
+  "basis": "公开资料线索：官方名录列有同址镇图书馆；小红书合集笔记写座位和电源较多。",
+  "drawing": 4,
+  "location": {
+   "lat": 31.28075,
+   "lng": 121.350786,
+   "system": "GCJ-02"
+  },
+  "sourceUrl": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+  "poiId": "13187874297833996871",
+  "leadSources": [
+   {
+    "url": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+    "note": "2026全市图书馆名录列有开放时间",
+    "checkedAt": "2026-11-01",
+    "kind": "公开资料"
+   },
+   {
+    "url": "https://www.xiaohongshu.com/explore/6a6bda4e00000000250010df",
+    "note": "小红书用户到访分享，仅作线索",
+    "checkedAt": "2026-11-01",
+    "kind": "用户分享"
+   }
+  ]
+ },
+ {
+  "id": "tencent-8001542148609659615",
+  "name": "北蔡镇社区党群服务中心",
+  "address": "上海市浦东新区北蔡镇陈春路101号(陈春路地铁站2号口步行390米)",
+  "district": "浦东",
+  "type": "图书馆",
+  "cost": "unknown",
+  "price": "费用待确认",
+  "budget": "费用待确认",
+  "plugs": "待确认",
+  "charging": "数量与位置待到访确认",
+  "chair": "待确认",
+  "chairNote": "尚无到访体验",
+  "zones": [],
+  "wifi": null,
+  "hours": "开放时间待确认",
+  "entry": "进入条件待确认",
+  "stay": "停留规则待确认",
+  "extras": [],
+  "demo": false,
+  "laptopFriendly": false,
+  "deskFits": false,
+  "evidence": {},
+  "sourceDate": "2026-11-01",
+  "poiSource": "腾讯位置服务",
+  "basis": "公开资料线索：官方名录列有同址镇图书馆；小红书合集笔记写有Wi-Fi。",
+  "drawing": 4,
+  "location": {
+   "lat": 31.173505,
+   "lng": 121.555428,
+   "system": "GCJ-02"
+  },
+  "sourceUrl": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+  "poiId": "8001542148609659615",
+  "leadSources": [
+   {
+    "url": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+    "note": "2026全市图书馆名录列有开放时间",
+    "checkedAt": "2026-11-01",
+    "kind": "公开资料"
+   },
+   {
+    "url": "https://www.xiaohongshu.com/explore/6a6bda4e00000000250010df",
+    "note": "小红书用户到访分享，仅作线索",
+    "checkedAt": "2026-11-01",
+    "kind": "用户分享"
+   }
+  ]
+ },
+ {
+  "id": "tencent-1209419657397115628",
+  "name": "愚园路党群服务中心",
+  "address": "上海市长宁区愚园路1051号(江苏路地铁站6号口步行260米)",
+  "district": "长宁",
+  "type": "公共空间",
+  "cost": "unknown",
+  "price": "费用待确认",
+  "budget": "费用待确认",
+  "plugs": "待确认",
+  "charging": "数量与位置待到访确认",
+  "chair": "待确认",
+  "chairNote": "尚无到访体验",
+  "zones": [],
+  "wifi": null,
+  "hours": "开放时间待确认",
+  "entry": "进入条件待确认",
+  "stay": "停留规则待确认",
+  "extras": [],
+  "demo": false,
+  "laptopFriendly": false,
+  "deskFits": false,
+  "evidence": {},
+  "sourceDate": "2026-11-01",
+  "poiSource": "腾讯位置服务",
+  "basis": "公开资料线索：小红书合集笔记列入免费自习空间；插座和Wi-Fi未说明。",
+  "drawing": 3,
+  "location": {
+   "lat": 31.218343,
+   "lng": 121.429318,
+   "system": "GCJ-02"
+  },
+  "sourceUrl": "https://www.xiaohongshu.com/explore/6a7ed31b000000002c0027dc",
+  "poiId": "1209419657397115628",
+  "leadSources": [
+   {
+    "url": "https://www.xiaohongshu.com/explore/6a7ed31b000000002c0027dc",
+    "note": "小红书用户到访分享，仅作线索",
+    "checkedAt": "2026-11-01",
+    "kind": "用户分享"
+   }
+  ]
+ },
+ {
+  "id": "tencent-12514261518351685943",
+  "name": "黄浦区明复图书馆",
+  "address": "上海市黄浦区陕西南路235号(近绍兴路)",
+  "district": "黄浦",
+  "type": "图书馆",
+  "cost": "unknown",
+  "price": "费用待确认",
+  "budget": "费用待确认",
+  "plugs": "待确认",
+  "charging": "数量与位置待到访确认",
+  "chair": "待确认",
+  "chairNote": "尚无到访体验",
+  "zones": [],
+  "wifi": null,
+  "hours": "开放时间待确认",
+  "entry": "进入条件待确认",
+  "stay": "停留规则待确认",
+  "extras": [],
+  "demo": false,
+  "laptopFriendly": false,
+  "deskFits": false,
+  "evidence": {},
+  "sourceDate": "2026-11-01",
+  "poiSource": "腾讯位置服务",
+  "basis": "公开资料线索：官方名录列有开放时间；小红书合集笔记写插座较少；电脑办公规则需核对。",
+  "drawing": 4,
+  "location": {
+   "lat": 31.208796,
+   "lng": 121.461906,
+   "system": "GCJ-02"
+  },
+  "sourceUrl": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+  "poiId": "12514261518351685943",
+  "leadSources": [
+   {
+    "url": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+    "note": "2026全市图书馆名录列有开放时间",
+    "checkedAt": "2026-11-01",
+    "kind": "公开资料"
+   },
+   {
+    "url": "https://www.xiaohongshu.com/explore/6a7ed31b000000002c0027dc",
+    "note": "小红书用户到访分享，仅作线索",
+    "checkedAt": "2026-11-01",
+    "kind": "用户分享"
+   }
+  ]
+ },
+ {
+  "id": "tencent-13068563004408030446",
+  "name": "新华路街道图书馆",
+  "address": "上海市长宁区法华镇路453号3楼(近番禺路)",
+  "district": "长宁",
+  "type": "图书馆",
+  "cost": "unknown",
+  "price": "费用待确认",
+  "budget": "费用待确认",
+  "plugs": "待确认",
+  "charging": "数量与位置待到访确认",
+  "chair": "待确认",
+  "chairNote": "尚无到访体验",
+  "zones": [],
+  "wifi": null,
+  "hours": "开放时间待确认",
+  "entry": "进入条件待确认",
+  "stay": "停留规则待确认",
+  "extras": [],
+  "demo": false,
+  "laptopFriendly": false,
+  "deskFits": false,
+  "evidence": {},
+  "sourceDate": "2026-11-01",
+  "poiSource": "腾讯位置服务",
+  "basis": "公开资料线索：官方名录列有开放时间；插座、Wi-Fi和电脑办公规则需核对。",
+  "drawing": 4,
+  "location": {
+   "lat": 31.204511,
+   "lng": 121.42697,
+   "system": "GCJ-02"
+  },
+  "sourceUrl": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+  "poiId": "13068563004408030446",
+  "leadSources": [
+   {
+    "url": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
+    "note": "2026全市图书馆名录列有开放时间",
+    "checkedAt": "2026-11-01",
+    "kind": "公开资料"
+   }
+  ]
+ }
+]
