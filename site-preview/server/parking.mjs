@@ -9,7 +9,7 @@ export async function nearbyParking(point,{key=''}={},fetcher=fetch){
  const old=cache.get(cacheKey);if(old&&old.until>Date.now())return old.value;
  const target=new URL('https://apis.map.qq.com/ws/place/v1/search');
  target.search=new URLSearchParams({key,keyword:'停车场',boundary:`nearby(${point.lat},${point.lng},500)`,page_size:'5',orderby:'_distance'}).toString();
- let data;try{const res=await fetcher(target,{signal:AbortSignal.timeout(8000),redirect:'error'});if(!res.ok)throw new Error();data=await res.json();}catch{fail(502,'附近停车信息暂不可用，请稍后重试');}
+ let data;try{const res=await fetcher(target,{signal:AbortSignal.timeout(8000),redirect:'manual'});if(!res.ok)throw new Error();data=await res.json();}catch{fail(502,'附近停车信息暂不可用，请稍后重试');}
  if(data.status!==0||!Array.isArray(data.data))fail(502,'附近停车信息暂不可用，请稍后重试');
  const ids=new Set();const items=[];
  for(const row of data.data.slice(0,5)){

@@ -14,3 +14,5 @@ test('供应商失败不当成零停车场，也不把供应商鉴权详情输�
  await assert.rejects(nearbyParking(p,{key:'test'},async()=>Response.json({status:110,message:'secret'})),e=>e.status===502&&!e.message.includes('secret'));
  await assert.rejects(nearbyParking({...p,lat:39.9},{key:'test'}),e=>e.status===400);
 });
+
+test('停车查询兼容 Workers 且不跟随供应商重定向',async()=>{const {nearbyParking}=await ready;let calls=0;await assert.rejects(nearbyParking({lat:31.235,lng:121.475,system:'GCJ-02'},{key:'test'},async(_url,options)=>{calls++;assert.equal(options.redirect,'manual');return new Response(null,{status:302,headers:{Location:'https://other.example/collect'}});}),e=>e.status===502);assert.equal(calls,1);});

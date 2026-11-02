@@ -10,5 +10,5 @@ fs.copyFileSync(path.join(built,'index.html'),path.join(site,'public/client-shel
 for(const name of ['src','package.json','package-lock.json','vite.config.ts','tsconfig.json','index.html']){const dst=path.join(site,'client',name);fs.mkdirSync(path.dirname(dst),{recursive:true});fs.rmSync(dst,{recursive:true,force:true});fs.cpSync(path.join(client,name),dst,{recursive:true});}
 // 发布源的接口测试与功能主线共用用例，避免地点扩充后仍运行旧断言。
 fs.mkdirSync(path.join(site,'tests'),{recursive:true});
-fs.copyFileSync(path.join(root,'tests/cloud-api.test.js'),path.join(site,'tests/cloud-api.test.cjs'));
+for(const name of ['cloud-api','map-service'])fs.copyFileSync(path.join(root,'tests',name+'.test.js'),path.join(site,'tests',name+'.test.cjs'));
 console.log('已同步 uni-app 源码、Web 产物与接口测试，未复制依赖、数据库和本地环境变量。');

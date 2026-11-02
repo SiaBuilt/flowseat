@@ -314,3 +314,85 @@ test('证据不足的候选隐藏后不会被重新导入，插座松紧占位�
  await db.prepare("UPDATE places SET payload=json_set(payload,'$.charging','数量、位置与松紧待到访确认') WHERE id=?").bind(list[0].id).run();
  assert.equal((await call('places/'+list[0].id)).place.charging,'数量与位置待到访确认');
 });
+
+test('退回后本人可修改重提，其他账号不能编辑，重新通过后才公开',async()=>{
+ const {call}=await setup();
+ const input={...place(),name:'退回流程验收空间'};
+ const submitted=await call('submissions','POST',input,'owner');assert.equal(submitted.status,201);
+ assert.equal((await call('review/place/'+submitted.id,'POST',{action:'reject',note:'请补充进入方式'},'owner')).status,200);
+ const own=(await call('contributions','GET',undefined,'owner')).places.find(p=>p.id===submitted.id);
+ assert.equal(own.status,'rejected');assert.equal((await call('places/'+submitted.id)).status,404);
+ assert.equal((await call('submissions/'+submitted.id,'PUT',{...input,entry:'出示预约码进入'},'b')).status,404);
+ assert.equal((await call('submissions/'+submitted.id,'PUT',{...input,entry:'出示预约码进入'},'owner')).status,200);
+ const pending=(await call('review-queue','GET',undefined,'owner')).places.find(p=>p.id===submitted.id);
+ assert.equal(pending.reviewStatus,'pending');assert.equal(pending.entry,'出示预约码进入');
+ assert.equal((await call('places/'+submitted.id)).status,404);
+ assert.equal((await call('review/place/'+submitted.id,'POST',{action:'approve',note:'进入规则已核对'},'owner')).status,200);
+ assert.equal((await call('places/'+submitted.id)).status,200);
+});
+
+test('旧审核页不能把已发布或隐藏地点再次退回补充',async()=>{
+ const {call}=await setup(),id=await published(call);
+ assert.equal((await call('review/place/'+id,'POST',{action:'reject',note:'旧页面上的退回操作'},'owner')).status,409);
+ assert.equal((await call('places/'+id)).status,200);
+ assert.equal((await call('review/place/'+id,'POST',{action:'hide',note:'核对后暂时隐藏'},'owner')).status,200);
+ assert.equal((await call('review/place/'+id,'POST',{action:'reject',note:'旧页面上的退回操作'},'owner')).status,409);
+ assert.equal((await call('places/'+id)).status,404);
+});
+
+test('详情社区与列表都排除未来时间的空位反馈',async()=>{
+ const {call,db}=await setup(),id=await published(call);
+ await call('places/'+id+'/seats','POST',{status:'full'});
+ await db.prepare('UPDATE seats SET at=? WHERE place_id=?').bind(Date.now()+60000,id).run();
+ assert.equal((await call('places')).places[0].seat,undefined);
+ assert.equal((await call('places/'+id+'/community')).seat,null);
+});
+
+test('隐藏地点可由审核员补新依据但保持隐藏，普通作者不能修改，复核后显式恢复',async()=>{
+ const {call,db}=await setup(),id=await published(call);
+ assert.equal((await call('review/place/'+id,'POST',{action:'hide',note:'旧依据需要重新核对'},'owner')).status,200);
+ const stale={...place(),evidence:Object.fromEntries(Object.entries(place().evidence).map(([k,v])=>[k,{...v,date:'2020-01-01'}]))};
+ await db.prepare('UPDATE places SET payload=? WHERE id=?').bind(JSON.stringify(stale),id).run();
+ assert.equal((await call('review/place/'+id,'POST',{action:'restore',note:'旧依据不能直接恢复'},'owner')).status,400);
+ assert.equal((await call('submissions/'+id,'PUT',place(),'a')).status,409);
+ assert.equal((await call('submissions/'+id,'PUT',place(),'owner')).status,200);
+ assert.equal((await call('places/'+id)).status,404);
+ const hidden=(await call('review-queue','GET',undefined,'owner')).places.find(p=>p.id===id);
+ assert.equal(hidden.reviewStatus,'hidden');assert.deepEqual(hidden.publicationIssues,[]);
+ assert.equal((await call('review/place/'+id,'POST',{action:'restore',note:'新依据已逐项核对'},'owner')).status,200);
+ assert.equal((await call('places/'+id)).status,200);
+});
+
+test('审核读取后发生状态或内容更新时，旧审核不能覆盖更新',async()=>{
+ for(const mutation of ['status','payload']){
+  const {call,db}=await setup();const p=await call('submissions','POST',place());
+  const batch=db.batch.bind(db);let intervened=false;
+  db.batch=async items=>{
+   if(!intervened){intervened=true;
+    if(mutation==='status')await db.prepare("UPDATE places SET status='hidden' WHERE id=?").bind(p.id).run();
+    else await db.prepare("UPDATE places SET payload=json_set(payload,'$.laptopFriendly',json('false')) WHERE id=?").bind(p.id).run();
+   }
+   return batch(items);
+  };
+  const r=await call('review/place/'+p.id,'POST',{action:'approve',note:'尝试通过旧审核依据'},'owner');
+  assert.equal(r.status,409,mutation);
+  assert.equal((await call('places/'+p.id)).status,404);
+  assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM audit WHERE subject=? AND action='approve'").bind(p.id).first()).n,0);
+ }
+});
+
+test('修改投稿期间被审核或隐藏时，旧稿保存不能覆盖新状态',async()=>{
+ for(const nextStatus of ['published','hidden']){
+  const {call,db}=await setup();const p=await call('submissions','POST',place());
+  const batch=db.batch.bind(db);let intervened=false;
+  db.batch=async items=>{
+   if(!intervened){intervened=true;await db.prepare('UPDATE places SET status=? WHERE id=?').bind(nextStatus,p.id).run();}
+   return batch(items);
+  };
+  const r=await call('submissions/'+p.id,'PUT',{...place(),name:'不应写入的旧稿修改'});
+  assert.equal(r.status,409,nextStatus);
+  const current=await db.prepare('SELECT status,payload FROM places WHERE id=?').bind(p.id).first();
+  assert.equal(current.status,nextStatus);assert.equal(JSON.parse(current.payload).name,place().name);
+  assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM audit WHERE subject=? AND action='resubmit'").bind(p.id).first()).n,0);
+ }
+});

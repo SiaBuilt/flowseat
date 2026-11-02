@@ -22,7 +22,7 @@ export async function proxyMap(request,{key=''}={},fetcher=fetch){
  else if(path==='/service'||path.startsWith('/service/')){target=new URL('https://apis.map.qq.com/ws'+path.slice('/service'.length));params.set('key',key.trim());}
  else fail(404,'地图路径无效');
  target.search=params.toString();
- let upstream;try{upstream=await fetcher(target.href,{method:'GET',redirect:'error',signal:AbortSignal.timeout(8000),headers:{Referer:incoming.origin+'/'}});}catch(error){const detail=String(error?.message||'unknown').split(key.trim()).join('[redacted]').replace(/https?:\/\/[^\s]+/g,'[upstream]').slice(0,180);console.warn('Map upstream connection failure',target.hostname,detail);fail(502,'地图服务连接失败，请稍后重试');}
+ let upstream;try{upstream=await fetcher(target.href,{method:'GET',redirect:'manual',signal:AbortSignal.timeout(8000),headers:{Referer:incoming.origin+'/'}});}catch(error){const detail=String(error?.message||'unknown').split(key.trim()).join('[redacted]').replace(/https?:\/\/[^\s]+/g,'[upstream]').slice(0,180);console.warn('Map upstream connection failure',target.hostname,detail);fail(502,'地图服务连接失败，请稍后重试');}
  if(!upstream.ok||!upstream.body)fail(502,'地图服务暂不可用');
  const type=upstream.headers.get('content-type')||'application/json';
  if(!/^(application\/(json|javascript|octet-stream)|text\/(javascript|plain)|image\/)/i.test(type))fail(502,'地图响应格式无效');
