@@ -104,6 +104,8 @@ async function start(){
   TMap=await loadTencentMap(config);if(stopped||run!==generation)return;await nextTick();
   const container=document.getElementById(containerId);if(!container)throw new Error('地图容器尚未就绪');
   map=new TMap.Map(container,{viewMode:'2D',pitch:0,rotation:0,zoom:11,center:new TMap.LatLng(31.2304,121.4737)});
+  // Product zoom buttons already expose this action; keep scale and attribution.
+  map.removeControl(TMap.constants.DEFAULT_CONTROL_ID.ZOOM);
   readyTimer=setTimeout(()=>{if(!stopped&&run===generation&&!ready.value)emit('status','error');},15000);
   map.on('tilesloaded',()=>{if(stopped||run!==generation)return;nativeReady();});paint();resetView();centerSelected();
  }catch{if(!stopped&&run===generation)emit('status','error');}
@@ -132,6 +134,8 @@ defineExpose({retry,resetView,zoomBy});
 </template>
 
 <style>
+/* Contain SDK overlay z-indexes so map pins cannot intercept product controls. */
+.map-panel{isolation:isolate}.embedded-map{isolation:isolate;z-index:0;overflow:hidden}.map-top,.map-controls,.map-bottom{z-index:1}
 .map-cluster-pin{min-width:84px;justify-content:center;background:#202020;color:#fff;border:2px solid #fff;box-shadow:0 2px 10px #0003}
 .map-cluster-pin:before{display:none}.live-map-pin:focus-visible{outline:3px solid #66829a;outline-offset:3px}
 .map-cluster-panel{position:absolute;z-index:300;top:70px;left:12px;right:12px;max-height:calc(100% - 90px);display:flex;flex-direction:column;background:#fff;border:1px solid #ddd;border-radius:16px;box-shadow:0 8px 30px #0002;overflow:hidden}
