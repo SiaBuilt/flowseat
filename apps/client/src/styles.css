@@ -74,5 +74,19 @@ button[aria-pressed="true"] .app-icon{opacity:.65}
 
 .contribution-prompt{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:20px 0;margin-bottom:12px;border-bottom:1px solid #e8e8e6}.contribution-prompt .outline-button{flex-shrink:0}@media(max-width:600px){.contribution-prompt{align-items:flex-start;flex-direction:column}}
 
+/* Mobile forms stay readable when the keyboard opens; fixed controls clear the home indicator. */
+@media(max-width:650px){
+ .form-input,.form-textarea,.search input{font-size:16px}
+ .form-two{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+ .account-tabs{overflow-x:auto;scrollbar-width:none;gap:20px}
+ .account-tabs>uni-button{flex-shrink:0;min-height:48px}
+ .account-heading>view,.contribution-card .row>view{min-width:0;overflow-wrap:anywhere}
+ .account-id>uni-text,.review-copy,.audit-row>uni-text{overflow-wrap:anywhere}
+ .mobile-view-toggle{bottom:calc(20px + env(safe-area-inset-bottom))}
+ .compare-tray{bottom:calc(80px + env(safe-area-inset-bottom))}
+ .places-panel{padding-bottom:calc(100px + env(safe-area-inset-bottom))}
+ .account-shell,.form-shell{padding-bottom:env(safe-area-inset-bottom)}
+}
+
 /* Unknown prices use place names so nearby candidates remain identifiable. */
 .live-map-pin.pin-unknown>span{max-width:112px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.live-map-pin.pin-unknown.selected>span{max-width:220px}

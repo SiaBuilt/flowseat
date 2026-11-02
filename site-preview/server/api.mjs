@@ -120,7 +120,17 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={},seedDi
    const p=await first('SELECT * FROM places WHERE id=?',id);if(!p)fail(404,'投稿不存在');if(action==='approve'||action==='restore'){const payload=JSON.parse(p.payload);const issues=publicationIssues(payload);if(issues.length)fail(400,'暂不能发布：'+issues.join('；'));if(action==='approve'&&!['pending','candidate'].includes(p.status))fail(409,'该投稿已经处理');}
    const state=action==='approve'||action==='restore'?'published':action==='hide'?'hidden':action==='reject'?'rejected':null;if(!state)fail(400,'操作无效');if(action==='restore'&&p.status!=='hidden')fail(409,'仅隐藏地点可恢复');if(action==='reject'&&p.status!=='pending')fail(409,'仅待审核投稿可退回，请刷新处理记录');if(action==='hide'&&!['published','candidate','pending'].includes(p.status))fail(409,'当前地点已处理，请刷新处理记录');const transitionId=uuid();const tasks=[q('UPDATE places SET status=?,note=?,updated_at=? WHERE id=? AND status=? AND payload=? AND updated_at=?',state,note,now,id,p.status,p.payload,p.updated_at),q('INSERT INTO audit(id,actor,subject,action,note,at) SELECT ?,?,?,?,?,? WHERE changes()=1',transitionId,uid,id,action,note,now)];if(action==='restore')tasks.push(q("UPDATE reports SET status='resolved' WHERE place_id=? AND status='active' AND EXISTS(SELECT 1 FROM audit WHERE id=?)",id,transitionId));await db.batch(tasks);if(!await first('SELECT id FROM audit WHERE id=?',transitionId))fail(409,'地点刚刚被更新，请刷新后重新审核');return json({saved:true});
   }
-  if(kind==='review'){one(action,['approve','reject']);const r=await first("SELECT * FROM reviews WHERE id=? AND status='pending'",id);if(!r)fail(409,'该体验已处理或不存在');const v=JSON.parse(r.payload),tasks=[];
+  if(kind==='review'){one(action,['approve','reject']);const r=await first("SELECT * FROM reviews WHERE id=? AND status='pending'",id);if(!r)fail(409,'该体验已处理或不存在');const v=JSON.parse(r.payload);
+   const commitReview=async(place=null,next=null,state=null,placeNote=null)=>{
+    const auditId=uuid(),tasks=[];
+    if(place){
+     tasks.push(q("UPDATE places SET payload=?,status=?,note=?,updated_at=? WHERE id=? AND payload=? AND status=? AND updated_at=? AND EXISTS(SELECT 1 FROM reviews WHERE id=? AND status='pending' AND payload=?)",next,state,placeNote??place.note,now,place.id,place.payload,place.status,place.updated_at,id,r.payload));
+     tasks.push(q("UPDATE reviews SET status=?,note=? WHERE id=? AND status='pending' AND payload=? AND changes()=1",action==='approve'?'approved':'rejected',note,id,r.payload));
+    }else tasks.push(q("UPDATE reviews SET status=?,note=? WHERE id=? AND status='pending' AND payload=?",action==='approve'?'approved':'rejected',note,id,r.payload));
+    tasks.push(q('INSERT INTO audit(id,actor,subject,action,note,at) SELECT ?,?,?,?,?,? WHERE changes()=1',auditId,uid,id,action,note,now));
+    await db.batch(tasks);
+    if(!await first('SELECT id FROM audit WHERE id=?',auditId))fail(409,'地点或审核记录刚刚被更新，请刷新后重新审核');
+   };
    if(action==='approve'&&v.kind==='supplement'){
     const valid=supplementInput(v),place=await first("SELECT * FROM places WHERE id=? AND status IN ('candidate','published')",r.place_id);if(!place)fail(409,'地点已隐藏或转入审核，请先处理地点状态');
     const payload=JSON.parse(place.payload),field=valid.field;validateSupplementContext(valid,payload);
@@ -132,8 +142,7 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={},seedDi
     payload[field]=valid.value;if(field==='plugs')payload.charging=valid.text;if(field==='chair')payload.chairNote=valid.text;payload.observations={...payload.observations,[field]:{value:valid.value,date:valid.date,note:valid.text,sourceUrl:valid.sourceUrl,reviewId:id}};
     if(coreFields.includes(field)){payload.evidence={...payload.evidence};delete payload.confirmations?.[field];if(valid.sourceUrl)payload.evidence[field]={kind:'visit',url:valid.sourceUrl,date:valid.date,note:valid.text};else delete payload.evidence[field];}
     const state=['laptopFriendly','deskFits'].includes(field)&&valid.value===false?'hidden':place.status==='published'&&publicationIssues(payload).length?'candidate':place.status,next=JSON.stringify(payload);
-    await db.batch([q('UPDATE places SET payload=?,status=?,updated_at=? WHERE id=? AND payload=? AND status=?',next,state,now,place.id,place.payload,place.status),q("UPDATE reviews SET status='approved',note=? WHERE id=? AND status='pending' AND EXISTS(SELECT 1 FROM places WHERE id=? AND payload=?)",note,id,place.id,next),q("INSERT INTO audit(id,actor,subject,action,note,at) SELECT ?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM reviews WHERE id=? AND status='approved')",uuid(),uid,id,'approve',note,now,id)]);
-    if((await first('SELECT status FROM reviews WHERE id=?',id)).status!=='approved')fail(409,'地点刚刚被更新，请刷新后重新审核');return json({saved:true});
+    await commitReview(place,next,state);return json({saved:true});
    }
    if(action==='approve'&&v.kind==='merchant'){
     const place=await first("SELECT * FROM places WHERE id=? AND status IN ('pending','candidate','published')",r.place_id);if(!place)fail(409,'地点已隐藏或已退回，请先处理地点状态');
@@ -141,16 +150,16 @@ export async function handle(request,{db,reviewerIds='',mapCredentials={},seedDi
     if(now-Date.parse(v.date+'T00:00:00+08:00')>30*86400000)fail(409,'商家确认已超过 30 天，请重新发送确认链接');
     const updated=applyMerchant(payload,v,id),denied=updated.laptopFriendly===false||updated.deskFits===false;
     const state=denied?'hidden':place.status==='published'&&publicationIssues(updated).length?'candidate':place.status,next=JSON.stringify(updated);
-    await db.batch([q('UPDATE places SET payload=?,status=?,note=?,updated_at=? WHERE id=? AND payload=? AND status=?',next,state,denied?'商家确认不支持电脑办公或桌面不足':place.note,now,place.id,place.payload,place.status),q("UPDATE reviews SET status='approved',note=? WHERE id=? AND status='pending' AND EXISTS(SELECT 1 FROM places WHERE id=? AND payload=?)",note,id,place.id,next),q("INSERT INTO audit(id,actor,subject,action,note,at) SELECT ?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM reviews WHERE id=? AND status='approved')",uuid(),uid,id,'approve',note,now,id)]);
-    if((await first('SELECT status FROM reviews WHERE id=?',id)).status!=='approved')fail(409,'地点刚刚被更新，请刷新后重新审核');return json({saved:true,visibility:state});
+    await commitReview(place,next,state,denied?'商家确认不支持电脑办公或桌面不足':place.note);return json({saved:true,visibility:state});
    }
    if(action==='approve'&&v.kind==='confirmation'){
     const place=await first("SELECT * FROM places WHERE id=? AND status='published'",r.place_id);if(!place)fail(409,'地点已隐藏，不能通过到访核对');const payload=JSON.parse(place.payload);
     if(!Array.isArray(v.confirmationFields)||!v.confirmationFields.length||v.confirmationFields.some(f=>!coreFields.includes(f)||payload[f]!==v.values?.[f]))fail(409,'地点条件已有变化，请退回后重新核对');
     if(now-Date.parse(v.date+'T00:00:00+08:00')>30*86400000)fail(409,'到访记录已超过 30 天，请重新核对');
-    for(const f of v.confirmationFields){const observation={kind:'visit',date:v.date,note:v.text,reviewId:id};tasks.push(q("UPDATE places SET payload=json_set(payload,?,json(?)),updated_at=? WHERE id=?",'$.confirmations.'+f,JSON.stringify(observation),now,r.place_id));}
+    payload.confirmations={...payload.confirmations};for(const f of v.confirmationFields)payload.confirmations[f]={kind:'visit',date:v.date,note:v.text,reviewId:id};
+    await commitReview(place,JSON.stringify(payload),place.status);return json({saved:true});
    }
-   tasks.push(q('UPDATE reviews SET status=?,note=? WHERE id=?',action==='approve'?'approved':'rejected',note,id),audit(id,action,note));await db.batch(tasks);return json({saved:true});}
+   await commitReview();return json({saved:true});}
   one(action,['resolve']);await db.batch([q("UPDATE reports SET status='resolved' WHERE id=?",id),audit(id,'resolve',note)]);return json({saved:true});
  }
  fail(404,'接口不存在');

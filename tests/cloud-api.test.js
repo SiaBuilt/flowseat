@@ -396,3 +396,52 @@ test('修改投稿期间被审核或隐藏时，旧稿保存不能覆盖新状�
   assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM audit WHERE subject=? AND action='resubmit'").bind(p.id).first()).n,0);
  }
 });
+
+test('体验审核遇到并发退回不能覆盖处理结果',async()=>{
+ const {call,db}=await setup(),id=await published(call);
+ const r=await call('places/'+id+'/reviews','POST',{date:today(),period:'下午',text:'用于并发审核的测试体验',spend:''});
+ const batch=db.batch.bind(db);let intervened=false;
+ db.batch=async items=>{if(!intervened){intervened=true;await db.prepare("UPDATE reviews SET status='rejected',note='另一审核已退回' WHERE id=?").bind(r.id).run();}return batch(items);};
+ assert.equal((await call('review/review/'+r.id,'POST',{action:'approve',note:'旧审核页面通过'},'owner')).status,409);
+ const current=await db.prepare('SELECT status,note FROM reviews WHERE id=?').bind(r.id).first();
+ assert.equal(current.status,'rejected');assert.equal(current.note,'另一审核已退回');
+ assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM audit WHERE subject=? AND action='approve'").bind(r.id).first()).n,0);
+});
+
+test('补充和商家确认被并发退回后不能改动地点',async()=>{
+ for(const kind of ['supplement','merchant']){
+  const {call,db}=await setup(),id=await published(call);
+  let reviewId;
+  if(kind==='supplement')reviewId=(await call('places/'+id+'/supplements','POST',{field:'hours',value:'10:00—16:00',date:today(),text:'测试新时间但应因冲突而不写入',sourceUrl:'https://merchant.example/hours'})).id;
+  else{
+   const link=await call('merchant-links','POST',{placeId:id,fields:['hours']},'owner');
+   const submitted=await call('merchant/'+link.token,'POST',{contact:'测试负责人',note:'测试商家确认的新开放时间',answers:{hours:'10:00—16:00'}},'');
+   assert.equal(submitted.status,201);
+   reviewId=(await call('review-queue','GET',undefined,'owner')).reviews.find(r=>r.payload.kind==='merchant').id;
+  }
+  const before=await db.prepare('SELECT payload,status FROM places WHERE id=?').bind(id).first();
+  const batch=db.batch.bind(db);let intervened=false;
+  db.batch=async items=>{if(!intervened){intervened=true;await db.prepare("UPDATE reviews SET status='rejected' WHERE id=?").bind(reviewId).run();}return batch(items);};
+  assert.equal((await call('review/review/'+reviewId,'POST',{action:'approve',note:'旧审核页面通过'},'owner')).status,409,kind);
+  const after=await db.prepare('SELECT payload,status FROM places WHERE id=?').bind(id).first();
+  assert.deepEqual(after,before,kind+' must not mutate the place');
+  assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM audit WHERE subject=? AND action='approve'").bind(reviewId).first()).n,0);
+ }
+});
+
+test('到访确认审批不能覆盖审批期间变化的地点条件或审核结果',async()=>{
+ for(const change of ['place','review']){
+  const {call,db}=await setup(),id=await published(call);
+  const r=await call('places/'+id+'/confirm','POST',{fields:['hours'],note:'确认当前开放时间'});
+  const batch=db.batch.bind(db);let intervened=false;
+  db.batch=async items=>{if(!intervened){intervened=true;
+   if(change==='place')await db.prepare("UPDATE places SET payload=json_set(payload,'$.hours','已变更时间') WHERE id=?").bind(id).run();
+   else await db.prepare("UPDATE reviews SET status='rejected' WHERE id=?").bind(r.id).run();
+  }return batch(items);};
+  assert.equal((await call('review/review/'+r.id,'POST',{action:'approve',note:'旧核对页面审批'},'owner')).status,409,change);
+  const payload=JSON.parse((await db.prepare('SELECT payload FROM places WHERE id=?').bind(id).first()).payload);
+  assert.equal(payload.confirmations,undefined);
+  if(change==='place')assert.equal(payload.hours,'已变更时间');
+  assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM audit WHERE subject=? AND action='approve'").bind(r.id).first()).n,0);
+ }
+});

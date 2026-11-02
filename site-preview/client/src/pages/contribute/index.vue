@@ -6,7 +6,7 @@ import {onLoad} from '@dcloudio/uni-app';
 import ActionButton from '../../components/ActionButton.vue';
 import {request,loadSession,session,signIn,errorMessage} from '../../services/api';
 import {notify} from '../../adapters/platform';
-const editing=ref(''),error=ref(''),busy=ref(false),done=ref(false),hidden=ref(false),extra=ref(false),loaded=ref(false);
+const editing=ref(''),error=ref(''),busy=ref(false),done=ref(false),hidden=ref(false),extra=ref(false),loaded=ref(false),loadError=ref('');
 const regions=['静安','徐汇','黄浦','长宁','浦东','普陀','虹口','杨浦','闵行','宝山','嘉定','松江','青浦','奉贤','金山','崇明'];
 const types=['咖啡馆','公共空间','联合办公','自习室','图书馆','其他'];
 const costs=[{key:'unknown',label:'待确认'},{key:'free',label:'免费'},{key:'purchase',label:'需消费'},{key:'paid',label:'付费工位'}];
@@ -14,18 +14,37 @@ const initial=()=>({name:'',address:'',district:'静安',type:'咖啡馆',cost:'
 const form=reactive(initial());
 const longitude=ref(''),latitude=ref('');
 
-onLoad(async options=>{await loadSession();editing.value=String(options?.id||'');if(editing.value){try{const own=(await request('contributions')).places.map((r:any)=>({...r.payload,id:r.id,reviewStatus:r.status}));let p=own.find((p:any)=>p.id===editing.value);if(!p&&session.value?.canReview)p=(await request('review-queue')).places.find((p:any)=>p.id===editing.value);if(!p)throw new Error('找不到可编辑的投稿');Object.assign(form,p);hidden.value=p.reviewStatus==='hidden';if(p.location){longitude.value=String(p.location.lng);latitude.value=String(p.location.lat);extra.value=true;}}catch(e){error.value=errorMessage(e);}}else{const draft=uni.getStorageSync('flowseat-place-draft');if(draft&&typeof draft==='object'){Object.assign(form,draft);longitude.value=draft.longitude||'';latitude.value=draft.latitude||'';}}loaded.value=true;});
+onLoad(options=>{editing.value=String(options?.id||'');void loadForm();});
+async function loadForm(){
+ loaded.value=false;loadError.value='';
+ try{
+  await loadSession();
+  if(editing.value){
+   const own=(await request('contributions')).places.map((r:any)=>({...r.payload,id:r.id,reviewStatus:r.status}));
+   let p=own.find((p:any)=>p.id===editing.value);
+   if(!p&&session.value?.canReview)p=(await request('review-queue')).places.find((p:any)=>p.id===editing.value);
+   if(!p)throw new Error('找不到可编辑的投稿');
+   Object.assign(form,p);hidden.value=p.reviewStatus==='hidden';
+   if(p.location){longitude.value=String(p.location.lng);latitude.value=String(p.location.lat);extra.value=true;}
+  }else{
+   const draft=uni.getStorageSync('flowseat-place-draft');
+   if(draft&&typeof draft==='object'){Object.assign(form,draft);longitude.value=draft.longitude||'';latitude.value=draft.latitude||'';}
+  }
+ }catch(e){loadError.value=errorMessage(e);}finally{loaded.value=true;}
+}
 watch([form,longitude,latitude],()=>{if(loaded.value&&!editing.value&&!done.value)uni.setStorageSync('flowseat-place-draft',{...form,longitude:longitude.value,latitude:latitude.value});},{deep:true});
 function addEvidence(field:string){form.evidence[field]={kind:'public',url:form.sourceUrl,date:form.sourceDate,note:''};}
 function back(){uni.reLaunch({url:'/pages/index/index'});}
 function pick(field:'district'|'type'|'plugs'|'chair',list:string[],e:{detail:{value:string|number}}){form[field]=list[Number(e.detail.value)];}
 function zone(z:string){form.zones=form.zones.includes(z)?form.zones.filter(x=>x!==z):form.zones.concat(z);}
-async function submit(){error.value='';if(!session.value){signIn();return;}if(!session.value.displayName){error.value='请先到“我的”设置贡献署名。';return;}if(!form.name.trim()||!form.address.trim()||!form.sourceUrl.trim()){error.value='请填写地点名称、详细地址和公开来源链接。';return;}busy.value=true;try{await request(editing.value?'submissions/'+editing.value:'submissions',editing.value?'PUT':'POST',{...form,location:longitude.value.trim()||latitude.value.trim()?{lng:longitude.value.trim()?Number(longitude.value):null,lat:latitude.value.trim()?Number(latitude.value):null,system:'GCJ-02'}:null});done.value=true;uni.removeStorageSync('flowseat-place-draft');}catch(e){error.value=errorMessage(e);}finally{busy.value=false;}}
+async function submit(){if(!loaded.value||loadError.value||busy.value)return;error.value='';if(!session.value){signIn();return;}if(!session.value.displayName){error.value='请先到“我的”设置贡献署名。';return;}if(!form.name.trim()||!form.address.trim()||!form.sourceUrl.trim()){error.value='请填写地点名称、详细地址和公开来源链接。';return;}busy.value=true;try{await request(editing.value?'submissions/'+editing.value:'submissions',editing.value?'PUT':'POST',{...form,location:longitude.value.trim()||latitude.value.trim()?{lng:longitude.value.trim()?Number(longitude.value):null,lat:latitude.value.trim()?Number(latitude.value):null,system:'GCJ-02'}:null});done.value=true;uni.removeStorageSync('flowseat-place-draft');}catch(e){error.value=errorMessage(e);}finally{busy.value=false;}}
 function profile(){uni.navigateTo({url:'/pages/me/index'});}
 function contributions(){uni.navigateTo({url:'/pages/me/index?tab='+(hidden.value?'review':'contributions')});}
 </script>
 <template><view class="shell form-shell"><view class="topbar"><ActionButton class="brand" @click="back"><image class="brand-mark" src="/static/brand/logo-icon.png"/><view class="brand-words"><text>流动工位</text><text class="brand-sub">FlowSeat</text></view></ActionButton><ActionButton class="text-button" @click="back">返回探索</ActionButton></view>
 <view v-if="done" class="success-state"><view class="success-mark">✓</view><view class="section-title">{{hidden?'资料已保存，地点仍保持隐藏。':'谢谢，新的好工位有线索了。'}}</view><view class="description">{{hidden?'请回到快速审核核对新依据，再决定是否恢复展示。':'投稿已保存到云端，审核通过后会展示你的贡献署名。'}}<text class="line-break"> </text>{{hidden?'恢复前仍不会出现在探索列表。':'可以在“我的贡献”查看进度和修改建议。'}}</view><view class="chips"><ActionButton class="black-button" @click="contributions">{{hidden?'返回快速审核':'查看我的贡献'}}</ActionButton><ActionButton class="outline-button" @click="back">返回探索</ActionButton></view></view>
+<view v-else-if="!loaded" class="notice" role="status">正在读取投稿资料…</view>
+<view v-else-if="loadError" class="error-box" role="alert">{{loadError}}<view class="chips"><ActionButton class="underlink" @click="loadForm">重新加载</ActionButton><ActionButton class="underlink" @click="back">返回探索</ActionButton></view></view>
 <view v-else class="contribute-layout"><view class="form-intro"><view class="small-tag">Built by people who work anywhere.</view><view class="headline">好工位，<text class="line-break"> </text>值得被看见。</view><view class="description">推荐一个允许电脑办公的地方。<text class="line-break"> </text>不确定的条件留为待确认，<text class="line-break"> </text>公开来源和到访体验都能成为线索。</view><view class="notice">不复制其他平台的评论正文，不公开 Wi-Fi 密码或个人联系方式。提交的地点信息会经过审核。</view><view class="meta">{{editing?'正在编辑投稿':'内容会在本机自动保存为草稿'}}。</view></view><view class="form-content"><view class="section-title">{{editing?'补充地点信息':'推荐一个工位'}}</view><view v-if="!session" class="notice">请先登录并设置贡献署名。<ActionButton class="underlink" @click="signIn">使用 ChatGPT 登录</ActionButton></view>
 <view v-if="session&&!session.displayName" class="notice">投稿前请先设置贡献署名。<ActionButton class="underlink" @click="profile">去设置贡献署名</ActionButton></view>
 <label class="field-label">地点名称 *</label><input v-model="form.name" class="form-input" maxlength="70" placeholder="例如：某某咖啡（静安店）"/>
