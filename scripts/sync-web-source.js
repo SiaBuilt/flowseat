@@ -8,4 +8,7 @@ if(!fs.existsSync(path.join(built,'index.html')))throw new Error('请先执行 n
 for(const folder of ['assets','static']){const dst=path.join(site,'public',folder);fs.rmSync(dst,{recursive:true,force:true});fs.cpSync(path.join(built,folder),dst,{recursive:true});}
 fs.copyFileSync(path.join(built,'index.html'),path.join(site,'public/client-shell.html'));
 for(const name of ['src','package.json','package-lock.json','vite.config.ts','tsconfig.json','index.html']){const dst=path.join(site,'client',name);fs.mkdirSync(path.dirname(dst),{recursive:true});fs.rmSync(dst,{recursive:true,force:true});fs.cpSync(path.join(client,name),dst,{recursive:true});}
-console.log('已同步 uni-app 源码与 Web 产物，未复制依赖、数据库和本地环境变量。');
+// 发布源的接口测试与功能主线共用用例，避免地点扩充后仍运行旧断言。
+fs.mkdirSync(path.join(site,'tests'),{recursive:true});
+fs.copyFileSync(path.join(root,'tests/cloud-api.test.js'),path.join(site,'tests/cloud-api.test.cjs'));
+console.log('已同步 uni-app 源码、Web 产物与接口测试，未复制依赖、数据库和本地环境变量。');

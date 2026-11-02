@@ -127,7 +127,7 @@ test('真实地点候选公开但不认证办公，普通投稿仍私有；隐�
  const {db,call}=await setup();
  db.exec(readFileSync(prefix+'drizzle/0001_public_candidates.sql','utf8'));
  const {ensureDiscovery}=await discoveryReady;await ensureDiscovery(db);
- const list=(await call('places')).places;assert.equal(list.length,8);
+ const list=(await call('places')).places;assert.equal(list.length,42);
  assert.ok(list.every(p=>p.discovery&&!p.demo&&!p.laptopFriendly&&p.cost==='unknown'&&p.location.system==='GCJ-02'));
  assert.equal((await call('places/source-7754766b48220f30fe6d5c76')).status,404);
  const id=list[0].id;
@@ -136,7 +136,7 @@ test('真实地点候选公开但不认证办公，普通投稿仍私有；隐�
  assert.equal((await call('places/'+id+'/confirm','POST',{fields:['laptopFriendly'],note:'我看过了'})).status,400);
  assert.equal((await call('review/place/'+id,'POST',{action:'approve',note:'仅有地图坐标'},'owner')).status,400);
  await call('review/place/'+id,'POST',{action:'hide',note:'地点匹配有误，需要重新核对'},'owner');
- await ensureDiscovery(db);assert.equal((await call('places/'+id)).status,404);assert.equal((await call('places')).places.length,7);
+ await ensureDiscovery(db);assert.equal((await call('places/'+id)).status,404);assert.equal((await call('places')).places.length,41);
  assert.ok(!(await call('saved')).ids.includes(id));
 });
 test('候选的社区闭店反馈也能隐藏；只有审核员可以补充候选资料',async()=>{
@@ -226,4 +226,91 @@ test('商家确认遇到字段已变动拒绝通过；否定电脑办公会隐�
  r=(await call('review-queue','GET',undefined,'owner')).reviews.find(x=>x.payload.kind==='merchant');
  const res=await call('review/review/'+r.id,'POST',{action:'approve',note:'商家明确不允许'},'owner');assert.equal(res.status,200);assert.equal(res.visibility,'hidden');
  assert.equal((await call('places/'+id)).status,404);
+});
+
+
+test('费用和菜单补充经审核更新；费用变化清空旧预算并阻止过期预算覆盖',async()=>{
+ const {call}=await setup(),id=await published(call);
+ const draft=(field,value)=>({field,value,date:today(),text:'本次到访核对门口价目表和使用规则',sourceUrl:''});
+ const budget=await call('places/'+id+'/supplements','POST',draft('budget','¥35 / 人'));
+ const cost=await call('places/'+id+'/supplements','POST',draft('cost','paid'));
+ assert.equal(cost.status,201);
+ assert.equal((await call('review/review/'+cost.id,'POST',{action:'approve',note:'核对消费要求'},'owner')).status,200);
+ const p=(await call('places/'+id)).place;
+ assert.equal(p.cost,'paid');assert.equal(p.budget,'费用待确认');assert.equal(p.evidence.cost,undefined);
+ assert.equal((await call('review/review/'+budget.id,'POST',{action:'approve',note:'旧预算'},'owner')).status,409);
+ assert.equal((await call('places/'+id+'/supplements','POST',draft('menuUrl','javascript:alert(1)'))).status,400);
+ for(const [field,value] of [['menuUrl','https://merchant.example/menu'],['stay','工作日限坐两小时']]){
+  const r=await call('places/'+id+'/supplements','POST',draft(field,value),'b');assert.equal(r.status,201);
+  assert.notEqual((await call('places/'+id)).place[field],value);
+  assert.equal((await call('review/review/'+r.id,'POST',{action:'approve',note:'通过公开规则核对'},'owner')).status,200);
+  assert.equal((await call('places/'+id)).place[field],value);
+ }
+});
+
+test('扩充批次幂等，保留已隐藏地点并公开发现来源',async()=>{
+ const {db,call}=await setup();const {ensureDiscovery}=await discoveryReady;
+ await ensureDiscovery(db);await ensureDiscovery(db);
+ assert.equal((await call('places')).places.length,42);
+ const id='tencent-16435788558534883525';
+ assert.ok((await call('places/'+id)).place.leadSources[0].url.startsWith('https:'));
+ await call('review/place/'+id,'POST',{action:'hide',note:'等待再次核对'},'owner');
+ db.exec("DELETE FROM audit WHERE id='bootstrap:shanghai-expansion-20261025'");
+ await ensureDiscovery(db);
+ assert.equal((await call('places/'+id)).status,404);
+ assert.equal((await call('places')).places.length,41);
+});
+
+test('工作分区可多选或明确无分区，审核前不更新且拒绝非法分区',async()=>{
+ const {call}=await setup(),id=await published(call);
+ const draft=value=>({field:'zones',value,date:today(),text:'本次到访确认了现场分区标识',sourceUrl:''});
+ assert.equal((await call('places/'+id+'/supplements','POST',draft(['private']))).status,400);
+ assert.equal((await call('places/'+id+'/supplements','POST',draft('quiet'))).status,400);
+ const r=await call('places/'+id+'/supplements','POST',draft(['quiet','booth','quiet']));
+ assert.equal(r.status,201);
+ assert.notDeepEqual((await call('places/'+id)).place.zones,['booth','quiet']);
+ assert.equal((await call('review/review/'+r.id,'POST',{action:'approve',note:'核对分区'},'owner')).status,200);
+ assert.deepEqual((await call('places/'+id)).place.zones,['booth','quiet']);
+ const none=await call('places/'+id+'/supplements','POST',draft([]));
+ assert.equal((await call('review/review/'+none.id,'POST',{action:'approve',note:'现已撤除专门分区'},'owner')).status,200);
+ const p=(await call('places/'+id)).place;assert.deepEqual(p.zones,[]);assert.deepEqual(p.observations.zones.value,[]);
+});
+
+test('地图导入地点同名同址不可重复投稿，忽略空格与全角符号；隐藏后仍不重复',async()=>{
+ const {db,call}=await setup();await (await discoveryReady).ensureDiscovery(db);
+ const p=(await call('places')).places.find(p=>p.id==='tencent-16435788558534883525');
+ const submission={...place(),name:p.name,address:p.address,district:p.district,type:p.type};
+ assert.equal((await call('submissions','POST',submission)).status,409);
+ assert.equal((await call('submissions','POST',{...submission,name:' '+p.name+' ',address:p.address.replace(/\(/g,'（').replace(/\)/g,'）')})).status,409);
+ const other=await call('submissions','POST',{...place(),name:'另一处独立空间'});
+ assert.equal(other.status,201);
+ assert.equal((await call('submissions/'+other.id,'PUT',submission)).status,409);
+ await call('review/place/'+p.id,'POST',{action:'hide',note:'暂不开放'},'owner');
+ assert.equal((await call('submissions','POST',submission)).status,409);
+ assert.equal((await call('submissions','POST',{...submission,address:'上海市徐汇区另一条路100号'})).status,201);
+});
+
+test('免费地点的预算补充不允许非零收费，费用变免费后展示零预算',async()=>{
+ const {call}=await setup(),id=await published(call);
+ const draft=(field,value)=>({field,value,date:today(),text:'现场核对空间使用不收费，饮品自选',sourceUrl:''});
+ const r=await call('places/'+id+'/supplements','POST',draft('cost','free'));
+ assert.equal((await call('review/review/'+r.id,'POST',{action:'approve',note:'核对免费使用规则'},'owner')).status,200);
+ assert.equal((await call('places/'+id)).place.budget,'¥0');
+ assert.equal((await call('places/'+id+'/supplements','POST',draft('budget','¥35'))).status,400);
+ const zero=await call('places/'+id+'/supplements','POST',draft('budget','0'));assert.equal(zero.status,201);
+ assert.equal((await call('review/review/'+zero.id,'POST',{action:'approve',note:'空间费为零'},'owner')).status,200);
+});
+
+test('证据不足的候选隐藏后不会被重新导入，插座松紧占位不再输出',async()=>{
+ const {db,call}=await setup();const {ensureDiscovery}=await discoveryReady;
+ await ensureDiscovery(db);
+ const hunan='tencent-13353016511687307342';
+ assert.equal((await call('places/'+hunan)).status,404);
+ assert.equal((await db.prepare('SELECT status FROM places WHERE id=?').bind(hunan).first()).status,'hidden');
+ db.exec("DELETE FROM audit WHERE id LIKE 'bootstrap:shanghai-expansion%'");await ensureDiscovery(db);
+ assert.equal((await call('places/'+hunan)).status,404);
+ const list=(await call('places')).places;
+ assert.ok(list.every(p=>!String(p.charging).includes('松紧')));
+ await db.prepare("UPDATE places SET payload=json_set(payload,'$.charging','数量、位置与松紧待到访确认') WHERE id=?").bind(list[0].id).run();
+ assert.equal((await call('places/'+list[0].id)).place.charging,'数量与位置待到访确认');
 });
