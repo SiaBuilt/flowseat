@@ -21,7 +21,7 @@ function closeExpanded(){expandedIds.value=[];
 const expandedPlaces=computed(()=>points.value.filter(p=>expandedIds.value.includes(p.id)));
 function chooseExpanded(id:string){expandedIds.value=[];emit('select',id);}
 const nativeMarkers=computed(()=>points.value.map((p,index)=>({id:index+1,latitude:p.location!.lat,longitude:p.location!.lng,iconPath:'/static/map-pin-'+p.cost+'.png',width:28,height:36,callout:{content:(p.cost==='unknown'?p.name:p.cost==='free'?'免费':practical[p.id]?.budget||costLabels[p.cost])+' · '+p.type,color:props.selected===p.id?'#ffffff':'#202020',bgColor:props.selected===p.id?'#202020':'#ffffff',fontSize:11,borderRadius:12,padding:8,display:'ALWAYS'}})));
-let map:any,TMap:any,markers:any[]=[],nativeContext:any;let stopped=false,generation=0;let readyTimer:ReturnType<typeof setTimeout>|undefined;
+let map:any,TMap:any,markers:any[]=[],nativeContext:any;let viewportObserver:ResizeObserver|undefined;let viewportSignature='';let stopped=false,generation=0;let readyTimer:ReturnType<typeof setTimeout>|undefined;
 function nativeReady(){if(stopped)return;clearTimeout(readyTimer);ready.value=true;emit('status','ready');}
 function nativeSelect(e:{detail:{markerId:number}}){const p=points.value[e.detail.markerId-1];if(p)emit('select',p.id);}
 function paint(){
@@ -60,6 +60,34 @@ function paint(){
  markers.push(new ClusterLayer({map,isStopPropagation:true}));
  // #endif
 }
+function viewportPadding(){
+ // #ifdef H5
+ const container=document.getElementById(containerId),rect=container?.getBoundingClientRect();
+ if(rect&&rect.height>0){
+  const card=container?.closest('.map-panel')?.querySelector('.map-bottom')?.getBoundingClientRect();
+  const top=75,bottom=card&&card.height>0?Math.max(24,rect.bottom-card.top+24):40;
+  return {top,left:Math.min(50,rect.width/6),right:Math.min(50,rect.width/6),bottom:Math.min(bottom,Math.max(40,rect.height-top-80))};
+ }
+ // #endif
+ return {top:75,left:50,right:50,bottom:240};
+}
+function offsetForCard(){
+ // #ifdef H5
+ if(!map)return;const padding=viewportPadding();map.setOffset({x:0,y:(padding.top-padding.bottom)/2});
+ // #endif
+}
+function observeViewport(container:HTMLElement){
+ // #ifdef H5
+ viewportObserver?.disconnect();viewportSignature='';
+ viewportObserver=new ResizeObserver(()=>{
+  if(!map||stopped)return;const rect=container.getBoundingClientRect();if(!rect.width||!rect.height)return;
+  const padding=viewportPadding(),signature=JSON.stringify([Math.round(rect.width),Math.round(rect.height),Math.round(padding.bottom)]);
+  if(signature===viewportSignature)return;viewportSignature=signature;
+  if(props.selected)centerSelected();else void resetView();
+ });
+ viewportObserver.observe(container);const card=container.closest('.map-panel')?.querySelector('.map-bottom');if(card)viewportObserver.observe(card);
+ // #endif
+}
 function expandCluster(group:PointCluster<Place>,trigger?:HTMLElement){
  // #ifdef H5
  if(!map)return;
@@ -67,22 +95,22 @@ function expandCluster(group:PointCluster<Place>,trigger?:HTMLElement){
  const coincident=places.every(p=>Math.abs(p.location!.lat-first.lat)<0.00001&&Math.abs(p.location!.lng-first.lng)<0.00001);
  if(map.getZoom()>=17||coincident){clusterTrigger=trigger;expandedIds.value=places.map(p=>p.id);nextTick(()=>document.getElementById(containerId+'-cluster')?.querySelector<HTMLElement>('.cluster-place-choice')?.focus());return;}
  const lat=places.reduce((n,p)=>n+p.location!.lat,0)/places.length,lng=places.reduce((n,p)=>n+p.location!.lng,0)/places.length;
- map.easeTo({center:new TMap.LatLng(lat,lng),zoom:Math.min(18,map.getZoom()+2)},{duration:250});
+ offsetForCard();map.easeTo({center:new TMap.LatLng(lat,lng),zoom:Math.min(18,map.getZoom()+2)},{duration:250});
  // #endif
 }
 function centerSelected(){
  const p=points.value.find(p=>p.id===props.selected);if(!p)return;
  // #ifdef H5
- if(map)map.easeTo({center:new TMap.LatLng(p.location!.lat,p.location!.lng),zoom:Math.max(14,map.getZoom())},{duration:250});
+ if(map){offsetForCard();map.easeTo({center:new TMap.LatLng(p.location!.lat,p.location!.lng),zoom:Math.max(14,map.getZoom())},{duration:250});}
  // #endif
  // #ifndef H5
  latitude.value=p.location!.lat;longitude.value=p.location!.lng;nativeScale.value=14;
  // #endif
 }
-function resetView(){
- expandedIds.value=[];
+async function resetView(){
+ expandedIds.value=[];await nextTick();if(stopped)return;
  // #ifdef H5
- if(!map)return;if(points.value.length){const bounds=new TMap.LatLngBounds();for(const p of points.value)bounds.extend(new TMap.LatLng(p.location!.lat,p.location!.lng));map.fitBounds(bounds,{padding:{top:75,left:50,right:50,bottom:240},maxZoom:15});}else{map.setCenter(new TMap.LatLng(31.2304,121.4737));map.setZoom(11);}
+ if(!map)return;map.setOffset({x:0,y:0});if(points.value.length){const first=points.value[0].location!;if(points.value.every(p=>Math.abs(p.location!.lat-first.lat)<0.00001&&Math.abs(p.location!.lng-first.lng)<0.00001)){offsetForCard();map.setCenter(new TMap.LatLng(first.lat,first.lng));map.setZoom(15);}else{const bounds=new TMap.LatLngBounds();for(const p of points.value)bounds.extend(new TMap.LatLng(p.location!.lat,p.location!.lng));map.fitBounds(bounds,{padding:viewportPadding(),maxZoom:15});}}else{map.setCenter(new TMap.LatLng(31.2304,121.4737));map.setZoom(11);}
  // #endif
  // #ifndef H5
  if(points.value.length&&nativeContext)nativeContext.includePoints({points:points.value.map(p=>({latitude:p.location!.lat,longitude:p.location!.lng})),padding:[75,50,240,50]});else{latitude.value=31.2304;longitude.value=121.4737;nativeScale.value=11;}
@@ -105,19 +133,19 @@ async function start(){
   const container=document.getElementById(containerId);if(!container)throw new Error('地图容器尚未就绪');
   map=new TMap.Map(container,{viewMode:'2D',pitch:0,rotation:0,zoom:11,center:new TMap.LatLng(31.2304,121.4737)});
   // Product zoom buttons already expose this action; keep scale and attribution.
-  map.removeControl(TMap.constants.DEFAULT_CONTROL_ID.ZOOM);
+  map.removeControl(TMap.constants.DEFAULT_CONTROL_ID.ZOOM);observeViewport(container);
   readyTimer=setTimeout(()=>{if(!stopped&&run===generation&&!ready.value)emit('status','error');},15000);
-  map.on('tilesloaded',()=>{if(stopped||run!==generation)return;nativeReady();});paint();resetView();centerSelected();
+  map.on('tilesloaded',()=>{if(stopped||run!==generation)return;nativeReady();});paint();if(props.selected)centerSelected();else void resetView();
  }catch{if(!stopped&&run===generation)emit('status','error');}
  // #endif
  // #ifndef H5
  nativeContext=uni.createMapContext(containerId,instance?.proxy as any);if(ready.value)emit('status','ready');readyTimer=setTimeout(()=>{if(!stopped&&!ready.value)emit('status','error');},15000);await nextTick();resetView();centerSelected();
  // #endif
 }
-function retry(){expandedIds.value=[];clearTimeout(readyTimer);for(const marker of markers)marker.destroy();markers=[];if(map)map.destroy();map=null;ready.value=false;return start();}
-watch(()=>props.places,()=>{expandedIds.value=[];paint();if(!props.selected)resetView();},{deep:true});watch(()=>props.selected,()=>{expandedIds.value=[];paint();centerSelected();});
-watch(()=>props.visible,async visible=>{if(visible){await nextTick();if(map)map.setCenter(map.getCenter());}});
-onMounted(start);onBeforeUnmount(()=>{stopped=true;generation++;clearTimeout(readyTimer);for(const marker of markers)marker.destroy();markers=[];if(map)map.destroy();map=null;});
+function retry(){viewportObserver?.disconnect();expandedIds.value=[];clearTimeout(readyTimer);for(const marker of markers)marker.destroy();markers=[];if(map)map.destroy();map=null;ready.value=false;return start();}
+watch(()=>props.places,()=>{expandedIds.value=[];paint();if(!props.selected)resetView();},{deep:true});watch(()=>props.selected,async()=>{expandedIds.value=[];paint();await nextTick();if(props.selected)centerSelected();else void resetView();});
+watch(()=>props.visible,async visible=>{if(visible){await nextTick();if(map){if(props.selected)centerSelected();else void resetView();}}});
+onMounted(start);onBeforeUnmount(()=>{stopped=true;generation++;viewportObserver?.disconnect();clearTimeout(readyTimer);for(const marker of markers)marker.destroy();markers=[];if(map)map.destroy();map=null;});
 defineExpose({retry,resetView,zoomBy});
 </script>
 <template>
