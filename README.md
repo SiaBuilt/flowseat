@@ -1,51 +1,89 @@
 # 流动工位 · FlowSeat
 
+**找个座位，进入心流。**  
 Find your seat. Find your flow.
 
-Web 优先的共享工位发现与共创产品，面向自由职业者、远程工作者与独立创业者。上海首发，客户端为 uni-app + Vue 3 + TypeScript，保留小程序与 App 的源码复用。
+为自由职业者、远程工作者和独立创造者寻找适合带电脑工作的地方。上海起步，覆盖咖啡馆、公共空间、联合办公等地点：先在地图或列表里找，再看费用、开放时间、办公条件和信息来源，决定是否出发。
 
-当前 v0.3 已实现云端投稿、署名、收藏、体验审核、空位反馈、闭店去重与恢复，以及账号内快速审核。UI 保持黑白，费用与状态使用克制的语义色。[版本说明](docs/版本更新-v0.3.md)
+FlowSeat combines map-based workspace discovery with sourced place information and community contributions. Built with uni-app, Vue 3 and TypeScript, starting in Shanghai.
 
-v0.4 补齐公开候选一次性导入、投稿地图坐标与定点导航、列表余座同步、收藏展示隔离和地址搜索。[本次更新](docs/版本更新-v0.4.md)
+## 页面预览
 
-正式接入已选 `siabuilt.com`、微信登录、首轮免费；2026-10-19 已完成域名 DNS、绑定和 HTTPS 证书验证，托管状态 active。仍保持私有内测，公众访问、微信身份尚待接入，腾讯地图 Key 已配置并验证，页面联调与发布待完成，详见 [正式接入清单](docs/正式接入清单.md)。
+以下为 **2026-11-02 功能版的本地浏览器截图**。截图中的数量为本地数据快照，不代表全部地点已经核实，也不代表实时余座；空间插画不是实景照片。
 
-预览：[流动工位](https://laptop-friendly-shanghai-20261014.agilebowl.chatgpt.site)。访问范围仍是私有内测。平台 ChatGPT 登录用于预览；面向国内普通用户的登录、内置真实地图 SDK、支付与公众发布尚需接入。示意地图不用于导航，真实地点可打开高德地址搜索。
+| 地图找位 | 地点列表 |
+| --- | --- |
+| <img src="docs/screenshots/explore-map.jpg" width="300" alt="地图探索：搜索、筛选和地点卡片"> | <img src="docs/screenshots/explore-list.jpg" width="300" alt="地点列表：费用状态、收藏与对比入口"> |
 
-v0.5 增加逐项来源、近期依据上架校验与附近停车候选，调整黑白视觉与微动效。见[版本说明](docs/版本更新-v0.5.md)。
+<details>
+<summary><strong>查看地点详情与社区投稿页面</strong></summary>
 
-v0.5.1 增加「到访核对」：登录用户每次最多确认两项核心信息，刷新来源日期而不改字段值。见[版本说明](docs/版本更新-v0.5.1.md)。
+| 地点详情 | 推荐一个工位 |
+| --- | --- |
+| <img src="docs/screenshots/place-detail.jpg" width="300" alt="地点详情：办公条件、到访须知和带日期的信息来源"> | <img src="docs/screenshots/contribute.jpg" width="300" alt="社区投稿：地址、费用、办公条件与逐项依据"> |
 
-v0.6 增加「补充一项」，v0.7 增加商家确认链接：场地方免登录确认或更正信息，审核后以商家自述展示。见[v0.6](docs/版本更新-v0.6.md)、[v0.7](docs/版本更新-v0.7.md)。
+</details>
 
-## 数据研究与下一阶段
+## 可以做什么
 
-2026-10-19 完成上海 10 个目的性样本评估。详见[完整研究](docs/research/上海工位数据源与Agent采集评估-2026-10-19.md)、[阅读版](docs/research/上海工位数据源与Agent采集评估-2026-10-19.html)和[当前开发计划](docs/分版本开发计划.md)。本轮未发布新地点或发起商家电话；接口实测不等于各来源授权或全市覆盖率验证。
+- **发现地点**：地图与列表切换，搜索地点或地址，按区域、类型及工作场景筛选；地图支持聚类及同坐标地点选择。
+- **判断是否适合办公**：查看费用、开放时间、电脑使用规则、插座、Wi-Fi、桌椅及工作分区。没有可靠依据的字段保留“待确认”。
+- **收藏与比较**：保存感兴趣的地点，对比办公条件；查看地点坐标并跳转导航。
+- **共同维护信息**：推荐新地点、补充一项信息、到访核对、反馈空位或闭店；投稿与更正经审核后展示，保留贡献署名。
+- **追溯信息来源**：区分官方资料、用户分享与商家自述，展示来源和日期。公开资料不等于实地体验，旧信息也不等于当前承诺。
 
-## 开发目录
+## 当前状态
 
-- `apps/client`：跨端页面、领域类型、服务与平台适配器。
-- `site-preview`：已连接原 Sites 项目的发布仓库；含 API、D1 迁移、客户端源码快照与 Web 产物。
-- `data`：带来源的上海公开候选资料，导入后先审核。
-- `tests`：当前 HTTP 服务与客户端逻辑测试；保留早期微信骨架权限测试。
-- `miniprogram` / `cloudfunctions`：早期原生微信准备稿，不是当前 Web 后端。
-- `brand` / `previews`：品牌素材与浏览器验证截图。
+功能主线已实现上述页面与流程，Web 版本已部署到私有预览环境。**仓库公开不等于网站已向公众开放**；目前不提供免登录公开体验入口。
 
-## 常用命令
+截至 2026-11-02，主线 80 项测试、发布源 45 项测试、客户端类型检查及 Web / 服务端构建通过，并完成桌面浏览器中的移动宽度检查。真实账号的完整审核闭环仍待验收；官方微信登录、小程序真机验收及实验视觉方案整合尚未完成。
 
-开发需 Node.js 22.13+。前端依赖在 `apps/client`，服务端依赖在 `site-preview`，分别使用各自锁文件安装。
+当前 README 展示功能主线，`feat/flow-visual` 是单独保留的视觉试验，不作为正式发布效果。
+
+## 技术与目录
+
+| 目录 | 用途 |
+| --- | --- |
+| `apps/client` | uni-app + Vue 3 + TypeScript 客户端，Web 优先，保留小程序与 App 复用路径 |
+| `site-preview` | Vinext API、Cloudflare D1、数据库迁移、客户端源码快照及 Web 产物 |
+| `data` | 上海地点候选与带来源的研究资料 |
+| `tests` | 功能与权限测试 |
+| `docs` | 版本记录、开发说明及截图 |
+| `miniprogram` / `cloudfunctions` | 早期微信原型，不是当前 Web 后端 |
+
+腾讯地图提供地图与地点能力，审核身份由服务端校验。地图密钥、审核员配置和本地数据库不应提交到仓库。
+
+## 本地开发
+
+需要 Node.js 22.13+，分别安装根目录、客户端与服务端依赖：
 
 ```sh
+git clone https://github.com/SiaBuilt/flowseat.git
+cd flowseat
+npm ci
+npm --prefix apps/client ci
+npm --prefix site-preview ci
+
+# 类型检查与主线测试
 npm run typecheck:client
 npm test
+
+# 构建客户端并同步到服务目录
 npm run build:web
-npm run build:weixin
 npm run sync:web
 npm run build:server
 ```
 
-`sync:web` 将前端源码和产物复制到发布仓库，不复制依赖、环境变量或本地数据库。服务本地开发：`npm --prefix site-preview run dev`。D1 首次开发需先生成并应用本地迁移，详见发布仓库说明。部署仍按 Sites 的已有项目源仓库与打包流程执行。
+启动前按 [服务端说明](site-preview/README.md) 配置本地环境并初始化 D1 迁移，然后运行：
 
-审核角色在服务端 `REVIEWER_USER_IDS` 配置，不向前端硬编码账号，不用本机存储授予角色。所有真实写入按当前服务端身份授权，数据库与本地示例分开。
+```sh
+npm --prefix site-preview run dev -- --port 4173 --hostname 127.0.0.1
+```
 
-真实场所的插座数量、椅子舒适度、停留规则和余座可能未知；未知保持待确认。公开资料的日期与来源展示在地点页，不把资料整理写成实访。
+服务端 `TENCENT_MAP_KEY` 用于地图能力，`REVIEWER_USER_IDS` 用于审核授权。真实值只放在被忽略的本地配置或部署平台环境变量中。生产登录依赖托管环境；本地身份模拟仅供 loopback 开发使用。
+
+## 数据与贡献
+
+欢迎通过 Issue 提交可复现的问题、地点线索或产品建议。地点信息请附公开来源和日期；请勿提交 Wi-Fi 密码、私人联系方式、账户凭证或未获授权的用户数据。未知字段保持未知，不以候选地点数量代替核实质量。
+
+本仓库目前未单独授予项目级开源许可证；代码公开供浏览，复用需另行获得许可。第三方组件和素材遵循各自许可证。
