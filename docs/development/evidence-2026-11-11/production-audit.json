@@ -1,0 +1,79 @@
+{
+  "checkedAt": "2026-11-11",
+  "source": "Sites read_database_table_rows, DB.audit and DB.places",
+  "placeId": "0e72ab04-b61d-43b9-8758-9006580b23ef",
+  "currentStatus": "hidden",
+  "identityFieldsOmitted": true,
+  "events": [
+    {
+      "subject": "0e72ab04-b61d-43b9-8758-9006580b23ef",
+      "action": "submit",
+      "note": "",
+      "at": 1793614567807,
+      "utc": "2026-11-02T10:16:07.807Z"
+    },
+    {
+      "subject": "0e72ab04-b61d-43b9-8758-9006580b23ef",
+      "action": "reject",
+      "note": "验收退回，请补充合成测试说明",
+      "at": 1793778506975,
+      "utc": "2026-11-04T07:48:26.975Z"
+    },
+    {
+      "subject": "0e72ab04-b61d-43b9-8758-9006580b23ef",
+      "action": "resubmit",
+      "note": "",
+      "at": 1793778969651,
+      "utc": "2026-11-04T07:56:09.651Z"
+    },
+    {
+      "subject": "0e72ab04-b61d-43b9-8758-9006580b23ef",
+      "action": "approve",
+      "note": "合成验收记录：仅测试审核状态转换，不对应真实场所，通过后立即隐藏清理，不影响真实地点。",
+      "at": 1793779112652,
+      "utc": "2026-11-04T07:58:32.652Z"
+    },
+    {
+      "subject": "0e72ab04-b61d-43b9-8758-9006580b23ef",
+      "action": "report",
+      "note": "information",
+      "at": 1793779486846,
+      "utc": "2026-11-04T08:04:46.846Z"
+    },
+    {
+      "subject": "0e72ab04-b61d-43b9-8758-9006580b23ef",
+      "action": "hide",
+      "note": "合成验收记录，隐藏清理，不影响真实地点。",
+      "at": 1793779667354,
+      "utc": "2026-11-04T08:07:47.354Z"
+    },
+    {
+      "subject": "0e72ab04-b61d-43b9-8758-9006580b23ef",
+      "action": "restore",
+      "note": "仅验收恢复流程，随后再次隐藏。",
+      "at": 1793779738478,
+      "utc": "2026-11-04T08:08:58.478Z"
+    },
+    {
+      "subject": "0e72ab04-b61d-43b9-8758-9006580b23ef",
+      "action": "report",
+      "note": "information",
+      "at": 1793779861399,
+      "utc": "2026-11-04T08:11:01.399Z"
+    },
+    {
+      "subject": "0e72ab04-b61d-43b9-8758-9006580b23ef",
+      "action": "hide",
+      "note": "合成测试结束，隐藏清理，不影响真实地点。",
+      "at": 1793779907673,
+      "utc": "2026-11-04T08:11:47.673Z"
+    },
+    {
+      "subject": "a86158b0-6356-4010-a989-e2f9e0d10f85",
+      "action": "resolve",
+      "note": "合成测试结束，记录已隐藏。",
+      "at": 1793779952342,
+      "utc": "2026-11-04T08:12:32.342Z"
+    }
+  ]
+}

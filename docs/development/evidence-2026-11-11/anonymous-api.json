@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-11-11T07:00:04.280881+00:00",
+  "deploymentVersion": 17,
+  "method": "curl without cookies or identity headers",
+  "results": [
+    {
+      "path": "/api/health",
+      "status": 200
+    },
+    {
+      "path": "/api/me",
+      "status": 200,
+      "anonymous": true
+    },
+    {
+      "path": "/api/places",
+      "status": 200,
+      "count": 42,
+      "testAbsent": true
+    },
+    {
+      "path": "/api/review-queue",
+      "status": 401
+    },
+    {
+      "path": "/api/contributions",
+      "status": 401
+    },
+    {
+      "path": "/api/saved",
+      "status": 401
+    },
+    {
+      "path": "/api/places/0e72ab04-b61d-43b9-8758-9006580b23ef",
+      "status": 404
+    }
+  ]
+}

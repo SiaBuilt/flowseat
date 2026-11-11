@@ -78,12 +78,12 @@
  "source-60edd59f1c355e5d3c716366": [
   {
    "field": "进入方式",
-   "value": "官方悠座列表收录威海路696号，提供购买咨询；具体使用时段、报价以预订确认为准。",
+   "value": "官方悠座开放社区列表仍列威海路696号，并提供购买咨询；网页未列本社区具体价格和可订时段，以预订确认为准。",
    "status": "官方资料",
    "url": "https://www.wework.cn/zh-CN/business-solutions/pass/list/",
    "publishedAt": "",
-   "checkedAt": "2026-10-26",
-   "scope": ""
+   "checkedAt": "2026-11-11",
+   "scope": "仅威海路696号；不沿用旧体验价，不保证到场即可使用"
   },
   {
    "field": "费用",
@@ -198,7 +198,7 @@
    "status": "官方资料",
    "url": "https://yuyue.library.sh.cn/notice/seatAllNotice.html",
    "publishedAt": "",
-   "checkedAt": "2026-10-26",
+   "checkedAt": "2026-11-11",
    "scope": "仅四楼安静学习空间，不代表全馆限制"
   },
   {
@@ -216,25 +216,25 @@
    "status": "官方资料",
    "url": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
    "publishedAt": "2026-08-18",
-   "checkedAt": "2026-10-27",
+   "checkedAt": "2026-11-11",
    "scope": "东馆全馆；各预约空间以预约时段为准"
   },
   {
    "field": "电脑与网络",
-   "value": "四楼安静学习空间允许使用电子产品，须静音、使用静音鼠标键盘；五楼深度学习空间屏蔽信号，无移动数据、无无线网络、不提供电源。",
+   "value": "四楼安静学习空间的电子设备需静音，配静音鼠标键盘并注意用电安全；五楼深度学习空间无移动数据、无线网络和电源。",
    "status": "官方资料",
    "url": "https://yuyue.library.sh.cn/notice/seatAllNotice.html",
    "publishedAt": "",
-   "checkedAt": "2026-10-27",
-   "scope": "四楼可用电脑；五楼不适合电脑办公"
+   "checkedAt": "2026-11-11",
+   "scope": "仅指定学习空间；不推断全馆可办公或可通话"
   },
   {
    "field": "停留规则",
-   "value": "四楼、五楼单次预约90分钟，须在开始15分钟内扫码签到；累计违规3次暂停预约30天。三楼阅读广场按分时段预约。",
+   "value": "四楼、五楼单次预约90分钟，开始15分钟内扫码签到；累计违规3次暂停预约30天。三楼无预约时可使用当前未预约座位，须扫码锁定。",
    "status": "官方资料",
    "url": "https://yuyue.library.sh.cn/notice/seatAllNotice.html",
    "publishedAt": "",
-   "checkedAt": "2026-10-27",
+   "checkedAt": "2026-11-11",
    "scope": "仅预约座位区域"
   },
   {
@@ -245,6 +245,15 @@
    "publishedAt": "2026-07-30",
    "checkedAt": "2026-10-28",
    "scope": "个人到访体验；楼层规则以馆方为准"
+  },
+  {
+   "field": "桌面与电源",
+   "value": "馆方列明四楼安静学习空间有16组标准阅览桌椅；三楼阅读广场484个可预约座位提供设备电源。",
+   "status": "官方资料",
+   "url": "https://www.library.sh.cn/service/seatyy",
+   "publishedAt": "",
+   "checkedAt": "2026-11-11",
+   "scope": "桌椅数量仅四楼指定空间；供电说明仅三楼预约座位，不推断插座数量或实时空位"
   }
  ],
  "tencent-3299611627541318899": [
@@ -534,7 +543,7 @@
    "status": "官方资料",
    "url": "https://www.shhk.gov.cn/bmff/004001/004001006/004001006001/20260428/a51936da-e503-4743-9bbb-9e00c0e3a207.html",
    "publishedAt": "2026-04-28",
-   "checkedAt": "2026-10-26",
+   "checkedAt": "2026-11-11",
    "scope": "分区开放，不能概括成所有座位全天开放"
   },
   {
@@ -552,7 +561,7 @@
    "status": "官方资料",
    "url": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
    "publishedAt": "2026-08-18",
-   "checkedAt": "2026-10-27",
+   "checkedAt": "2026-11-11",
    "scope": "大连路1391号综合馆"
   },
   {
@@ -563,6 +572,24 @@
    "publishedAt": "2026-01-27",
    "checkedAt": "2026-10-28",
    "scope": "个人到访体验"
+  },
+  {
+   "field": "免费开放范围",
+   "value": "馆方运营采购文件要求公共文化服务空间设施免费开放；不据此承诺餐饮等商业消费免费。",
+   "status": "官方资料",
+   "url": "https://jpg.zfcg.sh.gov.cn/sh-gov-open-doc/1108QZ/229a09f9-5dd0-46b2-939e-9661448a0810.pdf",
+   "publishedAt": "",
+   "checkedAt": "2026-11-11",
+   "scope": "2026预算运营项目文件第7页、第22–23页；属于运营要求，不是现场核验"
+  },
+  {
+   "field": "自习与预约",
+   "value": "区官方报道确认综合馆设室内阅览区、临园户外阅读点位及成人自习分区，热门自习席位建议提前预约。",
+   "status": "官方资料",
+   "url": "https://whlyj.sh.gov.cn/gqfc/20260804/b51b9f90351c4b54ad02a53e9e466916.html",
+   "publishedAt": "2026-08-04",
+   "checkedAt": "2026-11-11",
+   "scope": "仅证明阅读自习服务；未明确电脑办公许可、插座数量或实时空位"
   }
  ],
  "tencent-16790604963118065515": [
@@ -755,7 +782,7 @@
    "status": "官方资料",
    "url": "https://whlyj.sh.gov.cn/tsg/20260818/0b1753a10e7f46dd929ab2f989409058.html",
    "publishedAt": "2026-08-18",
-   "checkedAt": "2026-10-27",
+   "checkedAt": "2026-11-11",
    "scope": "分楼层开放"
   },
   {

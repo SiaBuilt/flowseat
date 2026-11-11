@@ -56,7 +56,8 @@ async function retryCatalog(){places.value=await listPlaces();}
 function account(){uni.navigateTo({url:'/pages/me/index'});}
 function clear(){verification.value='all';district.value='全部片区';pin.value='';cost.value='all';zone.value='all';category.value='全部类型';search.value='';savedOnly.value=false;}
 function open(id:string){uni.navigateTo({url:'/pages/index/index?id='+encodeURIComponent(id)});}
-function back(){if(getCurrentPages().length>1)uni.navigateBack();else uni.reLaunch({url:'/pages/index/index'});}
+function back(){uni.reLaunch({url:'/pages/index/index'});}
+function explore(reset=false){if(place.value||missingPlace.value||routeLoading.value)back();else if(reset)clear();else savedOnly.value=false;}
 function goSaved(){if(place.value)uni.reLaunch({url:'/pages/index/index?saved=1'});else savedOnly.value=!savedOnly.value;}
 async function save(id:string){const p=place.value?.id===id?place.value:places.value.find(p=>p.id===id);if(p?.demo){const local=toggleSaved(id);saved.value=[...new Set(saved.value.filter(x=>!x.startsWith('demo-')).concat(local))];}else{try{const active=!saved.value.includes(id);await request('saved/'+id,'PUT',{saved:active});saved.value=active?saved.value.concat(id):saved.value.filter(x=>x!==id);}catch(e){notify(errorMessage(e));return;}}lastSaved.value=saved.value.includes(id)?id:'';}
 function changeCategory(e:{detail:{value:string|number}}){category.value=categories[Number(e.detail.value)];}
@@ -84,8 +85,8 @@ window.addEventListener('keydown',overlayKeys);onUnload(()=>window.removeEventLi
 <view class="shell" :class="{'explore-shell':!place,'detail-shell':!!place}">
  <view class="product-body" :aria-hidden="(dialog||wifiOpen)?true:undefined">
  <view class="topbar">
-  <ActionButton class="brand" aria-label="流动工位首页" @click="place?back():clear()"><image class="brand-mark" src="/static/brand/logo-icon.png" mode="aspectFit"/><view class="brand-words"><text>流动工位</text><text class="brand-sub">FlowSeat</text></view></ActionButton>
-  <view class="primary-nav"><ActionButton :class="{current:!savedOnly&&!place}" @click="place?back():(savedOnly=false)">探索工位</ActionButton><ActionButton :class="{current:savedOnly}" @click="goSaved">我的收藏 <text v-if="saved.length" class="count">{{saved.length}}</text></ActionButton></view>
+  <ActionButton class="brand" aria-label="流动工位首页" @click="explore(true)"><image class="brand-mark" src="/static/brand/logo-icon.png" mode="aspectFit"/><view class="brand-words"><text>流动工位</text><text class="brand-sub">FlowSeat</text></view></ActionButton>
+  <view class="primary-nav"><ActionButton :class="{current:!savedOnly&&!place}" @click="explore()">探索工位</ActionButton><ActionButton :class="{current:savedOnly}" @click="goSaved">我的收藏 <text v-if="saved.length" class="count">{{saved.length}}</text></ActionButton></view>
   <view class="nav"><ActionButton class="contribute-nav" @click="contribute">推荐地点 ＋</ActionButton><text class="city">上海</text><ActionButton class="icon-button profile" aria-label="我的账号" @click="account"><AppIcon name="user-round"/></ActionButton></view>
  </view>
  <view v-if="missingPlace" class="error-box">地点不存在或已隐藏。<ActionButton class="underlink" @click="back">返回探索</ActionButton></view><view v-if="routeLoading" class="notice">正在读取地点…</view><template v-if="!place&&!routeLoading&&!missingPlace">

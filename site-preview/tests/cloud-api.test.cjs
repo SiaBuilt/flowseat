@@ -445,3 +445,32 @@ test('到访确认审批不能覆盖审批期间变化的地点条件或审核�
   assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM audit WHERE subject=? AND action='approve'").bind(r.id).first()).n,0);
  }
 });
+
+test('公开访问权限矩阵隔离匿名、普通用户和审核员数据与操作',async()=>{
+ const{call}=await setup(),id=await published(call);
+ const pending=await call('submissions','POST',{...place(),name:'未公开测试稿',address:'上海市静安区测试路 456 号'});
+ const review=await call('places/'+id+'/reviews','POST',{date:today(),period:'下午',text:'仅投稿人和审核员可见的待审体验',spend:35});
+ for(const uid of ['', 'b']){
+  const denied=uid?403:401;
+  for(const [path,method,body] of [
+   ['review-queue','GET'],['seed-candidates','POST',{}],
+   ['merchant-links','POST',{placeId:id}],
+   ['review/place/'+id,'POST',{action:'hide',note:'无权执行操作'}],
+   ['review/review/'+review.id,'POST',{action:'approve',note:'无权执行操作'}],
+   ['review/report/nonexistent','POST',{action:'resolve',note:'无权执行操作'}],
+  ])assert.equal((await call(path,method,body,uid)).status,denied,path+' '+uid);
+  assert.equal((await call('places/'+pending.id,'GET',undefined,uid)).status,404);
+  assert.deepEqual((await call('places/'+id+'/community','GET',undefined,uid)).visits,[]);
+  const visible=(await call('places','GET',undefined,uid)).places;
+  assert.deepEqual(visible.map(p=>p.id),[id]);
+  for(const p of visible)for(const key of ['author','uid','userId','fingerprint'])assert.equal(p[key],undefined,key);
+ }
+ for(const path of ['saved','contributions'])assert.equal((await call(path,'GET',undefined,'')).status,401);
+ assert.deepEqual((await call('contributions','GET',undefined,'b')).places,[]);
+ assert.deepEqual((await call('contributions','GET',undefined,'b')).reviews,[]);
+ assert.equal((await call('me','GET',undefined,'')).user,null);
+ assert.equal((await call('me','GET',undefined,'b')).user.canReview,false);
+ assert.equal((await call('me','GET',undefined,'owner')).user.canReview,true);
+ assert.equal((await call('places/'+id+'/community','GET',undefined,'a')).visits.length,1);
+ assert.equal((await call('review-queue','GET',undefined,'owner')).reviews.length,1);
+});
